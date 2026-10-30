@@ -1,0 +1,285 @@
+/* ==========================================================================
+   HEADER — شبتوت بحري  v11
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   الهيكل الداخلي — مشترك
+-------------------------------------------------------------------------- */
+
+.header-home,
+.header-inner {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  gap: var(--space-3);
+}
+
+/* ==========================================================================
+   HOME — البراند + زر البحث
+   ========================================================================== */
+
+.header-home {
+  justify-content: space-between;
+}
+
+/* البراند */
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.header-brand__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    var(--color-brand-100) 0%,
+    var(--color-brand-300) 55%,
+    var(--color-brand-400) 100%
+  );
+  box-shadow:
+    0 0 0 2px rgba(var(--shimmer-vivid-rgb), 0.18),
+    0 0 10px rgba(var(--shimmer-deep-rgb), 0.40);
+  flex-shrink: 0;
+}
+
+/* عنوان الهيدر بالصفحة الرئيسية — أخضر البراند الأساسي، بتدرّج فاتح
+   احترافي (نفس هوية أخضر شبتوت بحري من اسم التطبيق نفسه). */
+.header-brand__name {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  background: linear-gradient(
+    to left,
+    var(--color-brand-050) 0%,
+    var(--color-brand-200) 50%,
+    var(--color-brand-400) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--color-brand-200);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-snug);
+  padding-bottom: 2px;
+  filter: drop-shadow(0 0 12px rgba(var(--color-brand-300-rgb), 0.35));
+}
+
+/* ==========================================================================
+   INNER PAGES — سهم الرجوع + العنوان
+   ========================================================================== */
+
+.header-inner {
+  justify-content: flex-start;
+  gap: var(--space-3);
+}
+
+/* --------------------------------------------------------------------------
+   زر الرجوع
+-------------------------------------------------------------------------- */
+
+.header-back-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  /* لمسة هوية هادئة: تظليل شفاف بلون البراند بدل خلفية مصمتة —
+     بتفرّقه عن زر البحث (مربّع محايد) من غير ما تبقى الدائرة لافتة
+     أو حادة وسط هيدر غامق. */
+  border: 1px solid rgba(var(--color-brand-400-rgb), 0.35);
+  background: rgba(var(--color-brand-500-rgb), 0.16);
+  color: var(--color-brand-200);
+  cursor: pointer;
+  flex-shrink: 0;
+  overflow: hidden;
+  box-shadow: var(--shadow-xs);
+  transition:
+    background      var(--duration-fast) var(--ease-out),
+    border-color    var(--duration-fast) var(--ease-out),
+    color           var(--duration-fast) var(--ease-out),
+    transform       var(--duration-base) var(--ease-spring),
+    box-shadow      var(--duration-base) var(--ease-out);
+}
+
+.header-back-btn:hover {
+  background: rgba(var(--color-brand-500-rgb), 0.24);
+  border-color: var(--color-brand-400);
+  color: var(--color-brand-100);
+}
+
+.header-back-btn:active {
+  transform: scale(0.90);
+  background: rgba(var(--color-brand-500-rgb), 0.32);
+  border-color: var(--color-brand-400);
+  box-shadow: none;
+}
+
+.header-back-btn__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-back-btn__icon svg {
+  width: 24px;
+  height: 24px;
+  stroke-width: 3;
+}
+
+/* Ripple */
+.header-back-btn__ripple {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at center,
+    rgba(var(--color-brand-400-rgb), 0.28) 0%,
+    transparent 70%
+  );
+  opacity: 0;
+  transform: scale(0);
+  pointer-events: none;
+  transition:
+    opacity  0.35s var(--ease-out),
+    transform 0.35s var(--ease-out);
+}
+
+.header-back-btn:active .header-back-btn__ripple {
+  opacity: 1;
+  transform: scale(1);
+  transition: none;
+}
+
+/* --------------------------------------------------------------------------
+   عنوان الصفحة
+-------------------------------------------------------------------------- */
+
+.header-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  flex: 1;
+}
+
+.header-page-title {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: var(--leading-snug);
+  padding-bottom: 2px;
+}
+
+/* خط أخضر تحت العنوان */
+.header-title-line {
+  display: block;
+  height: 2px;
+  width: 24px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(
+    to left,
+    transparent,
+    var(--color-brand-400),
+    transparent
+  );
+}
+
+/* --------------------------------------------------------------------------
+   زر الأيقونة — مشترك (بحث وغيره)
+-------------------------------------------------------------------------- */
+
+.header-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  /* مربع بحواف ناعمة — يفرّقه شكليًا عن زر الرجوع الدائري، مش بس لونيًا */
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-raised);
+  color: var(--color-brand-300);
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-xs);
+  transition:
+    color         var(--duration-fast) var(--ease-out),
+    background    var(--duration-fast) var(--ease-out),
+    border-color  var(--duration-fast) var(--ease-out),
+    transform     var(--duration-base) var(--ease-spring),
+    box-shadow    var(--duration-base) var(--ease-out);
+}
+
+.header-icon-btn svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 3;
+}
+
+.header-icon-btn:hover {
+  color: var(--color-brand-200);
+  background: var(--surface-elevated);
+  border-color: var(--border-brand);
+  box-shadow: var(--shadow-brand-sm);
+}
+
+.header-icon-btn:active {
+  transform: scale(0.90);
+  color: var(--color-brand-200);
+  background: var(--state-active-bg);
+  border-color: var(--color-brand-500);
+  box-shadow: none;
+}
+
+/* --------------------------------------------------------------------------
+   زر الذكاء الاصطناعي — شكل مميّز عن أزرار الأيقونة العادية: مربّع بحواف
+   ناعمة (مش حادة) بدل الدائرة، بتدرّج خفيف بلون البراند الأخضر.
+-------------------------------------------------------------------------- */
+.header-icon-btn--ai {
+  position: relative;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(
+    155deg,
+    rgba(var(--color-brand-500-rgb), 0.20) 0%,
+    rgba(var(--color-brand-700-rgb), 0.10) 100%
+  );
+  border-color: rgba(var(--color-brand-400-rgb), 0.42);
+  color: var(--color-brand-200);
+}
+
+.header-icon-btn--ai:hover {
+  background: linear-gradient(
+    155deg,
+    rgba(var(--color-brand-400-rgb), 0.30) 0%,
+    rgba(var(--color-brand-600-rgb), 0.18) 100%
+  );
+  border-color: var(--color-brand-400);
+  color: var(--color-brand-100);
+  box-shadow:
+    0 0 0 1px rgba(var(--color-brand-400-rgb), 0.24),
+    0 4px 14px rgba(var(--color-brand-700-rgb), 0.22);
+}
+
+.header-icon-btn--ai:active {
+  background: rgba(var(--color-brand-500-rgb), 0.28);
+  border-color: var(--color-brand-400);
+  color: var(--color-brand-100);
+}
+
+/* --------------------------------------------------------------------------
+   SPACER + ACTIONS (from navigation.css — unified here)
+-------------------------------------------------------------------------- */
+
+
+
+

@@ -1,0 +1,154 @@
+/* ==========================================================================
+   NAVIGATION — شبتوت بحري  v11
+   Bottom tab bar.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   BOTTOM NAV TAB
+-------------------------------------------------------------------------- */
+
+.nav-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  flex: 1;
+  height: 100%;
+  padding: var(--space-1) var(--space-2);
+  color: var(--text-muted);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  transition:
+    color     var(--duration-fast) var(--ease-out),
+    transform var(--duration-base) var(--ease-spring);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+}
+
+.nav-tab__icon {
+  width: 24px;
+  height: 24px;
+  transition:
+    transform var(--duration-base) var(--ease-spring),
+    color     var(--duration-fast) var(--ease-out);
+  position: relative;
+  z-index: 1;
+}
+
+/* --------------------------------------------------------------------------
+   NAV BADGE COUNT — عداد رقمي بنمط واتساب فوق أيقونة "التنبيهات"
+-------------------------------------------------------------------------- */
+
+.nav-badge-count {
+  position: absolute;
+  top: -2px;
+  inset-inline-start: 50%;
+  transform: translateX(9px);
+  z-index: 2;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  background: var(--notif-badge-bg);
+  color: var(--notif-badge-text);
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: var(--weight-bold);
+  line-height: 1;
+  border: 2px solid var(--surface-base);
+}
+
+.nav-badge-count.is-visible {
+  display: flex;
+}
+
+.nav-tab__label {
+  font-family: var(--font-display);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.02em;
+  position: relative;
+  z-index: 1;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.nav-tab:hover {
+  color: var(--text-secondary);
+}
+
+/* تأثير الضغط — التاب مالوش أي رجع فعل لحظة اللمس أصلاً (كان بيعتمد
+   بالكامل على tap-highlight الافتراضي من المتصفح، اللي متعطّل فوق بـ
+   -webkit-tap-highlight-color: transparent). بما إن شريط التنقل ده أكتر
+   عنصر بيتلمس في التطبيق كله، غيابه محسوس: المستخدم بيلمس ومفيش أي
+   رد فعل لحظي، وبيستنى وصول الصفحة نفسها عشان يتأكد إن اللمسة سجّلت.
+   نفس أسلوب home-card/btn (scale بسيط) — من غير ما نضيف transition
+   جديدة، الموجودة أصلاً (var(--duration-base) var(--ease-spring)) كفاية. */
+.nav-tab:active {
+  transform: scale(0.90);
+}
+
+.nav-tab--active:active {
+  transform: scale(0.94);
+}
+
+/* التبويب النشط */
+.nav-tab--active {
+  color: var(--color-brand-100);
+}
+
+/* حبة (pill) خلفية مصمتة خلف الأيقونة — بدل الهالة الشبحية الخفيفة
+   اللي كانت بالكاد تُلاحَظ. نفس فكرة تبويب واتساب النشط (خلفية خضراء
+   واضحة حوالين الأيقونة بس، مش التاب كله)، بنفس ألوان زر "ضيف
+   مناسبتك"/الأزرار الأساسية (brand-500 + نص فاتح) بدل لون جديد. */
+.nav-tab--active::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  transform: translateX(-50%) scale(1);
+  width: 46px;
+  height: 30px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-brand-500);
+  box-shadow: 0 2px 8px rgba(var(--color-brand-500-rgb), 0.35);
+  animation: nav-pill-pop var(--duration-base) var(--ease-spring);
+  pointer-events: none;
+}
+
+@keyframes nav-pill-pop {
+  from { transform: translateX(-50%) scale(0.6); opacity: 0; }
+  to   { transform: translateX(-50%) scale(1);   opacity: 1; }
+}
+
+.nav-tab--active .nav-tab__icon {
+  transform: translateY(-2px) scale(1.05);
+  color: var(--color-neutral-050);
+  filter: none;
+}
+
+.nav-tab--active .nav-tab__label {
+  color: var(--color-brand-100);
+}
+
+/* خط مؤشر */
+.nav-tab--active::after {
+  content: '';
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 2px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(
+    to left,
+    transparent,
+    var(--color-brand-300),
+    transparent
+  );
+}

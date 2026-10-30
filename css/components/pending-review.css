@@ -1,0 +1,117 @@
+/* --------------------------------------------------------------------------
+   PENDING REVIEW — بطاقة فكرة/مناسبة بانتظار موافقة المشرف (تظهر لصاحبها فقط).
+-------------------------------------------------------------------------- */
+
+.pending-review-note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  background: rgba(214, 170, 70, 0.12);
+  border: 1px solid rgba(214, 170, 70, 0.28);
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  line-height: var(--leading-relaxed);
+}
+
+.pending-review-note i {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--color-accent-300, #e3c26b);
+}
+
+/* ما في تصويت/إعجاب/تعليق على شيء لسه مش منشور */
+.idea-card--pending .idea-vote-buttons,
+.idea-card--pending .idea-card__progress,
+.occasion-card--pending .occasion-card__actions {
+  display: none;
+}
+
+.idea-card--pending,
+.occasion-card--pending {
+  opacity: 0.92;
+  border-style: dashed;
+}
+.idea-card--pending .idea-card__details { display: none; }
+
+/* شريط عدد ما بانتظار المراجعة في لوحة الإدارة */
+.admin-pending-note {
+  margin: 0 0 var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  background: rgba(214, 170, 70, 0.14);
+  border: 1px solid rgba(214, 170, 70, 0.32);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+}
+.admin-pending-note.hidden { display: none; }
+
+/* --------------------------------------------------------------------------
+   REVIEW NOTICE — رسالة شكر مكان الفكرة/المناسبة وهي تحت المراجعة
+-------------------------------------------------------------------------- */
+
+.review-notice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-2);
+  padding: var(--space-6) var(--space-5);
+  border-radius: var(--radius-xl, var(--radius-lg));
+  border: 1px solid rgba(var(--color-brand-400-rgb), 0.35);
+  background: linear-gradient(
+    160deg,
+    rgba(var(--color-brand-400-rgb), 0.14) 0%,
+    var(--surface-raised) 70%
+  );
+  box-shadow: var(--shadow-xs);
+  animation: review-notice-in 0.45s var(--ease-out, ease-out) both;
+}
+
+.review-notice__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  color: var(--color-brand-200);
+  background: rgba(var(--color-brand-400-rgb), 0.18);
+  border: 1px solid rgba(var(--color-brand-400-rgb), 0.4);
+}
+
+.review-notice__icon i,
+.review-notice__icon svg { width: 26px; height: 26px; }
+
+.review-notice__title {
+  margin: var(--space-1) 0 0;
+  font-family: var(--font-display, var(--font-heading));
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+}
+
+.review-notice__text {
+  margin: 0;
+  max-width: 34ch;
+  font-family: var(--font-long-text, var(--font-body));
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+}
+
+@keyframes review-notice-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .review-notice { animation: none; }
+}

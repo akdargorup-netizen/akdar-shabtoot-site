@@ -1,0 +1,152 @@
+/* ==========================================================================
+   RESET — شبتوت بحري
+   Opinionated but non-destructive baseline.
+   Removes browser inconsistencies. Sets the stage.
+   Consumes: tokens.css
+   ========================================================================== */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* خاصية hidden لازم تربح دايماً — أي كلاس بيحدد display (flex/grid/block)
+   على نفس العنصر بيهزم [hidden] الافتراضية من متصفح، لأن كلاس المؤلف
+   بيتقدّم على الـ user-agent stylesheet بغض النظر عن الخصوصية.
+   هذا كان بيسبب ظهور أقسام (زي نتيجة البحث) وهي مفروض تكون مخفية. */
+[hidden] {
+  display: none !important;
+}
+
+html {
+  font-size: 24.75px;  /* "عادي": بين "عادي" القديم (23.5) و"كبير" القديم (26) — تعديل أكتوبر ٢٠٢٦ */
+  /* على الشاشات الضيقة يتناسب الحجم مع عرض الشاشة: يبقى ٢٤.٧٥px على الهواتف العريضة (≈٤١٢px فما فوق)
+     ويصغر نسبيًا على الأضيق، فيظهر بنفس الشكل على كل هاتف. السطر الأول احتياطي لو المتصفح لا يعرف min(). */
+  font-size: min(24.75px, 6vw);
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  height: 100%;
+}
+
+/* حجم الخط — خياران فقط (أكتوبر ٢٠٢٦):
+   "عادي" = الافتراضي (24.75px) بلا قاعدة خاصة، و"كبير" = 27.5px (خطوة ≈ ١١٪ فوق العادي
+   لتبقى النسبة متناغمة بين الحجمين). القيم القديمة المحفوظة (large / xlarge) تُحوَّل في الجافاسكربت. */
+html[data-text-size="large"] {
+  font-size: 27.5px;
+  font-size: min(27.5px, 6.67vw);   /* نفس نسبة "عادي" (٢٧.٥ ÷ ٤١٢) */
+}
+
+/* تبعيات حجم الخط — الهيدر وشريط التنقل السفلي ارتفاعهما ثابت بالبكسل (لا يتبع rem)
+   بينما النص جوّاهم يتبع rem، فنكبّر التوكنين مع كل حجم حتى لا يفيض النص.
+   كل مكان تاني بيستخدم هذين المتغيّرين بياخد القياس الجديد تلقائياً لأنه var(). */
+html[data-text-size="normal"] {
+  --header-height:     64px;
+  --bottom-nav-height: 70px;
+}
+
+html[data-text-size="large"] {
+  --header-height:     70px;
+  --bottom-nav-height: 77px;
+}
+
+/* الهيدر وشريط التنقل يتبعان حجم الخط نفسه على الشاشات الضيقة */
+@supports (font-size: min(1px, 1vw)) {
+  html[data-text-size="normal"] {
+    --header-height:     calc(min(24.75px, 6vw) * 2.586);
+    --bottom-nav-height: calc(min(24.75px, 6vw) * 2.828);
+  }
+  html[data-text-size="large"] {
+    --header-height:     calc(min(27.5px, 6.67vw) * 2.545);
+    --bottom-nav-height: calc(min(27.5px, 6.67vw) * 2.8);
+  }
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-normal);
+  color: var(--text-primary);
+  background-color: var(--surface-base);
+  min-height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ==========================================================================
+   منع نسخ/تحديد نصوص التطبيق (ثابت — لا تحذفه)
+   ⚠️ مكانه هنا (مصدر css/core/reset.css) عمدًا. ملف css/bundle.css مُولَّد
+   تلقائيًا من node build/bundle-css.js ويُستبدل بالكامل عند كل بناء، فأي تعديل
+   يدوي عليه يضيع بعد أول تحديث. عدّل هنا فقط ثم شغّل سكربت الدمج.
+   - الاستثناءات: حقول الإدخال (لازم تقبل الكتابة والتحديد، وiOS يعطّل
+     الكتابة لو أخذت user-select:none) والنصوص المقصود نسخها صراحةً
+     (مثل رقم الحساب .project-method__account الذي له user-select:all).
+   ========================================================================== */
+html, body {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+input, textarea, select, [contenteditable=""], [contenteditable="true"] {
+  -webkit-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
+}
+
+img, video, svg {
+  display: block;
+  max-width: 100%;
+}
+
+button, input, textarea, select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+a {
+  color: var(--text-brand);
+  text-decoration: none;
+  transition: var(--transition-color);
+}
+
+a:hover {
+  color: var(--text-brand-strong);
+}
+
+ul, ol {
+  list-style: none;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--border-subtle);
+  margin: var(--space-6) 0;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--surface-elevated);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-neutral-600);
+}
+

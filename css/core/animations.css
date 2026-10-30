@@ -1,0 +1,154 @@
+/* ==========================================================================
+   ANIMATIONS — شبتوت بحري  v11
+   All @keyframes in one place.
+   Transition tokens live in tokens.css.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   TOAST MOTION
+-------------------------------------------------------------------------- */
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes toast-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   MODAL / OVERLAY MOTION
+-------------------------------------------------------------------------- */
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   SKELETON LOADER
+-------------------------------------------------------------------------- */
+
+/* ⚡ أداء: كانت بتحرّك background-position (إعادة رسم كل إطار). صارت نبضة opacity
+   فقط — بيتنفذ على كرت الشاشة بدون إعادة رسم. نفس الاسم عشان كل الاستخدامات تستفيد. */
+@keyframes skeleton-sweep {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.5; }
+}
+
+/* --------------------------------------------------------------------------
+   GENERAL PURPOSE
+-------------------------------------------------------------------------- */
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fade-down {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.6; }
+}
+
+/* --------------------------------------------------------------------------
+   BADGE BREATHE — هالة ضوئية هادية حول شارة "عاجل"/"قريباً"/"جديد"،
+   بدل ما تكون ساكنة تمامًا. بتستخدم currentColor عشان تتلوّن تلقائياً
+   بلون الشارة (أحمر للعاجل، أخضر البراند للباقي) بدون تكرار كود.
+-------------------------------------------------------------------------- */
+
+@keyframes badge-breathe {
+  0%, 100% { box-shadow: 0 0 0 0 transparent; }
+  50%      { box-shadow: 0 0 8px 1px color-mix(in srgb, currentColor 45%, transparent); }
+}
+
+/* ⚡ أداء: النبض صار 3 مرات فقط ثم يهدأ (كان للأبد وبيحرّك box-shadow = إعادة رسم
+   كل إطار على بطاقات الرئيسية). بعد ما يخلص تبقى الشارة ساكنة. */
+.animate-breathe {
+  animation: badge-breathe 2.6s ease-in-out 3;
+}
+
+/* --------------------------------------------------------------------------
+   SHEEN SWEEP — خط ضوء رفيع بيعدي قطريًا على البطاقة كل فترة، هادي
+   ومش مزعج (أبطأ بكتير من skeleton-sweep بتاع التحميل). الهدف إحساس
+   "حياة" مستمر على بطاقة/قسم مميّز، بدون ما يحتاج تفاعل من المستخدم.
+   أول استخدام: بطاقة "جيل أخضر" في فهرس المجتمع (.community-index-card--vivid)
+-------------------------------------------------------------------------- */
+
+@keyframes sheen-sweep {
+  0%   { transform: translateX(-120%) skewX(-12deg); }
+  35%, 100% { transform: translateX(220%) skewX(-12deg); }
+}
+
+
+
+
+
+/* --------------------------------------------------------------------------
+   ANIMATION UTILITY CLASSES
+-------------------------------------------------------------------------- */
+
+.animate-fade-in  { animation: fade-in    var(--duration-base) var(--ease-out) both; }
+.animate-fade-up  { animation: fade-up    var(--duration-slow) var(--ease-out) both; }
+
+
+
+
+/* Stagger delays for list items */
+.animate-stagger-1 { animation-delay:  60ms; }
+.animate-stagger-2 { animation-delay: 120ms; }
+.animate-stagger-3 { animation-delay: 180ms; }
+.animate-stagger-4 { animation-delay: 240ms; }
+.animate-stagger-5 { animation-delay: 300ms; }

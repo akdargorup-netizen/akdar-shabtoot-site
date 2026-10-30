@@ -1,0 +1,142 @@
+/* ==========================================================================
+   CARD — شبتوت بحري  v12
+   بطاقات أكثر عمقاً وجمالاً — مع هوية بصرية واضحة
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   BASE
+-------------------------------------------------------------------------- */
+
+.card {
+  background: linear-gradient(
+    148deg,
+    var(--surface-raised) 0%,
+    color-mix(in srgb, var(--surface-raised) 88%, var(--color-brand-950)) 100%
+  );
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-2xl);
+  padding: var(--spacing-card-inner) var(--space-6);
+  box-shadow:
+    var(--shadow-md),
+    inset 0 1px 0 rgba(var(--shimmer-soft-rgb), 0.07);
+  transition:
+    box-shadow    var(--duration-base) var(--ease-out),
+    border-color  var(--duration-base) var(--ease-out),
+    transform     var(--duration-base) var(--ease-out);
+  position: relative;
+  overflow: hidden;
+}
+
+/* بريق داخلي علوي */
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(
+    to left,
+    transparent 5%,
+    rgba(var(--shimmer-base-rgb), 0.28) 35%,
+    rgba(var(--shimmer-bright-rgb), 0.40) 50%,
+    rgba(var(--shimmer-base-rgb), 0.28) 65%,
+    transparent 95%
+  );
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   DEPTH VARIANTS
+-------------------------------------------------------------------------- */
+
+.card--elevated {
+  background: linear-gradient(
+    148deg,
+    var(--surface-elevated) 0%,
+    color-mix(in srgb, var(--surface-elevated) 85%, var(--color-brand-900)) 100%
+  );
+  box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(var(--shimmer-soft-rgb), 0.09);
+}
+
+.card--sunken {
+  background: var(--surface-sunken);
+  box-shadow: var(--shadow-inset);
+  border-color: var(--border-subtle);
+}
+.card--sunken::before { display: none; }
+
+.card--bordered {
+  border-color: var(--border-default);
+}
+
+.card--brand {
+  border-color: var(--color-brand-700);
+  background: linear-gradient(
+    148deg,
+    color-mix(in srgb, var(--surface-raised) 90%, var(--color-brand-800)) 0%,
+    color-mix(in srgb, var(--surface-raised) 82%, var(--color-brand-900)) 100%
+  );
+  box-shadow: var(--shadow-brand-sm), var(--shadow-md);
+}
+
+/* --------------------------------------------------------------------------
+   INTERACTIVE
+-------------------------------------------------------------------------- */
+
+.card--interactive {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.card--interactive:hover {
+  border-color: var(--color-brand-500);
+  box-shadow:
+    var(--shadow-lg),
+    0 0 0 1px rgba(var(--color-brand-400-rgb), 0.14),
+    inset 0 1px 0 rgba(var(--shimmer-base-rgb), 0.10);
+  transform: translateY(-3px);
+}
+
+.card--interactive:active {
+  transform: translateY(0) scale(0.985);
+  box-shadow: var(--shadow-xs);
+  border-color: var(--border-default);
+}
+
+/* --------------------------------------------------------------------------
+   INNER STRUCTURE
+-------------------------------------------------------------------------- */
+
+.card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.card__title {
+  font-family: var(--font-heading);
+  font-size: var(--text-md);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-snug);
+}
+
+.card__body {
+  color: var(--text-secondary);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+}
+
+.card__footer {
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}

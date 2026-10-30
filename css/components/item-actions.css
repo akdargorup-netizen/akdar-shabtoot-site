@@ -1,0 +1,211 @@
+/* ==========================================================================
+   ITEM ACTIONS — زر ⋮ + قائمة (تعديل / حذف / إبلاغ) للمناسبات والأفكار
+   وتعليقاتهما. المكوّن: js/shared/item-actions.js
+   ========================================================================== */
+
+/* عنصر المحتوى: نمنع قائمة اللمس الافتراضية (iOS callout) عشان الضغط
+   المطوّل يفتح قائمتنا. التحديد بالنص نفسه يفضل شغّال (مش user-select:none). */
+[data-item-kind] {
+  -webkit-touch-callout: none;
+}
+
+/* ── زر ⋮ ─────────────────────────────────────────────────────
+   يُلاحَظ كزر (دائرة بخلفية خفيفة وإطار رفيع) من غير ما يلفت النظر:
+   بلا ظل ولا تدرّج ولا بريق، وبلون هادئ يقترب من لون البطاقة. */
+.item-menu-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full, 50%);
+  background: rgba(var(--color-brand-400-rgb), 0.07);
+  color: var(--text-secondary);
+  box-shadow: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background var(--duration-base) var(--ease-out), color var(--duration-base) var(--ease-out), border-color var(--duration-base) var(--ease-out), transform var(--duration-base) var(--ease-out);
+}
+
+.item-menu-btn i,
+.item-menu-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.item-menu-btn:active {
+  background: rgba(var(--color-brand-400-rgb), 0.18);
+  transform: scale(0.92);
+}
+
+.item-menu-btn:hover,
+.item-menu-btn:focus-visible {
+  background: rgba(var(--color-brand-400-rgb), 0.14);
+  border-color: rgba(var(--color-brand-400-rgb), 0.35);
+  color: var(--text-primary);
+}
+
+/* نسخة أصغر داخل فقاعات التعليقات — مثبّتة في الزاوية العليا للفقاعة
+   (جهة النهاية = يسار في RTL)، والقلب يفضل في الزاوية السفلى. */
+.item-menu-btn--sm {
+  width: 28px;
+  height: 28px;
+}
+.item-menu-btn--sm i,
+.item-menu-btn--sm svg {
+  width: 15px;
+  height: 15px;
+}
+
+.item-menu-btn--corner {
+  position: absolute;
+  inset-block-start: 4px;
+  inset-inline-end: 4px;
+  z-index: 1;
+}
+
+/* مساحة جانبية تمنع تداخل اسم صاحب التعليق مع الزر في الزاوية */
+.occasion-bubble:has(> .item-menu-btn--corner) > .occasion-bubble__author,
+.idea-bubble__body:has(> .item-menu-btn--corner) > .idea-bubble__author {
+  padding-inline-end: 34px;
+}
+.idea-bubble__body:has(> .item-menu-btn--corner) {
+  position: relative;
+  min-width: 96px;
+}
+.occasion-bubble:has(> .item-menu-btn--corner) {
+  position: relative;
+}
+
+/* رأس البطاقة: ⋮ في آخر السطر (طرف النهاية = يسار في RTL) */
+.idea-card__head,
+.occasion-card__head {
+  position: relative;
+}
+.occasion-card__head > .item-menu-btn,
+.idea-card__head > .item-menu-btn {
+  margin-inline-start: auto;
+}
+
+/* ── وسم "معدّل" ──────────────────────────────────────────── */
+.item-edited-mark {
+  margin-inline-start: var(--space-1);
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+
+/* ── تعليق محذوف / مخفي بالبلاغات ─────────────────────────── */
+.item-placeholder-text {
+  margin: 0;
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: var(--text-sm);
+}
+
+.item-reported-note {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0 0 var(--space-2);
+  color: var(--color-danger-300, #e0a3a3);
+  font-size: var(--text-xs);
+}
+.item-reported-note i,
+.item-reported-note svg {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+}
+
+/* بطاقة اتخفت بالبلاغات (تظهر لصاحبها والمشرف بس): نفس معاملة "قيد المراجعة" */
+.idea-card--reported .idea-vote-buttons,
+.idea-card--reported .idea-card__progress,
+.idea-card--reported .idea-card__details,
+.occasion-card--reported .occasion-card__actions {
+  display: none;
+}
+.idea-card--reported,
+.occasion-card--reported {
+  opacity: 0.92;
+  border-style: dashed;
+}
+
+/* ── القائمة (bottom sheet) ───────────────────────────────── */
+.item-sheet {
+  padding-bottom: var(--space-2);
+}
+
+.item-sheet__title {
+  padding: var(--space-3) var(--space-6) var(--space-2);
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  text-align: center;
+}
+
+.item-sheet__list {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-1) var(--space-3);
+}
+
+.item-sheet__action {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: 48px;
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: transparent;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  text-align: start;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.item-sheet__action i,
+.item-sheet__action svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.item-sheet__action:hover,
+.item-sheet__action:focus-visible,
+.item-sheet__action:active {
+  background: rgba(var(--color-brand-400-rgb), 0.12);
+}
+
+.item-sheet__action:disabled {
+  opacity: 0.5;
+}
+
+.item-sheet__action--danger {
+  color: var(--color-danger-300, #e0a3a3);
+}
+
+.item-sheet__hint {
+  margin: var(--space-1) var(--space-6) 0;
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  text-align: center;
+}
+
+.item-sheet__footer {
+  padding: var(--space-2) var(--space-4) var(--space-3);
+}
+
+.item-edit__body {
+  padding-top: var(--space-2);
+}
+
+

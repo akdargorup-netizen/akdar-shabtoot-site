@@ -1,0 +1,192 @@
+/* ==========================================================================
+   INSTALL PAGE — صفحة تثبيت أخضر شبتوت بحري
+   مستقلة تمامًا: تُحقن داخل install.html عند البناء (build/gen-install.js)،
+   فلا تعتمد على أي ملف CSS خارجي (لو فشل ملف ضاعت الصفحة).
+
+   المقاسات = مقاسات التطبيق بحجم الخط «عادي» (الافتراضي):
+   - html بنفس قاعدة reset.css: min(24.75px, 6vw)، وكل أحجام الخطوط من توكنز التطبيق (--text-*)
+   - المسافات والأيقونات والزوايا بالبكسل من توكنز التطبيق (--space-* / --icon-* / --radius-*)
+   - الأزرار بمواصفات .btn، والصفوف بمواصفات بطاقات الفهرس (أيقونة ٤٨px + عنوان + وصف)
+   الخط نفسه يبقى خط النظام (لا خطوط تُحمَّل) — الأحجام فقط هي المطابقة.
+   ========================================================================== */
+
+:root {
+  --bg: #1b1c14;           /* surface-base */
+  --card: #23251a;
+  --line: rgba(180, 182, 154, 0.2);
+  --txt: #f1f1e4;
+  --txt2: #cfd0b8;
+  --mut: #a9aa90;
+  --brand: #60a84e;        /* brand-400 */
+  --brand-d: #306328;      /* brand-600 */
+  --brand-t: #a8dc96;      /* brand-200 */
+  --warn-bg: rgba(140, 104, 0, 0.16);
+  --warn-line: rgba(200, 160, 64, 0.45);
+  --warn-t: #e2c880;
+  --on-brand: #fff;
+}
+[data-scheme="light"] {
+  --bg: #f2f2e6;
+  --card: #fbfbf5;
+  --line: #d6d6bc;
+  --txt: #1d2616;
+  --txt2: #3e422f;
+  --mut: #5e614a;
+  --brand: #3f7d33;
+  --brand-d: #2d6224;
+  --brand-t: #234819;
+  --warn-bg: rgba(74, 53, 0, 0.07);
+  --warn-line: #b99a4a;
+  --warn-t: #4a3500;
+  color-scheme: light;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+[hidden] { display: none !important; }
+/* نفس قاعدة التطبيق (reset.css) لحجم «عادي»: ثابت على الهواتف العريضة ويتناسب مع الشاشات الأضيق */
+html { font-size: 24.75px; font-size: min(24.75px, 6vw); -webkit-text-size-adjust: 100%; }
+body {
+  font-family: Tahoma, 'Segoe UI', 'Noto Sans Arabic', system-ui, sans-serif;
+  font-size: var(--text-base); line-height: var(--leading-normal);
+  color: var(--txt); background: var(--bg);
+  -webkit-font-smoothing: antialiased; min-height: 100%;
+}
+img, svg { display: block; max-width: 100%; }
+button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; }
+b { font-weight: 700; }
+
+.ins { max-width: var(--content-max-w); margin-inline: auto; padding: 0 var(--space-4) var(--space-10); }
+
+/* ── الهيرو: هادئ ومسطّح (أخضر داكن في الوضعين: شعار الواحة ذهبي فاتح يحتاج خلفية داكنة) ── */
+.ins-hero {
+  --txt: #f1f1e4; --txt2: #cfd0b8; --brand-t: #a8dc96; --line: rgba(180, 182, 154, 0.25);
+  margin-inline: calc(var(--space-4) * -1); padding: var(--space-8) var(--space-5) var(--space-6); text-align: center;
+  background: #14260d;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0 0 var(--radius-2xl) var(--radius-2xl);
+}
+.ins-logo { width: 64px; height: 64px; margin: 0 auto var(--space-3); border-radius: var(--radius-xl); }
+.ins-title { font-size: var(--text-2xl); line-height: var(--leading-snug); font-weight: 700; color: var(--txt); margin-bottom: var(--space-2); }
+.ins-sub { color: var(--txt2); font-size: var(--text-sm); line-height: var(--leading-normal); }
+.ins-pills { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2); margin-top: var(--space-4); }
+.ins-pill {
+  padding: 2px var(--space-3); border-radius: var(--radius-full); font-size: var(--text-xs);
+  color: var(--brand-t); border: 1px solid var(--line);
+}
+
+/* ── الكروت ── */
+.card {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--radius-xl); padding: var(--space-5); margin-top: var(--space-3);
+}
+.card h2 {
+  font-size: var(--text-lg); line-height: var(--leading-snug); font-weight: 700; color: var(--brand-t);
+  margin-bottom: var(--space-3); display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap;
+}
+.card h2 .ico { width: var(--icon-md); height: var(--icon-md); }
+.card p { color: var(--txt2); font-size: var(--text-sm); }
+.card p + p { margin-top: var(--space-2); }
+.card .lead { margin-bottom: var(--space-3); }
+.mut { color: var(--mut); font-size: var(--text-xs); }
+.card p.mut { font-size: var(--text-xs); margin-top: var(--space-2); }
+.card.mine { border-color: var(--brand); }
+.tag {
+  font-size: var(--text-xs); font-weight: 700; padding: 0 var(--space-2); border-radius: var(--radius-full);
+  background: var(--brand); color: var(--on-brand); line-height: var(--leading-normal);
+}
+
+/* ── تنبيهات ── */
+.notice {
+  margin-top: var(--space-3); padding: var(--space-3) var(--space-4); border-radius: var(--radius-lg);
+  background: var(--warn-bg); color: var(--warn-t); border: 1px solid var(--warn-line);
+  font-size: var(--text-sm);
+}
+.notice a { color: inherit; font-weight: 700; }
+.notice.ok { background: transparent; color: var(--brand-t); border-color: var(--brand-d); text-align: center; font-weight: 700; }
+.notice .mut { font-weight: 400; }
+.notice .btn { margin-top: var(--space-3); }
+
+/* ── الأزرار: مواصفات .btn في التطبيق (text-sm، حشوة ١٢/٢٤، زاوية radius-lg) ── */
+.btn {
+  display: flex; align-items: center; justify-content: center; gap: var(--space-2);
+  width: 100%; padding: var(--space-3) var(--space-6); border-radius: var(--radius-lg);
+  font-size: var(--text-sm); font-weight: 700; line-height: 1; text-decoration: none;
+  background: var(--brand-d); color: var(--on-brand); border: 1px solid var(--brand);
+  min-height: 48px;
+}
+.btn:active { opacity: 0.85; }
+.btn:focus-visible, summary:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.btn.alt { background: transparent; color: var(--txt); border-color: var(--line); }
+.ico { width: var(--icon-sm); height: var(--icon-sm); stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+/* ── الخطوات (نفس شكل خطوات نافذة تثبيت iOS في التطبيق: دائرة ٢٨px + نص text-sm) ── */
+.steps-list { list-style: none; counter-reset: s; margin-top: var(--space-2); }
+.steps-list li {
+  counter-increment: s; position: relative; padding-inline-start: calc(28px + var(--space-3)); min-height: 28px;
+  margin-bottom: var(--space-4); color: var(--txt2); font-size: var(--text-sm); line-height: 1.5;
+}
+.steps-list li:last-child { margin-bottom: 0; }
+.steps-list li::before {
+  content: counter(s); position: absolute; inset-inline-start: 0; top: 0;
+  width: 28px; height: 28px; border-radius: var(--radius-full); display: grid; place-items: center;
+  font-size: var(--text-sm); font-weight: 700; line-height: 1; background: var(--brand-d); color: var(--on-brand);
+}
+.ic { display: inline-block; padding: 0 var(--space-2); border-radius: var(--radius-sm); border: 1px solid var(--line); color: var(--txt); }
+
+/* ── التثبيت اليدوي: مطويّ تحت الزر، ويفتح وحده فقط لو الزر ما اشتغل ── */
+details.manual { margin-top: var(--space-3); border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--bg); }
+details.manual > summary { padding: var(--space-3) var(--space-4); min-height: 48px; }
+details.manual > .ans { padding: 0 var(--space-4) var(--space-4); }
+details.manual .mut { margin-top: var(--space-3); }
+
+/* ── الأقسام القابلة للطي ── */
+summary {
+  list-style: none; cursor: pointer; min-height: 48px; padding: var(--space-2) 0;
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
+  font-weight: 700; font-size: var(--text-sm); color: var(--txt); line-height: var(--leading-snug);
+}
+summary::-webkit-details-marker { display: none; }
+summary::after {
+  content: ''; flex: none; width: 8px; height: 8px;
+  border-right: 2px solid var(--brand); border-bottom: 2px solid var(--brand);
+  transform: rotate(45deg); transition: transform 0.15s;
+}
+details[open] > summary::after { transform: rotate(-135deg); }
+details .ans { padding: 0 0 var(--space-3); color: var(--txt2); font-size: var(--text-sm); line-height: var(--leading-normal); }
+#faq details { border-top: 1px solid var(--line); }
+#faq details:first-of-type { border-top: 0; }
+
+/* ── مميزات التطبيق: صفوف بمواصفات بطاقات الفهرس (أيقونة ٤٨px + عنوان text-md + وصف text-xs) ── */
+.feat { list-style: none; }
+.feat li { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) 0; border-top: 1px solid var(--line); }
+.feat li:first-child { border-top: 0; padding-top: 0; }
+.feat li:last-child { padding-bottom: 0; }
+.feat-ico {
+  width: 48px; height: 48px; flex: none; display: flex; align-items: center; justify-content: center;
+  border-radius: var(--radius-lg); background: rgba(96, 168, 78, 0.14); border: 1px solid var(--line); color: var(--brand);
+}
+[data-scheme="light"] .feat-ico { background: rgba(63, 125, 51, 0.1); }
+.feat-ico .ico { width: var(--icon-md); height: var(--icon-md); stroke-width: 1.75; }
+.feat-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.feat-body b { font-size: var(--text-md); line-height: var(--leading-snug); color: var(--txt); }
+.feat-body span { font-size: var(--text-xs); line-height: var(--leading-snug); color: var(--mut); }
+
+/* ── QR ── */
+#qr { width: 180px; max-width: 70%; height: auto; margin: var(--space-3) auto; padding: var(--space-2); border-radius: var(--radius-lg); background: #fff; color: #111; }
+.qr-url { text-align: center; word-break: break-all; direction: ltr; color: var(--mut); font-size: var(--text-xs); }
+
+.ins-share { margin-top: var(--space-3); }
+.ins-foot { text-align: center; margin-top: var(--space-6); color: var(--mut); font-size: var(--text-xs); }
+.ins-foot a { color: var(--brand-t); }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* ── روابط بديلة (المضيفات) ── */
+.hosts { list-style: none; margin-top: var(--space-2); }
+.hosts li {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-2);
+  padding: var(--space-3) 0; border-top: 1px solid var(--line);
+}
+.hosts a { color: var(--brand-t); font-weight: 700; font-size: var(--text-sm); text-decoration: none; }
+.hosts .st { font-size: var(--text-xs); color: var(--mut); }
+.hosts .st.ok { color: var(--brand-t); }

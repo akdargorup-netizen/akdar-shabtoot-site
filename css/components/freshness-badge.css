@@ -1,0 +1,68 @@
+/* --------------------------------------------------------------------------
+   FRESHNESS BADGE — "فيه جديد؟" (js/shared/content-freshness.js)
+   جزءين: عدّاد رقمي على أيقونة بطاقة الرئيسية/الخدمات (.section-badge،
+   من js/shared/section-badges.js)، وشارة "جديد" نصية على العنصر نفسه
+   جوّه القائمة (أخبار/مناسبات/أفكار). 2026-09-28: العدّاد كان نقطة
+   بلا رقم عمدًا (تفادي الزحمة)، اتحوّل لرقم بقرار من المطوّر لأن
+   الرئيسية كانت باردة ومفيش ما يشدّ المستخدم لتفقّد الأقسام.
+-------------------------------------------------------------------------- */
+
+/* عدّاد "جديد" — ابن مباشر لـ .home-card (الرئيسية) أو .service-card
+   (الخدمات، بطاقة مصنع الأفكار)، وكلاهما position:relative. مثبّت في
+   ركن البطاقة العلوي الأيسر (شمال فعليًا، بغض النظر عن اتجاه RTL) —
+   انظر _setCardBadge في js/shared/section-badges.js. نفس ألوان شارة
+   الرسائل بالظبط (--notif-badge-*) — نفس الإشارة، نفس اللغة. حلقة
+   بلون سطح البطاقة حوالين الرقم بتفصله عن خلفية البطاقة. */
+.section-badge {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  z-index: 2;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  background: var(--notif-badge-bg);
+  color: var(--notif-badge-text);
+  border: 2px solid var(--surface-raised);
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: var(--weight-bold);
+  line-height: 1;
+  pointer-events: none;
+  animation: section-badge-pop var(--duration-slow) var(--ease-spring, var(--ease-out)) both;
+}
+
+@keyframes section-badge-pop {
+  from { transform: scale(0.4); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-badge { animation: none; }
+}
+
+/* شارة "جديد" — على العنصر نفسه جوّه القائمة (سطر البيانات الوصفية:
+   news-meta / occasion-card__head / idea-card__meta). نفس لون
+   النقطة فوق (نفس معنى الإشارة، حجمين مختلفين لسياقين مختلفين). */
+.content-new-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  background: var(--notif-badge-bg);
+  color: var(--notif-badge-text);
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: var(--weight-bold);
+  line-height: 1.4;
+  flex-shrink: 0;
+}
+
+/* نسخة زاوية-مطلقة — لبطاقة المناسبة اللي مالهاش سطر بيانات وصفية
+   مناسب لحقن شارة نصية داخله (زي news-meta/idea-card__meta)، فبتترسم
+   في الزاوية العلوية المقابلة بدل كده. */
+

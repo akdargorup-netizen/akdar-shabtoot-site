@@ -1,0 +1,705 @@
+/* ==========================================================================
+   STATES — شبتوت بحري  v11
+   Empty state, loading, error, list items, avatars, dividers, toast, icons.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   LIST ITEM
+-------------------------------------------------------------------------- */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* --------------------------------------------------------------------------
+   AVATAR
+-------------------------------------------------------------------------- */
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  background: linear-gradient(
+    135deg,
+    var(--color-brand-700) 0%,
+    var(--color-brand-900) 100%
+  );
+  border: 1px solid var(--border-brand);
+  font-family: var(--font-display);
+  font-weight: var(--weight-semibold);
+  color: var(--color-brand-200);
+  letter-spacing: var(--tracking-tight);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.avatar--xs { width: 24px; height: 24px; font-size: var(--text-xs); }
+.avatar--sm { width: 32px; height: 32px; font-size: var(--text-sm); }
+.avatar--md { width: 40px; height: 40px; font-size: var(--text-base); }
+.avatar--lg { width: 56px; height: 56px; font-size: var(--text-xl); }
+.avatar--xl { width: 72px; height: 72px; font-size: var(--text-2xl); }
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* --------------------------------------------------------------------------
+   DIVIDER
+-------------------------------------------------------------------------- */
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--border-subtle);
+  margin: var(--space-4) 0;
+}
+
+
+
+
+
+
+
+/* --------------------------------------------------------------------------
+   EMPTY STATE
+-------------------------------------------------------------------------- */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-16) var(--space-8);
+  gap: var(--space-4);
+  min-height: 240px;
+  animation: fade-up var(--duration-slow) var(--ease-out) both;
+}
+
+.empty-state__icon {
+  width: 52px;
+  height: 52px;
+  color: var(--color-neutral-600);
+  margin-bottom: var(--space-2);
+  opacity: 0.7;
+}
+
+.empty-state__title {
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  color: var(--text-secondary);
+  line-height: var(--leading-snug);
+}
+
+.empty-state__description {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  max-width: 28ch;
+  line-height: var(--leading-relaxed);
+}
+
+.empty-state__action {
+  margin-top: var(--space-2);
+}
+
+/* ── تنويعة "brand" — لأقسام هويتها البصرية أخضر البراند (زي "جيل
+   أخضر")، عشان هوية القسم تفضل حاضرة جوه الصفحة نفسها، مش بس في
+   بطاقة الرئيسية اللي بتودّي ليها. بديل شارة دائرية بلون البراند
+   بدل الأيقونة الرمادية المحايدة الافتراضية. ── */
+.empty-state--brand .empty-state__icon-badge {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(var(--color-brand-400-rgb), 0.14);
+  border: 1px solid rgba(var(--color-brand-400-rgb), 0.32);
+  margin-bottom: var(--space-2);
+}
+
+.empty-state--brand .empty-state__icon {
+  width: 34px;
+  height: 34px;
+  color: var(--color-brand-300);
+  opacity: 1;
+  margin-bottom: 0;
+}
+
+/* --------------------------------------------------------------------------
+   ERROR STATE — رسالة فشل تحميل موحّدة لكل قسم بيانات في التطبيق
+   (js/shared/error-state.js). تُميّز بين انقطاع النت والخطأ العام
+   بأيقونة/عنوان مختلفين، ومعاها زر "إعادة المحاولة" دايماً — عشان
+   المستخدم في بيئة نت ضعيف يقدر يتصرف بدل ما يوصل لطريق مسدود.
+-------------------------------------------------------------------------- */
+
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-10) var(--space-6);
+  gap: var(--space-3);
+  min-height: 180px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--status-error-text);
+  background: var(--status-error-bg);
+  border: 1px solid var(--status-error-border);
+  border-radius: var(--radius-lg);
+  animation: fade-up var(--duration-slow) var(--ease-out) both;
+}
+
+/* استخدام مباشر كفقرة نص واحدة (حالات "غير موجود" وليست فشل تحميل،
+   مثل idea-box-detail.js وoccasion-detail.js) بدون بنية أيقونة/زر */
+p.error-state {
+  min-height: 120px;
+  padding: var(--space-6) var(--space-4);
+}
+
+.error-state__icon {
+  width: 40px;
+  height: 40px;
+  color: var(--status-error-text);
+  opacity: 0.85;
+  margin-bottom: var(--space-1);
+}
+
+.error-state__title {
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  color: var(--status-error-text);
+  line-height: var(--leading-snug);
+}
+
+.error-state__desc {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--status-error-text);
+  opacity: 0.85;
+  max-width: 30ch;
+  line-height: var(--leading-relaxed);
+}
+
+.error-state__retry {
+  margin-top: var(--space-2);
+}
+
+/* --------------------------------------------------------------------------
+   IMAGE STATES — معالج الصور المركزي (js/shared/img.js)
+   يشتغل تلقائياً على كل <img> في التطبيق بعد كل render. كان بلا أي تنسيق
+   نهائياً رغم إنه المسار الأهم لتطبيق مصمم للاتصال الضعيف/المتقطع.
+-------------------------------------------------------------------------- */
+
+/* أثناء تحميل الصورة */
+.img--loading {
+  background: linear-gradient(
+    90deg,
+    var(--surface-overlay) 25%,
+    var(--surface-elevated) 50%,
+    var(--surface-overlay) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-sweep 1.6s ease-in-out infinite;
+}
+
+/* بديل الصورة المكسورة / بدون نت */
+.img-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 96px;
+  width: 100%;
+  padding: var(--space-4);
+  background: var(--surface-overlay);
+  border: 1px dashed var(--border-subtle);
+  border-radius: var(--radius-lg);
+  color: var(--text-muted);
+}
+
+.img-placeholder__icon {
+  width: 28px;
+  height: 28px;
+  opacity: 0.6;
+}
+
+.img-placeholder__icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.img-placeholder__label {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* بديل مصغّرة الفيديو (بلا نت / فشل التحميل) — يُرسم فوق مكان الصورة بنفس قياس الحاوية،
+   وزر التشغيل (.play-overlay / .voice-overlay) يفضل ظاهر فوقه. يُضاف من js/shared/img.js */
+.img--failed {
+  visibility: hidden;   /* يخفي الصورة المكسورة ونص alt معًا، ويحافظ على القياس */
+}
+
+.thumb-fallback {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  padding-bottom: var(--space-3);
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(var(--color-brand-400-rgb), 0.16) 0%, transparent 62%),
+    linear-gradient(160deg, var(--surface-overlay) 0%, var(--surface-raised) 100%);
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.thumb-fallback__icon {
+  width: 18px;
+  height: 18px;
+  opacity: 0.55;
+}
+
+.thumb-fallback__icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.thumb-fallback__label {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  opacity: 0.85;
+}
+
+/* المصغّرة الصغيرة (الفعالية المرتبطة بخبر): الأيقونة فقط بلا نص */
+.reader-linked-event__thumb .thumb-fallback { justify-content: center; padding-bottom: 0; }
+.reader-linked-event__thumb .thumb-fallback__label { display: none; }
+
+/* --------------------------------------------------------------------------
+   ICON SYSTEM
+-------------------------------------------------------------------------- */
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.icon--xs { width: var(--icon-xs); height: var(--icon-xs); }
+.icon--sm { width: var(--icon-sm); height: var(--icon-sm); }
+.icon--md { width: var(--icon-md); height: var(--icon-md); }
+.icon--lg { width: var(--icon-lg); height: var(--icon-lg); }
+.icon--xl { width: var(--icon-xl); height: var(--icon-xl); }
+
+.icon--primary   { color: var(--text-primary); }
+.icon--secondary { color: var(--text-secondary); }
+.icon--muted     { color: var(--text-muted); }
+.icon--brand     { color: var(--color-brand-300); }
+.icon--accent    { color: var(--color-accent-300); }
+
+/* --------------------------------------------------------------------------
+   METRICS / STAT CARD
+-------------------------------------------------------------------------- */
+
+
+
+
+
+
+
+/* --------------------------------------------------------------------------
+   CONNECTIVITY BAR
+-------------------------------------------------------------------------- */
+
+#connectivity-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-top);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  transform: translateY(-100%);
+  transition: transform var(--duration-base) var(--ease-out);
+  text-align: center;
+}
+
+.connectivity-bar--offline {
+  background: var(--status-error-bg);
+  color: var(--status-error-text);
+  border-bottom: 1px solid var(--status-error-border);
+  transform: translateY(0);
+}
+
+.connectivity-bar--online {
+  background: var(--status-success-bg);
+  color: var(--status-success-text);
+  border-bottom: 1px solid var(--status-success-border);
+  transform: translateY(0);
+}
+
+.connectivity-bar--hidden {
+  transform: translateY(-100%);
+}
+
+/* --------------------------------------------------------------------------
+   TOAST CONTAINER
+-------------------------------------------------------------------------- */
+
+#toast-container {
+  position: fixed;
+  inset-inline: 0;
+  bottom: calc(var(--bottom-nav-height) + var(--space-3));
+  z-index: var(--z-toast);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding-inline: var(--spacing-page-x);
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   NOT FOUND PAGE
+-------------------------------------------------------------------------- */
+
+.not-found-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+}
+
+.not-found-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-4);
+  padding: var(--space-8);
+}
+
+.not-found-code {
+  font-family: var(--font-display);
+  font-size: 3.6rem;
+  font-weight: var(--weight-bold);
+  color: var(--color-brand-800);
+  line-height: 1;
+  letter-spacing: var(--tracking-tight);
+}
+
+.not-found-title {
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  color: var(--text-secondary);
+}
+
+.not-found-desc {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  max-width: 26ch;
+  line-height: var(--leading-relaxed);
+}
+
+/* --------------------------------------------------------------------------
+   BANNED PAGE — رقابة الأعضاء (حظر كامل)
+   يعيد استخدام هيكل not-found-page/not-found-inner بالكامل، فقط أيقونة
+   دائرية بلون الخطر بدل رقم "٤٠٤".
+-------------------------------------------------------------------------- */
+
+.banned-page__icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(var(--color-danger-500-rgb, 197, 92, 92), 0.14);
+  color: var(--color-danger-500);
+}
+
+.banned-page__icon svg {
+  width: 30px;
+  height: 30px;
+}
+
+/* --------------------------------------------------------------------------
+   PAGE SKELETON
+-------------------------------------------------------------------------- */
+
+.page-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-4) 0;
+}
+
+.page-skeleton__hero {
+  height: 180px;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(
+    90deg,
+    var(--surface-overlay) 25%,
+    var(--surface-elevated) 50%,
+    var(--surface-overlay) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-sweep 1.6s ease-in-out infinite;
+}
+
+.page-skeleton__line,
+.skeleton-line {
+  height: 15px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(
+    90deg,
+    var(--surface-overlay) 25%,
+    var(--surface-elevated) 50%,
+    var(--surface-overlay) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-sweep 1.6s ease-in-out infinite;
+}
+
+.page-skeleton__line--lg, .skeleton-line--lg  { width: 72%; height: 20px; }
+.page-skeleton__line--md                      { width: 52%; }
+.page-skeleton__line--sm, .skeleton-line--sm  { width: 34%; height: 12px; }
+
+/* بديل block لصور قيد التحميل (news-image) — نفس تأثير sweep بس بيملأ الحاوية */
+.skeleton-block {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--surface-overlay) 25%,
+    var(--surface-elevated) 50%,
+    var(--surface-overlay) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-sweep 1.6s ease-in-out infinite;
+}
+
+/* Grid skeleton */
+.page-skeleton__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+.page-skeleton__card {
+  height: 110px;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(
+    90deg,
+    var(--surface-overlay) 25%,
+    var(--surface-elevated) 50%,
+    var(--surface-overlay) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-sweep 1.6s ease-in-out infinite;
+}
+
+
+/* --------------------------------------------------------------------------
+   SKELETON BUILDING BLOCKS — قطع إضافية عشان هيكل التحميل يحاكي شكل
+   البطاقة الحقيقية (أفتار، صف، شريحة، أزرار، صورة) بدل أسطر عامة.
+   كلها بنفس تأثير skeleton-sweep.
+-------------------------------------------------------------------------- */
+
+.page-skeleton__thumb,
+.page-skeleton__pill,
+.page-skeleton__avatar {
+  background: linear-gradient(
+    90deg,
+    var(--surface-overlay) 25%,
+    var(--surface-elevated) 50%,
+    var(--surface-overlay) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-sweep 1.6s ease-in-out infinite;
+}
+
+.page-skeleton__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.page-skeleton__row .page-skeleton__line { flex: none; }
+
+.page-skeleton__stack {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.page-skeleton__avatar--sm { width: 28px; height: 28px; }
+
+.page-skeleton__thumb {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-lg);
+}
+
+.page-skeleton__pill {
+  flex: 1;
+  height: 38px;
+  border-radius: var(--radius-full);
+}
+
+.page-skeleton__pill--tag { flex: none; width: 76px; height: 22px; }
+.page-skeleton__pill--icon { flex: none; width: 44px; }
+
+.page-skeleton__actions {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-skeleton__thumb,
+  .page-skeleton__pill,
+  .page-skeleton__avatar { animation: none; }
+}
+
+
+/* ==========================================================================
+   2026-10-14 — الحالات الفارغة وحالات الخطأ بتصميم البطاقات الناعمة
+   • الأيقونة داخل مربع ناعم 72px بدل أيقونة رمادية باهتة
+   • الخطأ: بطاقة محايدة بزوايا 18px، النص بلون القراءة الأساسي، واللون
+     الدلالي (أحمر/أزرق) للأيقونة فقط — كان النص كله أحمر على خلفية حمراء
+   • انقطاع الإنترنت يأخذ لونًا هادئًا (معلومة) بدل لون الخطأ
+   • الكتلة آخر الملف عمدًا: تُلغي القواعد أعلاه. لا تغيير في JS
+   ========================================================================== */
+
+.empty-state {
+  gap: var(--space-3);
+  padding: var(--space-12) var(--space-8);
+}
+
+.empty-state:not(.empty-state--brand) .empty-state__icon {
+  box-sizing: content-box;
+  width: 32px;
+  height: 32px;
+  padding: 20px;
+  margin-bottom: var(--space-2);
+  border-radius: 24px;
+  color: var(--text-brand);
+  background: rgba(var(--color-brand-400-rgb), 0.12);
+  border: 1px solid rgba(var(--color-brand-400-rgb), 0.22);
+  stroke-width: 1.5;
+  opacity: 1;
+}
+
+.empty-state--brand .empty-state__icon-badge {
+  border-radius: 24px;
+  width: 72px;
+  height: 72px;
+}
+
+.empty-state__title {
+  font-size: var(--text-md);
+  color: var(--text-primary);
+}
+
+.empty-state__description {
+  font-size: 0.9375rem;
+  line-height: 1.8;
+  max-width: 30ch;
+}
+
+/* ── الخطأ ── */
+.error-state {
+  --err-c:  var(--status-error-text);
+  --err-bg: var(--status-error-bg);
+  gap: var(--space-2);
+  padding: var(--space-8) var(--space-6);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  box-shadow: var(--shadow-xs);
+  color: var(--text-secondary);
+}
+
+/* انقطاع الإنترنت: ليس خطأً — لون معلومة هادئ */
+.error-state:has(.error-state__icon[data-lucide="wifi-off"]) {
+  --err-c:  var(--status-info-text);
+  --err-bg: var(--status-info-bg);
+}
+
+.error-state .error-state__icon {
+  box-sizing: content-box;
+  width: 28px;
+  height: 28px;
+  padding: 16px;
+  margin-bottom: var(--space-2);
+  border-radius: 20px;
+  color: var(--err-c);
+  background: var(--err-bg);
+  stroke-width: 1.75;
+  opacity: 1;
+}
+
+.error-state__title {
+  font-size: var(--text-md);
+  color: var(--text-primary);
+}
+
+.error-state__desc {
+  font-size: 0.9375rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  opacity: 1;
+  max-width: 32ch;
+}
+
+.error-state__retry { margin-top: var(--space-3); }
+
+/* فقرة نص واحدة (غير موجود): تبقى بتلوين خفيف بلا بنية */
+p.error-state {
+  padding: var(--space-6) var(--space-4);
+  color: var(--status-error-text);
+  background: var(--status-error-bg);
+  border-color: color-mix(in srgb, var(--status-error-border) 45%, transparent);
+  box-shadow: none;
+}

@@ -1,0 +1,157 @@
+/* ==========================================================================
+   INDEX CARD — شبتوت بحري
+   كارت فهرسة عام (أيقونة + عنوان + وصف + سهم) لأي صفحة فهرس رئيسية.
+
+   ⚠️ ده الآن خاص بـ association-index-card بس. كان فيه community-index-card
+   جنبه (متطابق حرفياً)، لكن اتفصل ونقل لـ css/pages/community.css بهوية
+   بصرية مستقلة (ألوان لكل قسم، توهج، حركة دخول) — قرار تصميم صريح بخصوص
+   واجهة "المجتمع".
+
+   ملاحظة: history-index-card (history.css)، memory-nav-card (memory.css)،
+   و nlang-index-card (nubian-language.css) بينفذوا نفس الفكرة لكن بفروقات
+   بصرية حقيقية ومقصودة (حجم الأيقونة، عمق الظل، خطوط الزخرفة...).
+
+   Consumes: tokens.css
+   ========================================================================== */
+
+.association-index {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-bottom: var(--space-5);
+}
+
+.association-index-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-5) var(--space-5);
+  min-height: 88px;
+
+  cursor: pointer;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+
+  box-shadow: var(--shadow-sm);
+
+  transition:
+    border-color  var(--duration-base) var(--ease-out),
+    box-shadow    var(--duration-base) var(--ease-out),
+    transform     var(--duration-base) var(--ease-out);
+}
+
+.association-index-card:hover {
+  border-color: var(--border-brand);
+  box-shadow: var(--shadow-brand-sm);
+  transform: translateY(-1px);
+}
+
+.association-index-card:hover .association-index-card__icon {
+  background: rgba(var(--color-brand-400-rgb), 0.22);
+  border-color: rgba(var(--shimmer-deep-rgb), 0.38);
+  color: var(--color-brand-100);
+}
+
+.association-index-card:hover .association-index-card__arrow {
+  opacity: 1;
+  color: var(--color-brand-200);
+  transform: translateX(-4px);
+}
+
+.association-index-card:active {
+  transform: translateY(0) scale(0.99);
+  box-shadow: var(--shadow-xs);
+  border-color: var(--border-subtle);
+}
+
+/* --------------------------------------------------------------------------
+   ICON
+-------------------------------------------------------------------------- */
+
+.association-index-card__icon {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: rgba(var(--color-brand-500-rgb), 0.12);
+  border: 1px solid rgba(var(--color-brand-400-rgb), 0.22);
+  border-radius: var(--radius-lg);
+  color: var(--color-brand-200);
+  transition:
+    background    var(--duration-fast) var(--ease-out),
+    border-color  var(--duration-fast) var(--ease-out),
+    color         var(--duration-fast) var(--ease-out);
+}
+
+.association-index-card__icon svg,
+.association-index-card__icon i {
+  width: 22px;
+  height: 22px;
+  stroke-width: 1.75;
+}
+
+/* --------------------------------------------------------------------------
+   BODY
+-------------------------------------------------------------------------- */
+
+.association-index-card__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* ↑ عنوان بتوقيع البراند الأخضر — يتباين عن الوصف */
+.association-index-card__title {
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  color: var(--text-brand);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-tight);
+  margin: 0;
+}
+
+/* ↑ وصف أبيض عادي للتباين مع العنوان الأخضر */
+.association-index-card__desc {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: var(--leading-normal);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* --------------------------------------------------------------------------
+   ARROW
+-------------------------------------------------------------------------- */
+
+.association-index-card__arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  color: var(--color-brand-400);
+  opacity: 0.6;
+  transition:
+    opacity    var(--duration-fast) var(--ease-out),
+    color      var(--duration-fast) var(--ease-out),
+    transform  var(--duration-base) var(--ease-out);
+  user-select: none;
+}
+
+.association-index-card__arrow svg {
+  width: 32px;
+  height: 32px;
+}

@@ -1,0 +1,75 @@
+/* ==========================================================================
+   ASSOCIATION JOURNEY PAGE — مسيرة الرابطة
+   نفس مكوّنات "مقالاتنا" (.article-list/.article-item/.article-badge/
+   .filter-chip) بالحرف — الميزات والسلوك مطابقين 100%. الفرق المقصود
+   الوحيد هوية بصرية بسيطة: أخضر البراند (--color-brand-*) كباقي التطبيق،
+   Scoped بـ .association-journey-page عشان ما يأثرش على نفس الكلاسات
+   في صفحات تانية (مقالاتنا، المناسبات...) — نفس نمط الـ scoping
+   المستخدم أصلاً لهوية "شوف البرامج" الذهبية في events.css.
+   ========================================================================== */
+
+.association-journey-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.association-journey-page .filter-chip.active {
+  color: var(--color-brand-200);
+  background-color: rgba(var(--color-brand-400-rgb), 0.16);
+  border-color: var(--color-brand-600);
+}
+
+.association-journey-page .article-list {
+  background: linear-gradient(
+    150deg,
+    var(--surface-raised) 0%,
+    color-mix(in srgb, var(--surface-raised) 92%, var(--color-brand-800)) 100%
+  );
+}
+
+.association-journey-page .article-item:hover {
+  background-color: rgba(var(--color-brand-600-rgb), 0.12);
+}
+
+.association-journey-page .article-item:active {
+  background-color: rgba(var(--color-brand-600-rgb), 0.18);
+}
+
+.association-journey-page .article-number {
+  color: var(--color-brand-200);
+  background: rgba(var(--color-brand-600-rgb), 0.16);
+  border-color: rgba(var(--color-brand-600-rgb), 0.26);
+}
+
+.association-journey-page .article-item:hover .article-number {
+  background: rgba(var(--color-brand-600-rgb), 0.26);
+  color: var(--color-brand-100);
+}
+
+.association-journey-page .article-item:hover .article-arrow {
+  color: var(--color-brand-200);
+}
+
+.association-journey-page .article-badge {
+  color: var(--color-brand-200);
+  background-color: rgba(var(--color-brand-400-rgb), 0.14);
+  border-color: var(--color-brand-600);
+}
+
+/* theme-dark-plus.css عنده [data-scheme="dark"] .article-badge (أخضر) بنفس الأولوية
+   وأحدث ترتيبًا، فكان نص شارة مسيرة الرابطة أخضر على خلفية نيلية. الأولوية هنا أعلى. */
+[data-scheme="dark"] .association-journey-page .article-badge {
+  color: var(--color-brand-200);
+}
+
+
+/* ==========================================================================
+   2026-10-05 — هامش جانبي أصغر ليتّسع الفهرس (كان 16px من .page → 8px)
+   .page.association-journey-page أعلى وزنًا من .page في breakpoints.css
+   فلا يعود الهامش الكبير على الشاشات الأعرض.
+   ========================================================================== */
+
+.page.association-journey-page {
+  padding-inline: var(--space-2);
+}

@@ -1,0 +1,385 @@
+/* ==========================================================================
+   MODAL — شبتوت بحري  v11
+   Overlay backdrop, bottom-sheet modal, skeleton loader.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   OVERLAY BACKDROP
+-------------------------------------------------------------------------- */
+
+.overlay-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(var(--color-brand-950-rgb), 0.82);
+  /* ⚡ أداء: بدون backdrop-filter على طبقة بحجم الشاشة كاملة */
+  z-index: var(--z-overlay);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  /* بدون padding علوي عمدًا — كان بيسيب فراغ معتم فاضي فوق المودال،
+     فيبان المودال "مقطوع" أو ملتصق بدل ما ياخد المساحة المتاحة. */
+  padding: 0 var(--space-4) var(--space-4);
+  animation: fade-in var(--duration-base) var(--ease-out);
+}
+
+/* الكيبورد مفتوح (keyboard-scroll.js): الغطاء يتقصّ على المنطقة المرئية
+   بالظبط والمودال ياخد أقصى ارتفاعها — من غير فراغ ولا padding مصطنع. */
+body.kb-open .overlay-backdrop {
+  bottom: var(--kb-inset, 0px);
+  padding-bottom: var(--space-2);
+}
+
+body.kb-open .modal {
+  max-height: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   MODAL (Bottom Sheet on mobile, centered on tablet+)
+-------------------------------------------------------------------------- */
+
+.modal {
+  background: var(--surface-modal);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-2xl) var(--radius-2xl) var(--radius-lg) var(--radius-lg);
+  width: 100%;
+  max-width: 480px;
+  /* vh كـ fallback لأي WebView قديم مايدعمش dvh (يتجاهل السطر التاني
+     وقتها)؛ المتصفحات اللي بتدعم dvh بتاخد آخر قيمة فتغلب vh تلقائيًا.
+     92 بدل 85 عشان نقلل الفراغ المعتم الفاضي فوق المودال. */
+  max-height: 92vh;
+  max-height: 92dvh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-xl);
+  animation: slide-up var(--duration-slow) var(--ease-out);
+  /* Subtle glow on brand border */
+  box-shadow:
+    var(--shadow-xl),
+    0 0 0 1px rgba(var(--color-brand-400-rgb), 0.08) inset;
+}
+
+/* Drag handle */
+.modal__handle {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-3) 0 0;
+}
+
+.modal__handle::before {
+  content: '';
+  width: 32px;
+  height: 3px;
+  background: var(--border-default);
+  border-radius: var(--radius-full);
+}
+
+.modal__header {
+  padding: var(--space-4) var(--space-6) var(--space-3);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.modal__title {
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  letter-spacing: var(--tracking-tight);
+}
+
+.modal__body {
+  padding: var(--space-5) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.modal__footer {
+  padding: var(--space-4) var(--space-6) var(--space-6);
+  display: flex;
+  gap: var(--space-3);
+  flex-direction: column;
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* الزر الأساسي (نشر) دايمًا أول عنصر بصريًا — أوضح، أكبر أثر بصري،
+   وده اللي يفترض يشوفه المستخدم أول حاجة. زر الإلغاء يجي بعده كخيار
+   ثانوي أهدأ، مش بينافس زر النشر على الأولوية. */
+.modal__footer .btn--ghost {
+  opacity: 0.85;
+}
+
+/* --------------------------------------------------------------------------
+   MODAL — CENTERED VARIANT (رسائل قصيرة: تسجيل دخول، كلمة سر...)
+   بعض النوافذ محتواها بسيط (رسالة + زر/زرين) مش فورم طويل، فمابتستفيدش
+   من صيغة الـ bottom-sheet المعتادة — الأنسب ليها تظهر في منتصف الشاشة
+   زي أي تنبيه (alert) عادي. الفورمات (إضافة فكرة، مناسبة...) تفضل
+   bottom-sheet زي ما هي، دي فقط لنافذتي login-prompt و admin-gate.
+-------------------------------------------------------------------------- */
+
+.overlay-backdrop--center {
+  align-items: center;
+  padding: var(--space-4);
+}
+
+.modal--center {
+  border-radius: var(--radius-2xl);
+  animation: scale-in var(--duration-base) var(--ease-out);
+}
+
+/* لا داعي لمقبض السحب في نافذة مركزية — مش bottom-sheet بيتسحب لتحت */
+.modal--center .modal__handle {
+  display: none;
+}
+
+/* --------------------------------------------------------------------------
+   LOGIN PROMPT — نافذة "هل تريد تسجيل الدخول؟"
+   (login-prompt-modal.js) — محتوى مركزي بسيط بدل فورم، فمحتاج تنسيق
+   مختلف شوية عن modal__body العادي (اللي بيتلاقى مع فورم بيانات).
+-------------------------------------------------------------------------- */
+
+.login-prompt-modal__body {
+  align-items: center;
+  text-align: center;
+  padding-top: var(--space-6);
+}
+
+.login-prompt-modal__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-full);
+  background: rgba(var(--color-brand-500-rgb), 0.16);
+  color: var(--color-brand-300);
+  box-shadow: 0 0 0 6px rgba(var(--color-brand-500-rgb), 0.06);
+}
+
+.login-prompt-modal__icon i {
+  width: 26px;
+  height: 26px;
+}
+
+.login-prompt-modal__title {
+  font-size: var(--text-lg);
+}
+
+.login-prompt-modal__desc {
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+}
+
+/* --------------------------------------------------------------------------
+   CONFIRM MODAL — نافذة تأكيد عامة (confirm-modal.js). نفس بنية
+   login-prompt-modal__* فوق بالحرف (محتوى مركزي بسيط)، فرق واحد بس:
+   متغيّر --danger للأفعال اللي محتاجة تحذير أوضح (حذف مثلًا) —
+   أيقونة حمراء بدل الأخضر المعتاد.
+--------------------------------------------------------------------------- */
+
+.confirm-modal__body {
+  align-items: center;
+  text-align: center;
+  padding-top: var(--space-6);
+}
+
+.confirm-modal__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-full);
+  background: rgba(var(--color-brand-500-rgb), 0.16);
+  color: var(--color-brand-300);
+  box-shadow: 0 0 0 6px rgba(var(--color-brand-500-rgb), 0.06);
+}
+
+.confirm-modal__icon--danger {
+  background: rgba(var(--color-danger-600-rgb), 0.16);
+  color: var(--color-danger-400);
+  box-shadow: 0 0 0 6px rgba(var(--color-danger-600-rgb), 0.06);
+}
+
+.confirm-modal__icon i {
+  width: 26px;
+  height: 26px;
+}
+
+.confirm-modal__title {
+  font-size: var(--text-lg);
+}
+
+.confirm-modal__desc {
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+}
+
+/* --------------------------------------------------------------------------
+   TOAST
+-------------------------------------------------------------------------- */
+
+.toast {
+  pointer-events: auto;
+  width: 100%;
+  max-width: 420px;
+  margin-inline: auto;
+  box-sizing: border-box;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-default);
+  border-inline-start: 3px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) var(--space-4);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+
+  /* حالة الإخفاء الافتراضية — الجافاسكربت يتحكم بالظهور عبر toast--visible.
+     الاعتماد على transition (لا animation) ضروري: showToast() في toast.js
+     ينتظر حدث transitionend لحذف العنصر من الـ DOM بعد اختفائه، وanimation
+     لا يُطلق هذا الحدث فتبقى الرسالة عالقة على الشاشة للأبد. */
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity   var(--duration-slow) var(--ease-out),
+    transform var(--duration-slow) var(--ease-out);
+}
+
+.toast--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast--success {
+  border-inline-start-color: var(--status-success-border);
+}
+.toast--success .toast__icon {
+  color: var(--status-success-text);
+}
+
+.toast--error {
+  border-inline-start-color: var(--status-error-border);
+}
+.toast--error .toast__icon {
+  color: var(--status-error-text);
+}
+
+.toast--info .toast__icon {
+  color: var(--text-secondary);
+}
+
+.toast--clickable {
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.toast--exit {
+  animation: toast-out var(--duration-slow) var(--ease-in) forwards;
+}
+
+.toast__icon {
+  flex-shrink: 0;
+  margin-top: 2px; /* محاذاة بصرية مع أول سطر لما الرسالة تكون سطرين */
+}
+
+.toast__message {
+  flex: 1;
+  min-width: 0;
+  white-space: normal;
+  word-break: break-word;
+}
+
+/* --------------------------------------------------------------------------
+   SKELETON LOADER
+-------------------------------------------------------------------------- */
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--surface-overlay) 25%,
+    var(--surface-elevated) 50%,
+    var(--surface-overlay) 75%
+  );
+  background-size: 200% 100%;
+  border-radius: var(--radius-sm);
+  animation: skeleton-sweep 1.6s ease-in-out infinite;
+}
+
+
+
+
+
+
+
+/* ==========================================================================
+   2026-10-14 — توست بتصميم البطاقات الناعمة
+   • بطاقة عائمة بزوايا 18px بلا شريط جانبي، وأيقونة داخل مربع ناعم ملوّن
+   • نص 15px (كان 14px)، ظل أخف، ودخول بحركة صعود مع تكبير بسيط
+   • الكتلة آخر الملف عمدًا: تُلغي قواعد التوست أعلاه. الـ JS لم يتغيّر
+   ========================================================================== */
+
+.toast {
+  --toast-c:  var(--text-secondary);
+  --toast-bg: rgba(var(--color-nile-400-rgb), 0.16);
+  align-items: center;
+  gap: var(--space-3);
+  max-width: 440px;
+  padding: var(--space-3) var(--space-4) var(--space-3) var(--space-3);
+  border: 1px solid var(--border-subtle);
+  border-inline-start-width: 1px;
+  border-radius: 18px;
+  font-size: 0.9375rem;
+  font-weight: var(--weight-medium);
+  line-height: 1.6;
+  box-shadow: var(--shadow-md);
+  transform: translateY(12px) scale(0.97);
+  transition:
+    opacity   var(--duration-slow) var(--ease-out),
+    transform var(--duration-slow) var(--ease-out);
+}
+
+.toast--visible { transform: translateY(0) scale(1); }
+
+.toast--success { --toast-c: var(--status-success-text); --toast-bg: var(--status-success-bg);
+                  border-color: color-mix(in srgb, var(--status-success-border) 45%, transparent); }
+.toast--error   { --toast-c: var(--status-error-text);   --toast-bg: var(--status-error-bg);
+                  border-color: color-mix(in srgb, var(--status-error-border) 45%, transparent); }
+.toast--info    { --toast-c: var(--status-info-text);    --toast-bg: var(--status-info-bg); }
+
+/* الأيقونة: مربع ناعم 36px (الـ svg نفسه 18px + حشو) */
+.toast .toast__icon,
+.toast--success .toast__icon,
+.toast--error .toast__icon,
+.toast--info .toast__icon {
+  box-sizing: content-box;
+  width: 18px;
+  height: 18px;
+  padding: 9px;
+  margin: 0;
+  border-radius: 12px;
+  color: var(--toast-c);
+  background: var(--toast-bg);
+  stroke-width: 2;
+}
+
+.toast__message { color: var(--text-primary); }
+
+.toast--clickable {
+  text-decoration: none;
+}
+.toast--clickable:active { transform: scale(0.98); }
+
+@media (prefers-reduced-motion: reduce) {
+  .toast { transform: none; transition: opacity var(--duration-base) linear; }
+  .toast--visible, .toast--clickable:active { transform: none; }
+}

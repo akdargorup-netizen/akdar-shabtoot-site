@@ -1,0 +1,76 @@
+/* ==========================================================================
+   TEXT UTILITIES — شبتوت بحري  v11
+   ========================================================================== */
+
+/* Size */
+.text-xs   { font-size: var(--text-xs); }
+
+
+
+
+
+
+
+/* Color */
+
+
+.text-muted     { color: var(--text-muted); }
+
+
+
+
+
+
+/* Alignment */
+
+
+
+
+
+
+/* Family */
+
+
+
+
+
+
+/* Weight */
+
+
+
+
+
+/* Line height */
+
+
+
+.leading-relaxed { line-height: var(--leading-relaxed); }
+
+/* Transform & spacing */
+
+
+
+
+
+/* Truncation */
+
+
+
+
+
+
+/* Border radius (display helpers) */
+
+
+
+
+
+
+
+
+/* Surfaces */
+
+
+
+

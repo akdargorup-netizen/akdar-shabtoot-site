@@ -1,0 +1,900 @@
+/* ==========================================================================
+   ADMIN CONTENT — شبتوت بحري
+   نمط عام لأي شاشة إدارة محتوى (إشعارات، أخبار، ولاحقاً مناسبات/مشاريع):
+   شريط أدوات + قائمة صفوف قابلة للتعديل/الحذف + نموذج داخل .modal.
+   Consumes: tokens.css, forms.css, modal.css, button.css
+   ========================================================================== */
+
+.admin-content-toolbar {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--spacing-page-x) var(--space-4);
+}
+
+.admin-content-toolbar p {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: var(--leading-relaxed);
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   شريط حالة "النداء العاجل الحالي" — أعلى الرسائل الواردة، لو فيه
+   نداء منشور وشغال دلوقتي. أحمر خفيف عشان يتماشى مع هوية urgent-banner
+   نفسها بدون ما يكون بنفس ثقل التصميم (هنا للمشرف بس، مش للعرض العام).
+-------------------------------------------------------------------------- */
+
+.admin-urgent-status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0 var(--spacing-page-x) var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  background-color: rgba(var(--color-danger-600-rgb), 0.14);
+  border: 1px solid var(--color-danger-600);
+}
+
+.admin-urgent-status > i {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  color: var(--color-danger-300);
+}
+
+/* نسخة تحذير (كهرماني) من نفس الشريط — لأي تنبيه أخف حدة من "عاجل"،
+   زي تذكير صلاحيات المشرفين في admin-permissions.js. */
+.admin-urgent-status--warning {
+  align-items: flex-start; /* محتوى أطول من سطر — الأيقونة تفضل أعلى مش في النص */
+  background-color: var(--status-warning-bg);
+  border-color: var(--status-warning-border);
+}
+
+.admin-urgent-status--warning > i {
+  margin-top: 2px;
+}
+
+.admin-urgent-status--warning > i {
+  color: var(--status-warning-text);
+}
+
+.admin-urgent-status--warning code {
+  font-size: inherit;
+  background: rgba(0, 0, 0, 0.18);
+  padding: 1px 4px;
+  border-radius: var(--radius-sm);
+}
+
+/* العنوان الأصلي مصمم لسطر واحد قصير (نداء عاجل) — هنا محتاجين لفّ عادي */
+.admin-urgent-status--warning .admin-urgent-status__title {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+}
+
+.admin-urgent-status__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-urgent-status__title {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-urgent-status__meta {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin: 2px 0 0;
+}
+
+/* شريط فلاتر (مستخدم حالياً في admin-contacts) — كان inline style */
+.admin-content-filters {
+  display: flex;
+  gap: var(--space-2);
+  padding: 0 var(--spacing-page-x) var(--space-3);
+}
+
+.admin-content-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: 0 var(--spacing-page-x) var(--space-6);
+}
+
+/* صف عنصر داخل لوحة الإدارة — أي بطاقة معاينة (notification-item،
+   admin-news-preview، إلخ) + عمود إجراءات ثابت */
+.admin-content-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* عنصر مؤرشف يدوياً أو تلقائياً — تعتيم خفيف بدل الإخفاء الكامل،
+   عشان يبان واضح في قائمة الإدارة (المؤرشف مش مخفي عن المطوّر/المشرف
+   زي ما هو مخفي عن الخلاصة العامة). */
+.admin-content-row--archived {
+  opacity: 0.55;
+}
+
+.admin-content-row > :first-child {
+  flex: 1;
+  min-width: 0;
+  cursor: default;
+}
+
+.admin-content-row__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+/* --------------------------------------------------------------------------
+   معاينة خبر داخل صف الإدارة — بديل خفيف لـ .news-card الكامل
+-------------------------------------------------------------------------- */
+
+.admin-news-preview,
+.admin-content-preview {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background-color: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+}
+
+.admin-news-preview__thumb,
+.admin-content-preview__thumb {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background-color: var(--surface-overlay);
+  border: 1px solid var(--border-default);
+  color: var(--text-brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+/* صف "الرسائل الواردة" قابل للنقر لفتح نافذة عرض المحتوى الكامل —
+   attribute selector عشان ما يأثرش على .admin-content-preview في
+   باقي صفحات الإدارة (مش كلها قابلة للنقر). */
+.admin-content-preview[data-action="view-message"] {
+  cursor: pointer;
+  transition: var(--transition-color);
+}
+
+.admin-content-preview[data-action="view-message"]:hover,
+.admin-content-preview[data-action="view-message"]:focus-visible {
+  border-color: var(--border-brand);
+  background-color: var(--surface-overlay);
+}
+
+.admin-content-preview[data-action="view-message"]:focus-visible {
+  outline: 2px solid var(--border-brand);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   نافذة عرض رسالة كاملة — الرسائل الواردة
+-------------------------------------------------------------------------- */
+
+.admin-inbox-detail__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin: 0 0 var(--space-3);
+}
+
+.admin-inbox-detail__meta i {
+  width: 13px;
+  height: 13px;
+}
+
+.admin-inbox-detail__meta-dot {
+  opacity: 0.6;
+}
+
+.admin-inbox-detail__body {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  color: var(--text-primary);
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+}
+
+.admin-news-preview__thumb img,
+.admin-content-preview__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.admin-news-preview__body,
+.admin-content-preview__body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.admin-news-preview__head,
+.admin-content-preview__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.admin-news-preview__title,
+.admin-content-preview__title {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-news-preview__meta,
+.admin-content-preview__meta {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   شبكة اختيار (تصنيف/نوع) — داخل .modal الموجود أصلاً
+-------------------------------------------------------------------------- */
+
+.admin-type-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+}
+
+.admin-type-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-1);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-default);
+  background: var(--surface-raised);
+  cursor: pointer;
+  transition: var(--transition-color);
+}
+
+.admin-type-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.admin-type-option i {
+  width: 18px;
+  height: 18px;
+}
+
+.admin-type-option span {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: var(--weight-semibold);
+  color: var(--text-secondary);
+}
+
+.admin-type-option.is-selected {
+  border-color: var(--border-brand);
+  background: var(--state-selected-bg);
+}
+
+.admin-type-option.is-selected span {
+  color: var(--text-brand-strong);
+}
+
+/* --------------------------------------------------------------------------
+   مفتاح تبديل (خبر عاجل) — checkbox بشكل toggle
+-------------------------------------------------------------------------- */
+
+.admin-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+}
+
+.admin-toggle-row span {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+/* --------------------------------------------------------------------------
+   شبكة إدارة صور البلد (admin-gallery.js)
+-------------------------------------------------------------------------- */
+
+.admin-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+  padding: 0 var(--spacing-page-x) var(--space-8);
+}
+
+.admin-gallery-grid--empty {
+  display: block;
+  padding: 0 var(--spacing-page-x) var(--space-8);
+}
+
+.admin-gallery-tile {
+  background-color: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.admin-gallery-tile--skeleton {
+  aspect-ratio: 3 / 4;
+  border: none;
+}
+
+.admin-gallery-tile__thumb {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background-color: var(--surface-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-disabled);
+}
+
+.admin-gallery-tile__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.admin-gallery-tile__thumb svg {
+  width: 28px;
+  height: 28px;
+}
+
+.admin-gallery-tile__overlay {
+  position: absolute;
+  inset-block-start: var(--space-2);
+  inset-inline-end: var(--space-2);
+  display: flex;
+  gap: var(--space-1);
+}
+
+.admin-gallery-tile__overlay .btn--icon {
+  background-color: rgba(6, 12, 9, 0.55);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: var(--color-brand-050);
+  backdrop-filter: blur(4px);
+}
+
+.admin-gallery-tile__overlay .btn--danger {
+  background-color: rgba(var(--status-error-border-rgb), 0.75);
+}
+
+.admin-gallery-tile__body {
+  padding: var(--space-3) var(--space-4);
+}
+
+.admin-gallery-tile__title {
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  line-height: var(--leading-snug);
+  margin: 0 0 var(--space-1) 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.admin-gallery-tile__meta {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: var(--weight-semibold);
+  color: var(--color-brand-200);
+}
+
+/* --------------------------------------------------------------------------
+   شريط أرقام سريع (رقابة الأعضاء: إجمالي/نشط/محظور جزئيًا/كليًا) —
+   js/pages/admin/admin-members.js. شبكة ٤ أعمدة على الموبايل، بطاقات
+   صغيرة خفيفة الوزن بصريًا (مش تنافس البطاقات الرئيسية في التصميم).
+-------------------------------------------------------------------------- */
+
+.admin-stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-2);
+  margin: 0 var(--spacing-page-x) var(--space-4);
+}
+
+.admin-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: var(--space-3) var(--space-1);
+  border-radius: var(--radius-lg);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  text-align: center;
+}
+
+.admin-stat__value {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  line-height: 1.1;
+}
+
+.admin-stat__label {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: var(--leading-snug);
+}
+
+
+/* --------------------------------------------------------------------------
+   بطاقة جهات الاستلام في الرسائل الواردة (رقم واتساب المساهمات + بريد البلاغات)
+-------------------------------------------------------------------------- */
+
+.admin-recipients-card {
+  margin: 0 var(--spacing-page-x) var(--space-4);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+}
+
+.admin-recipients-card:empty { display: none; }
+
+.admin-recipients-card__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+}
+
+.admin-recipients-card__title i,
+.admin-recipients-card__title svg { width: 18px; height: 18px; }
+
+/* --------------------------------------------------------------------------
+   أزرار الإجراءات بنص + أيقونة (تعديل / أرشفة / حذف...)
+   المشرف الجديد ما يفترضش إن أيقونة القلم أو الأرشيف معناها واضح، فكل
+   زر عليه اسمه. الصف بيلتف: المحتوى فوق بعرض كامل، والأزرار صف أفقي تحته
+   (بدل عمود أيقونات ضيّق جنب المحتوى).
+-------------------------------------------------------------------------- */
+
+.admin-content-row {
+  flex-wrap: wrap;
+  row-gap: var(--space-2);
+}
+
+.admin-content-row > :first-child {
+  flex: 1 1 100%;
+}
+
+.admin-content-row__actions {
+  flex: 1 1 100%;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.admin-action-btn {
+  flex: 1 1 auto;            /* تتوزّع على عرض الصف: ٣ أزرار في سطر واحد على الهاتف */
+  justify-content: center;
+  min-height: 40px;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+  gap: var(--space-2);
+  white-space: nowrap;
+}
+
+.admin-action-btn svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* --------------------------------------------------------------------------
+   نص الشرح أعلى الصفحة: سطرين + "اقرأ المزيد"، وبحث داخل القوائم الطويلة
+   (admin-ui.js → enhanceAdminPage)
+-------------------------------------------------------------------------- */
+
+.admin-help-clamped {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.admin-help-toggle {
+  align-self: flex-start;
+  padding: var(--space-1) 0;
+  background: none;
+  border: 0;
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-brand);
+  cursor: pointer;
+}
+
+.admin-list-search {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: 0 var(--spacing-page-x) var(--space-3);
+}
+
+.admin-list-search__empty {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.admin-row-filtered {
+  display: none !important;
+}
+
+
+/* ==========================================================================
+   2026-10-05 — صف الإدارة بطاقة واحدة: المحتوى + أزرار الإجراءات ملتصقة به
+   قبل: بطاقة المحتوى ثم أزرار منفصلة تحتها بمسافة، فتبتعد الأزرار عن
+   العنصر المقصود (مقال/خبر/رسالة) وتشتّت. الآن الأزرار شريط سفلي داخل نفس
+   البطاقة (إطار واحد وخط فاصل رفيع) — كل زر باسمه وأيقونته كما كان.
+   ========================================================================== */
+
+.admin-content-row {
+  gap: 0;
+  row-gap: 0;
+  overflow: hidden;
+  background-color: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+}
+
+/* المعاينة (خبر/مقال/رسالة...) تفقد إطارها الخاص وتصير جزءًا من البطاقة.
+   تكرار الكلاس لرفع الوزن فوق أنماط المعاينات المختلفة. */
+.admin-content-row.admin-content-row > :first-child {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* المؤرشف: نعتّم المحتوى وحده؛ أزرار (استعادة/حذف) تبقى واضحة كاملة */
+.admin-content-row--archived { opacity: 1; }
+.admin-content-row--archived > :first-child { opacity: 0.55; }
+
+/* شريط الأزرار: خط فاصل علوي، وفواصل رفيعة بين الأزرار (فجوة 1px فوق
+   خلفية بلون الحدّ) تعمل أيضًا لو التفّت الأزرار على سطرين */
+.admin-content-row__actions {
+  gap: 1px;
+  background-color: var(--border-subtle);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.admin-content-row .admin-action-btn {
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: var(--surface-raised);
+  color: var(--text-secondary);
+  font-weight: var(--weight-semibold);
+  transform: none;
+}
+
+.admin-content-row .admin-action-btn:hover:not(:disabled),
+.admin-content-row .admin-action-btn:focus-visible {
+  background: var(--state-hover-bg);
+  color: var(--text-primary);
+  box-shadow: none;
+  transform: none;
+}
+
+.admin-content-row .admin-action-btn:active:not(:disabled) {
+  background: var(--state-active-bg);
+  transform: none;
+}
+
+.admin-content-row .admin-action-btn:focus-visible {
+  outline-offset: -2px;
+}
+
+/* موافقة/نشر: لون العلامة بخط أثقل بدل زر مملوء */
+.admin-content-row .admin-action-btn.btn--primary {
+  color: var(--text-brand);
+  font-weight: var(--weight-bold);
+}
+
+/* حذف: نص أحمر هادئ، وتظليل أحمر خفيف عند اللمس */
+.admin-content-row .admin-action-btn.btn--danger {
+  color: var(--status-error-text);
+}
+
+.admin-content-row .admin-action-btn.btn--danger:hover:not(:disabled),
+.admin-content-row .admin-action-btn.btn--danger:focus-visible {
+  background: var(--status-error-bg);
+  color: var(--status-error-text);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   صفحة إدارة آنداندي (admin-nubian.js): تبويبات كبيرة، فلاتر، معاينة حيّة
+   ═══════════════════════════════════════════════════════════════════ */
+.nadm-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); padding: 4px; background: var(--surface-sunken, var(--surface-overlay)); border-radius: var(--radius-xl); }
+.nadm-tab {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+  min-height: 48px; border: 0; border-radius: calc(var(--radius-xl) - 4px);
+  background: transparent; color: var(--text-secondary);
+  font-family: var(--font-display); font-size: var(--text-sm); font-weight: var(--weight-bold); cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.nadm-tab svg { width: 18px; height: 18px; }
+.nadm-tab.active { background: var(--surface-raised); color: var(--text-primary); box-shadow: var(--shadow-xs); }
+
+.nadm-filters { display: flex; gap: var(--space-2); overflow-x: auto; padding: var(--space-1) 0; scrollbar-width: none; }
+.nadm-filters::-webkit-scrollbar { display: none; }
+.nadm-filters .filter-chip { min-height: 40px; white-space: nowrap; }
+.nadm-filters__count { opacity: 0.75; font-variant-numeric: tabular-nums; }
+
+/* نموذج الكلمة */
+.nadm-preview-wrap { display: flex; flex-direction: column; gap: var(--space-1); margin-bottom: var(--space-3); }
+.nadm-preview-label { font-size: var(--text-xs); font-weight: var(--weight-bold); color: var(--text-muted); }
+.nadm-preview { padding: var(--space-2); border: 1px dashed var(--border-default); border-radius: var(--radius-lg); background: var(--surface-sunken, var(--surface-overlay)); }
+.nadm-preview .nword-grid { margin: 0; padding: 0; }
+.nadm-preview .clip-btn { pointer-events: none; }  /* زر الصوت للعرض فقط في المعاينة */
+.nadm-preview__empty { margin: 0; padding: var(--space-3); text-align: center; font-size: var(--text-sm); color: var(--text-muted); }
+
+.nadm-hint { margin: var(--space-1) 0 0; font-size: var(--text-xs); color: var(--text-muted); }
+.nadm-audio-card { margin-bottom: var(--space-3); }
+.nadm-audio-card + .nrec__field .audio-upload-actions .btn { min-height: 48px; }
+
+.nadm-more { margin-top: var(--space-3); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 0 var(--space-3); }
+.nadm-more > summary { min-height: 48px; display: flex; align-items: center; cursor: pointer; font-size: var(--text-sm); font-weight: var(--weight-bold); color: var(--text-secondary); list-style: none; }
+.nadm-more > summary::-webkit-details-marker { display: none; }
+.nadm-more[open] > summary { border-bottom: 1px solid var(--border-subtle); margin-bottom: var(--space-3); }
+.nadm-more[open] { padding-bottom: var(--space-2); }
+
+.nadm-footer { flex-wrap: wrap; gap: var(--space-2); }
+.nadm-footer .btn { min-height: 48px; }
+
+/* ── آنداندي: تنقّل التصنيفات + البحث + «عرض المزيد» (المرحلة 1) ───────────── */
+.nadm-search { margin-top: var(--space-2); }
+.nadm-nav { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-2); min-height: 44px; }
+.nadm-nav.hidden { display: none; }
+.nadm-nav__title { font-weight: var(--weight-bold); color: var(--text-primary); }
+
+.nadm-cat {
+  display: flex; align-items: center; gap: var(--space-3); width: 100%; min-height: 64px;
+  padding: var(--space-3) var(--space-4); text-align: start; font: inherit; color: inherit; cursor: pointer;
+  background: var(--surface-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl);
+}
+.nadm-cat:active { transform: scale(0.99); }
+.nadm-cat__icon {
+  display: grid; place-items: center; flex: none; width: 44px; height: 44px;
+  border-radius: var(--radius-lg); color: var(--color-accent-300);
+  background: color-mix(in srgb, var(--color-accent-400) 14%, transparent);
+}
+.nadm-cat__icon svg { width: 22px; height: 22px; }
+.nadm-cat__body { display: flex; flex-direction: column; flex: 1; min-width: 0; gap: 2px; }
+.nadm-cat__title { font-weight: var(--weight-bold); font-size: var(--text-md); color: var(--text-primary); }
+.nadm-cat__meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); font-size: var(--text-sm); color: var(--text-muted); }
+.nadm-cat__badge {
+  padding: 1px var(--space-2); border-radius: var(--radius-full); font-size: var(--text-xs); font-weight: var(--weight-bold);
+  color: var(--color-accent-200); background: color-mix(in srgb, var(--color-accent-400) 18%, transparent);
+}
+.nadm-cat__chev { flex: none; width: 20px; height: 20px; color: var(--text-muted); }
+
+/* بطاقة تصنيف = صف: البطاقة نفسها + زر ميكروفون اختياري (النطق الصوتي) */
+.nadm-cat-row { display: flex; align-items: stretch; gap: var(--space-2); }
+.nadm-cat-row .nadm-cat { flex: 1; width: auto; min-width: 0; }
+.nadm-cat-row--done .nadm-cat { opacity: 0.7; }
+.nadm-cat__progress {
+  display: block; width: 100%; height: 6px; margin-top: var(--space-1); border: 0; overflow: hidden;
+  border-radius: var(--radius-full); appearance: none; -webkit-appearance: none;
+  background: var(--surface-sunken, var(--surface-overlay));
+}
+.nadm-cat__progress::-webkit-progress-bar { background: var(--surface-sunken, var(--surface-overlay)); border-radius: var(--radius-full); }
+.nadm-cat__progress::-webkit-progress-value { background: var(--color-accent-400); border-radius: var(--radius-full); }
+.nadm-cat__progress::-moz-progress-bar { background: var(--color-accent-400); border-radius: var(--radius-full); }
+.nadm-cat__progress-text { font-size: var(--text-xs); color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.nadm-cat__rec {
+  flex: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  min-width: 64px; padding: 0 var(--space-2); cursor: pointer; font: inherit; font-size: var(--text-xs);
+  font-weight: var(--weight-bold); color: var(--color-accent-200); -webkit-tap-highlight-color: transparent;
+  background: color-mix(in srgb, var(--color-accent-400) 18%, var(--surface-raised));
+  border: 1px solid var(--border-subtle); border-radius: var(--radius-xl);
+}
+.nadm-cat__rec svg { width: 22px; height: 22px; }
+.nadm-cat__rec:active { transform: scale(0.97); }
+
+/* «متابعة من حيث توقفت» */
+.nadm-continue {
+  display: flex; align-items: center; gap: var(--space-3); width: 100%; min-height: 56px;
+  padding: var(--space-2) var(--space-4); text-align: start; font: inherit; color: inherit; cursor: pointer;
+  background: color-mix(in srgb, var(--color-accent-400) 10%, transparent);
+  border: 1px dashed var(--border-brand, var(--border-default)); border-radius: var(--radius-xl);
+}
+.nadm-continue:active { transform: scale(0.99); }
+.nadm-continue__icon { display: grid; place-items: center; flex: none; width: 36px; height: 36px; color: var(--color-accent-300); }
+.nadm-continue__icon svg { width: 20px; height: 20px; }
+.nadm-continue__text { display: flex; flex-direction: column; flex: 1; min-width: 0; gap: 2px; }
+.nadm-continue__label { font-size: var(--text-xs); color: var(--text-muted); }
+.nadm-continue__title { font-weight: var(--weight-bold); font-size: var(--text-md); color: var(--text-primary); }
+.nadm-show-more { width: 100%; min-height: 48px; margin-top: var(--space-2); }
+
+
+/* ── آنداندي: وضع التسجيل — شاشة كاملة، كلمة واحدة (المرحلة 2) ───────────── */
+html.nrec-open, html.nrec-open body { overflow: hidden; }
+.nadm-record-btn { width: 100%; min-height: 52px; }
+.nrec {
+  position: fixed; inset: 0; z-index: 250; /* فوق شريط التنقل (200) وتحت نوافذ التأكيد (300) */
+  display: flex; flex-direction: column;
+  background: var(--surface-base, var(--bg-primary));
+  padding-top: env(safe-area-inset-top);
+}
+.nrec__bar { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--border-subtle); }
+.nrec__close {
+  flex: none; display: grid; place-items: center; width: 44px; height: 44px; cursor: pointer;
+  color: var(--text-secondary); background: var(--surface-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-full);
+}
+.nrec__close svg { width: 20px; height: 20px; }
+.nrec__progress { flex: 1; min-width: 0; display: grid; gap: 2px; }
+.nrec__count { font-size: var(--text-md); color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.nrec__scope { font-size: var(--text-xs); color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nrec__track { height: 6px; margin-top: var(--space-1); border-radius: var(--radius-full); background: var(--surface-sunken, var(--surface-overlay)); overflow: hidden; }
+.nrec__fill { height: 100%; width: 0; border-radius: inherit; background: var(--color-accent-400); transition: width .25s ease; }
+@media (prefers-reduced-motion: reduce) { .nrec__fill { transition: none; } }
+
+.nrec__body { flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: var(--space-4); display: flex; flex-direction: column; gap: var(--space-4); }
+.nrec__card {
+  display: flex; flex-direction: column; align-items: center; gap: var(--space-2); text-align: center;
+  padding: var(--space-6) var(--space-4); background: var(--surface-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl);
+}
+.nrec__cat { padding: 2px var(--space-3); border-radius: var(--radius-full); font-size: var(--text-xs); font-weight: var(--weight-bold); color: var(--color-accent-200); background: color-mix(in srgb, var(--color-accent-400) 18%, transparent); }
+.nrec__ar { margin: 0; font-size: var(--text-2xl, 1.75rem); line-height: 1.4; color: var(--text-primary); }
+.nrec__nub { font-size: var(--text-xl, 1.4rem); font-weight: var(--weight-bold); color: var(--color-accent-300); }
+.nrec__translit { font-size: var(--text-md); color: var(--text-secondary); }
+.nrec__note { font-size: var(--text-sm); color: var(--text-muted); }
+.nrec__field .audio-upload-actions .btn { min-height: 48px; }
+
+.nrec__foot {
+  display: flex; gap: var(--space-3); padding: var(--space-3) var(--space-4); padding-bottom: calc(var(--space-3) + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--border-subtle); background: var(--surface-base, var(--bg-primary));
+}
+.nrec__btn { min-height: 52px; gap: var(--space-2); }
+.nrec__btn[hidden] { display: none; }
+.nrec__btn--wide { flex: 1; }
+.nrec__btn svg { width: 20px; height: 20px; }
+.nrec__done { margin: auto; display: grid; justify-items: center; gap: var(--space-2); text-align: center; padding: var(--space-6); }
+.nrec__done-icon { display: grid; place-items: center; width: 72px; height: 72px; border-radius: var(--radius-full); color: var(--color-accent-300); background: color-mix(in srgb, var(--color-accent-400) 16%, transparent); }
+.nrec__done-icon svg { width: 36px; height: 36px; }
+.nrec__done h2 { margin: 0; color: var(--text-primary); }
+.nrec__done p { margin: 0; color: var(--text-muted); }
+.nadm-record-btn.hidden { display: none; }
+
+/* ── إدارة آنداندي: شريط علوي مضغوط (أكتوبر ٢٠٢٦) — البحث ثم الإجراءات، والقائمة تبدأ أعلى الشاشة ── */
+.nadm-toolbar { display: flex; flex-direction: column; gap: var(--space-2); }
+.nadm-toolbar .nadm-search { margin-top: 0; }
+.nadm-actions { display: flex; flex-direction: column; gap: var(--space-2); }
+.nadm-actions > .btn, .nadm-actions > .cta-button { width: 100%; justify-content: center; }
+.nadm-actions .nadm-actions__main { flex: 1; min-height: 48px; }
+.nadm-actions .btn { min-height: 48px; white-space: nowrap; }
+.nadm-actions .nadm-record-btn { width: 100%; min-height: 48px; }
+.nadm-actions .nadm-record-btn.hidden { display: none; }
+
+/* تنبيه وضع التسجيل: «تعذّر حفظ…» + إعادة المحاولة */
+.nrec__alert {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
+  padding: var(--space-2) var(--space-4); font-size: var(--text-sm);
+  color: var(--text-primary); background: color-mix(in srgb, var(--color-danger-500, #c0392b) 18%, var(--surface-base, transparent));
+  border-bottom: 1px solid var(--border-subtle);
+}
+.nrec__alert.hidden { display: none; }
+
+/* صفحة وضع التسجيل (خفيفة) */
+.nadm-add__head { display: flex; flex-direction: column; gap: var(--space-1); text-align: center; padding-top: var(--space-3); }
+.nadm-add__title { margin: 0; font-family: var(--font-heading); font-size: var(--text-xl); font-weight: var(--weight-bold); color: var(--text-primary); }
+.nadm-add__sub { margin: 0; font-size: var(--text-sm); color: var(--text-muted); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   إدارة آنداندي — امتداد عرضي (أكتوبر ٢٠٢٦)
+   البطاقات والأزرار ممتدة بعرض الشاشة تقريبًا بدل الهوامش الجانبية الواسعة:
+   كل ما يعتمد على --spacing-page-x (الصفحة، الشريط العلوي، القائمة) يضيق هنا فقط.
+   ═══════════════════════════════════════════════════════════════════ */
+.admin-nubian-page,
+.nadm-home { --spacing-page-x: var(--space-2); }
+
+.nadm-tile { padding-inline: var(--space-3); }
+.nadm-cat  { padding-inline: var(--space-3); border-radius: var(--radius-lg); }
+.nadm-tile { border-radius: var(--radius-lg); }
+.nadm-cat-row { gap: var(--space-1); }
+.nadm-continue { border-radius: var(--radius-lg); padding-inline: var(--space-3); }
+.nadm-todo { padding: var(--space-3); }
+.nadm-actions .cta-button,
+.nadm-actions .btn { width: 100%; min-height: 52px; justify-content: center; }
+.admin-nubian-page .admin-content-row { border-radius: var(--radius-lg); }
+.admin-nubian-page .admin-content-preview { padding-inline: var(--space-3); }
+
+/* ── نافذة تصنيفات الكلمات: أزرار وصفوف عريضة ── */
+.nadm-wide { width: 100%; min-height: 52px; justify-content: center; }
+.nadm-catmodal { max-width: 560px; }
+.nadm-catmodal .modal__body { display: flex; flex-direction: column; gap: var(--space-3); }
+.nadm-catmodal .modal__footer { display: flex; gap: var(--space-2); }
+.nadm-catmodal .modal__footer .btn { flex: 1; }
+.nadm-catlist { display: flex; flex-direction: column; gap: var(--space-2); }
+.nadm-catline { display: flex; align-items: stretch; gap: var(--space-1); }
+.nadm-catline__main {
+  display: flex; align-items: center; gap: var(--space-3); flex: 1; min-width: 0; min-height: 60px;
+  padding: var(--space-2) var(--space-3); text-align: start; font: inherit; color: inherit; cursor: pointer;
+  background: var(--surface-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg);
+  -webkit-tap-highlight-color: transparent;
+}
+.nadm-catline__main:active { transform: scale(0.99); }
+.nadm-catline__icon {
+  display: grid; place-items: center; flex: none; width: 40px; height: 40px; border-radius: var(--radius-md, 10px);
+  color: var(--color-accent-300); background: color-mix(in srgb, var(--color-accent-400) 14%, transparent);
+}
+.nadm-catline__icon svg { width: 20px; height: 20px; }
+.nadm-catline__title { flex: 1; min-width: 0; font-weight: var(--weight-bold); font-size: var(--text-md); color: var(--text-primary); overflow-wrap: anywhere; }
+.nadm-catline__tag {
+  flex: none; padding: 1px var(--space-2); border-radius: var(--radius-full); font-size: var(--text-xs); font-weight: var(--weight-bold);
+  color: var(--color-accent-200); background: color-mix(in srgb, var(--color-accent-400) 18%, transparent);
+}
+.nadm-catline__edit { display: inline-flex; align-items: center; gap: var(--space-1); flex: none; font-size: var(--text-sm); color: var(--text-muted); }
+.nadm-catline__edit svg { width: 16px; height: 16px; }
+.nadm-catline__del {
+  flex: none; display: grid; place-items: center; min-width: 56px; cursor: pointer; font: inherit;
+  color: var(--status-error-text); background: var(--surface-raised);
+  border: 1px solid var(--border-subtle); border-radius: var(--radius-lg);
+}
+.nadm-catline__del svg { width: 20px; height: 20px; }
+.nadm-catline__del:active { background: var(--status-error-bg); }
+
+.nadm-iconpick { display: grid; grid-template-columns: repeat(6, 1fr); gap: var(--space-2); }
+.nadm-iconpick__btn {
+  display: grid; place-items: center; min-height: 48px; cursor: pointer; color: var(--text-secondary);
+  background: var(--surface-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg);
+}
+.nadm-iconpick__btn svg { width: 22px; height: 22px; }
+.nadm-iconpick__btn.active {
+  color: var(--color-accent-200); border-color: var(--color-accent-400);
+  background: color-mix(in srgb, var(--color-accent-400) 18%, var(--surface-raised));
+}

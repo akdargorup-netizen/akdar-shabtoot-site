@@ -1,0 +1,400 @@
+/* ==========================================================================
+   LAYOUT — شبتوت بحري  v11
+   App shell + page structure + scroll zones.
+   Fixed header, scrollable content, fixed bottom nav.
+   Mobile-first. Safe area aware.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   APP SHELL
+-------------------------------------------------------------------------- */
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  overflow: hidden;
+  position: relative;
+}
+
+/* --------------------------------------------------------------------------
+   APP SPLASH — الإنترو (js/shared/app-splash.js)
+   2026-10-01 (v5): الإنترو يبدأ بأخضر الأيقونة #113714 (نفس شاشة أندرويد)،
+   ويفضل ثابت ~٠٫٧ث ثم تنبثق خلفية التطبيق (--surface-base) من مركز الشعار كموجة
+   ماء بحافة ناعمة وتزيح الأخضر للخارج (بدل تبديل لون موحّد)، فتتبع الثيم
+   (داكن/فاتح/تلقائي) بدون قفزة. الشعار ذهبي فاتح مضيء ويبدأ بنفس الذهبي حتى في
+   الثيم الفاتح ثم يتحوّل لأخضر غامق مع الخلفية. الدخول هادئ: الشعار يتجلّى
+   تدريجيًا بدون ارتداد، ثم تبدأ الهالة والحلقات بعده، وتنبض هالة الشعار.
+   • الحركة (بالترتيب):
+       ١) هالة ناعمة تتنفّس خلف الشعار + حلقات ماء رقيقة تتّسع وتتلاشى
+       ٢) الشعار يتجلّى من الضبابية بهدوء ثم يعوم ويتمايل وينبض بتوهّج ذهبي مع لمعات تتلألأ حوله
+       ٣) لمعة رقيقة تعبر الشعار مرة واحدة
+       ٤) ذرّات رملية صغيرة تصعد ببطء طول الوقت
+       ٥) الخروج: الشعار يقترب ويتلاشى والشاشة تنطبق كدائرة على مركزه وتكشف التطبيق تحتها
+   • الجدول الزمني: الظهور ~٣٫٤ث ثم تلاشي ٠٫٨ث (لازم يتطابق مع app-splash.js).
+   • prefers-reduced-motion (أو "إزالة الرسوم" في أندرويد/سامسونج): نسخة هادئة بلا أي حركة
+     مكانية — بس تلاشٍ ناعم: الشعار يظهر تدريجيًا والأخضر يتحوّل لخلفية التطبيق بتلاشي.
+-------------------------------------------------------------------------- */
+
+/* مسجّلة عشان لون الشعار يتحوّل بنعومة (من الذهبي لأخضر الثيم الفاتح) */
+@property --sp-mark-a { syntax: '<color>'; inherits: true; initial-value: #fff3c8; }
+@property --sp-mark-b { syntax: '<color>'; inherits: true; initial-value: #f2cd6f; }
+
+.app-splash {
+  --sp-mark-a:    #fff3c8;
+  --sp-mark-b:    #f2cd6f;
+  --sp-sand-rgb:  255, 243, 200;
+  --sp-gold-rgb:  242, 205, 111;
+
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: #113714;   /* أخضر الأيقونة = شاشة أندرويد */
+  opacity: 1;
+  /* لون الشعار يتحوّل (للثيم الفاتح) في اللحظة اللي تعبر فيها الموجة الشعار */
+  animation: app-splash-mark 600ms cubic-bezier(0.4, 0, 0.2, 1) 750ms both;
+  /* ⚡ أداء: الخروج بتلاشي opacity فقط (كان clip-path متحرك + blur = رسم على المعالج) */
+  transition: opacity 600ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+
+/* موجة الخلفية: خلفية التطبيق تنبثق من مركز الشعار كحلقة ماء كبيرة بحافة ناعمة
+   وتزيح الأخضر للخارج، متزامنة مع أول حلقة ماء. (transform فقط = سلسة على الجوال) */
+.app-splash::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 240vmax;
+  height: 240vmax;
+  margin: -120vmax 0 0 -120vmax;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle closest-side,
+    var(--surface-base) 0%,
+    var(--surface-base) 72%,
+    transparent 100%
+  );
+  transform: scale(0);
+  animation: app-splash-wave 2000ms cubic-bezier(0.45, 0.05, 0.25, 1) 700ms both;
+  will-change: transform;
+  pointer-events: none;
+}
+
+/* الثيم الفاتح: الشعار والحلقات والذرّات بأخضر غامق بدل الرملي (عشان تبان على الكريمي) */
+[data-scheme="light"] .app-splash {
+  --sp-mark-a:   #306328;
+  --sp-mark-b:   #234819;
+  --sp-sand-rgb: 35, 72, 25;
+  --sp-gold-rgb: 48, 99, 40;
+}
+
+
+.app-splash--hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* الخروج: كل المحتوى يقترب ويرقّ */
+.app-splash__center {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  padding: env(safe-area-inset-top, 0px) var(--space-6) 0;
+  transition: transform 600ms var(--ease-out);
+}
+
+.app-splash--hide .app-splash__center {
+  transform: scale(1.2);
+}
+
+/* هالة تتنفّس خلف الشعار */
+.app-splash__glow {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 300px;
+  height: 300px;
+  margin-left: -150px;
+  margin-top: -70px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(var(--sp-gold-rgb), 0.30) 0%,
+    rgba(var(--sp-gold-rgb), 0.10) 45%,
+    transparent 70%
+  );
+  opacity: 0;
+  animation:
+    app-splash-fade   1800ms var(--ease-out) 600ms forwards,
+    app-splash-breathe 3600ms var(--ease-inout) 600ms infinite;
+  pointer-events: none;
+}
+
+/* عائم الشعار (طبقة منفصلة عشان الظهور والعوم ما يتعارضوش) */
+.app-splash__mark {
+  position: relative;
+  width: 124px;
+  height: 154px;
+  opacity: 0;
+  transform: translateY(10px) scale(0.94);
+  animation:
+    app-splash-emerge 1600ms cubic-bezier(0.33, 1, 0.68, 1) forwards,
+    app-splash-float  4200ms var(--ease-inout) 1700ms infinite;
+}
+
+.app-splash__sway {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 88%;
+  /* ⚡ أداء: اتشال drop-shadow المتحرك (كان يعيد الرسم كل إطار) — الهالة الثابتة
+     app-splash__glow خلف الشعار تكفي. التمايل بـ transform فقط. */
+  animation: app-splash-sway 3400ms var(--ease-inout) 1500ms infinite;
+}
+
+.app-splash__logo,
+.app-splash__shine {
+  position: absolute;
+  inset: 0;
+  -webkit-mask-size: contain;
+          mask-size: contain;
+  -webkit-mask-position: center;
+          mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+}
+
+.app-splash__logo {
+  background: linear-gradient(180deg, var(--sp-mark-a) 0%, var(--sp-mark-b) 100%);
+}
+
+/* لمعة رقيقة تعبر الشعار مرة واحدة (نفس الـ mask فما تطلعش برا حدوده) */
+.app-splash__shine {
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.75) 50%,
+    transparent 70%
+  );
+  background-size: 260% 100%;
+  background-position: 130% 0;
+  background-repeat: no-repeat;
+  animation: app-splash-shine 1500ms var(--ease-inout) 1300ms forwards;
+}
+
+@keyframes app-splash-wave { to { transform: scale(1); } }
+@keyframes app-splash-mark { from { --sp-mark-a: #fff3c8; --sp-mark-b: #f2cd6f; } }
+
+@keyframes app-splash-emerge {
+  0%   { opacity: 0; transform: translateY(10px) scale(0.94); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* تمايل النخلة بهدوء (حول قاعدتها) */
+@keyframes app-splash-sway {
+  0%, 100% { transform: rotate(-1.6deg); }
+  50%      { transform: rotate(1.6deg); }
+}
+
+@keyframes app-splash-float {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-6px) scale(1.015); }
+}
+
+@keyframes app-splash-breathe {
+  0%, 100% { transform: scale(1);    }
+  50%      { transform: scale(1.12); }
+}
+
+@keyframes app-splash-shine {
+  to { background-position: -30% 0; }
+}
+
+@keyframes app-splash-rise {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes app-splash-fade {
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-splash,
+  .app-splash--hide {
+    transition: opacity 200ms linear;
+  }
+  .app-splash--hide .app-splash__center {
+    transform: none;
+  }
+  /* لا حركة مكانية — تلاشي فقط: الأخضر يتحوّل لخلفية التطبيق، والشعار يظهر تدريجيًا */
+  .app-splash::before {
+    transform: none;
+    opacity: 0;
+    animation: app-splash-fade 1300ms ease 700ms both;
+  }
+  .app-splash__sway { animation: none; }
+  .app-splash__glow { animation: none; opacity: 1; }
+  .app-splash__mark {
+    animation: app-splash-fade 1500ms ease forwards;
+    transform: none;
+    filter: none;
+  }
+  .app-splash__shine { display: none; }
+}
+
+/* --------------------------------------------------------------------------
+   FIXED HEADER — Glass premium bar
+-------------------------------------------------------------------------- */
+
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-height);
+  z-index: var(--z-sticky);
+  background: linear-gradient(
+    180deg,
+    rgba(30, 33, 22, 0.98) 0%,
+    rgba(24, 26, 18, 0.98) 100%
+  );
+  /* حافة سفلية بلمسة reed خفيفة بدل الخط المحايد القديم — تربط الهيدر
+     بصريًا بهوية قسم المجتمع اللي بقى عنوانه بنفس اللون فوق. */
+  border-bottom: 1px solid rgba(var(--color-reed-400-rgb), 0.16);
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+  box-shadow:
+    0 1px 0 rgba(var(--color-reed-400-rgb), 0.10),
+    0 2px 16px rgba(var(--color-brand-950-rgb), 0.55),
+    0 6px 20px -8px rgba(var(--color-reed-700-rgb), 0.35);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--spacing-page-x);
+  padding-left: calc(var(--spacing-page-x) + env(safe-area-inset-left));
+  padding-right: calc(var(--spacing-page-x) + env(safe-area-inset-right));
+  gap: var(--space-3);
+  /* ⚡ أداء: اتشال backdrop-filter (تمويه 24px) — كان أثقل عنصر على أندرويد المتوسط
+     وقت التمرير، والخلفية أصلاً شبه معتمة فالفرق البصري صفر تقريبًا. */
+}
+
+/* --------------------------------------------------------------------------
+   SCROLLABLE CONTENT ZONE
+-------------------------------------------------------------------------- */
+
+.app-content {
+  position: fixed;
+  top: var(--header-height);
+  left: 0;
+  right: 0;
+  bottom: var(--bottom-nav-height);
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  /* Smooth scrolling */
+  scroll-behavior: smooth;
+}
+
+/* --------------------------------------------------------------------------
+   KEYBOARD — js/shared/keyboard-scroll.js
+   المنطقة المرئية بتتقاس فعليًا و--kb-inset = الجزء اللي الكيبورد لسه
+   مغطّيه فوق الصفحة (٠ لو الصفحة نفسها اتصغّرت بواسطة المتصفح). بدل
+   padding مصطنع تحت المحتوى، بنقصّ الحاوية على المنطقة المرئية بالظبط
+   ونخفي الشريط السفلي أثناء الكتابة فما ياكلش مساحة فوق الكيبورد.
+-------------------------------------------------------------------------- */
+
+/* !important: الراوتر بيتحكم في display الشريط عبر style مباشر */
+body.kb-open .app-bottom-nav {
+  display: none !important;
+}
+
+body.kb-open .app-content {
+  bottom: var(--kb-inset, 0px);
+}
+
+body.kb-open #toast-container {
+  bottom: calc(var(--kb-inset, 0px) + var(--space-3));
+}
+
+/* --------------------------------------------------------------------------
+   FIXED BOTTOM NAVIGATION
+-------------------------------------------------------------------------- */
+
+.app-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--bottom-nav-height);
+  z-index: var(--z-sticky);
+  background: linear-gradient(
+    0deg,
+    rgba(30, 33, 22, 0.98) 0%,
+    rgba(24, 26, 18, 0.98) 100%
+  );
+  /* حافة علوية بلمسة reed خفيفة + زوايا علوية دائرية — نفس هوية
+     الهيدر بالظبط، عشان الشريطين (فوق وتحت) يبانوا كوحدة واحدة. */
+  border-top: 1px solid rgba(var(--color-reed-400-rgb), 0.16);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  box-shadow:
+    0 -1px 0 rgba(var(--color-reed-400-rgb), 0.10),
+    0 -2px 16px rgba(var(--color-brand-950-rgb), 0.55),
+    0 -6px 20px -8px rgba(var(--color-reed-700-rgb), 0.35);
+  /* ⚡ أداء: اتشال backdrop-filter (تمويه 24px) — كان أثقل عنصر على أندرويد المتوسط
+     وقت التمرير، والخلفية أصلاً شبه معتمة فالفرق البصري صفر تقريبًا. */
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 var(--space-1);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: calc(var(--space-1) + env(safe-area-inset-left));
+  padding-right: calc(var(--space-1) + env(safe-area-inset-right));
+}
+
+/* --------------------------------------------------------------------------
+   PAGE CONTAINER
+-------------------------------------------------------------------------- */
+
+.page {
+  width: 100%;
+  max-width: var(--content-max-w);
+  margin: 0 auto;
+  padding: var(--space-5) var(--spacing-page-x) var(--space-8);
+}
+
+.page--wide  { max-width: var(--page-max-w); }
+.page--full  { max-width: none; }
+
+/* --------------------------------------------------------------------------
+   SECTION — Vertical rhythm
+-------------------------------------------------------------------------- */
+
+.section {
+  padding: var(--spacing-section-y) 0;
+}
+
+.section + .section {
+  padding-top: 0;
+}
+
+/* --------------------------------------------------------------------------
+   PAGE INTRO — shared utility
+-------------------------------------------------------------------------- */
+
+.page-intro {
+  padding: var(--space-4) var(--spacing-page-x) var(--space-2);
+}
+
+.page-intro p {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: var(--leading-relaxed);
+  margin: 0;
+}

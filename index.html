@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+<script>
+  // تطبيق وضع الرؤية المحسّنة قبل رسم الصفحة لتجنب الوميض
+  if (localStorage.getItem('vision-enhanced') === 'true') {
+    document.documentElement.setAttribute('data-vision', 'enhanced');
+  }
+  // الثيم قبل أول رسم — عشان الإنترو ياخد لون خلفية التطبيق الصحيح من أول لحظة
+  // data-theme = اختيار المستخدم (light | system) — data-scheme = القيمة المحلولة (light | dark)
+  // وهي اللي كل CSS الثيم بيقرأها. نفس منطق js/shared/theme.js (مكرَّر هنا عمداً قبل أول رسم).
+  // "تلقائي" = يتبع الجهاز؛ والأجهزة التي لا تدعم prefers-color-scheme (هواتف ضعيفة) تتبع الوقت (داكن ليلًا).
+  (function () {
+    var t = localStorage.getItem('app-theme');
+    if (t !== 'light') t = 'system';   // الخيار "داكن" القديم يتحوّل لـ "تلقائي"
+    var dark = false;
+    try {
+      if (t === 'system') {
+        var mq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+        // الهواتف الضعيفة لا تعرف prefers-color-scheme (media === 'not all') → بديل: داكن من ٧م حتى ٥ف
+        if (mq && mq.media !== 'not all' && (mq.matches || window.matchMedia('(prefers-color-scheme: light)').matches)) dark = mq.matches;
+        else { var h = new Date().getHours(); dark = h >= 19 || h < 5; }
+      }
+    } catch (e) {}
+    var root = document.documentElement;
+    root.setAttribute('data-theme', t);
+    root.setAttribute('data-scheme', dark ? 'dark' : 'light');
+    window.__themeChrome = dark ? '#1b1c14' : '#f2f2e6';
+  })();
+  // حجم الخط قبل أول رسم (الافتراضي: عادي = 24.75px؛ من اختار "كبير" أو "كبير جدًا" سابقًا يأخذ "كبير" الجديد = 27.5px) — يمنع قفزة الحجم بعد تحميل app.js
+  (function () {
+    var t = localStorage.getItem('app-text-size');
+    document.documentElement.setAttribute('data-text-size', (t === 'large' || t === 'xlarge') ? 'large' : 'normal');
+  })();
+</script>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content" />
+  <meta name="theme-color" content="#1b1c14" />
+  <script>document.querySelector('meta[name="theme-color"]').setAttribute('content', window.__themeChrome || '#1b1c14');</script>
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="أخضر شبتوت بحري" />
+  <meta name="description" content="تطبيق مجتمعي لتوثيق ذاكرة وأخبار وخدمات شبتوت بحري — من إصدارات مجموعة أخضر" />
+  <link rel="manifest" href="./manifest.json" />
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       iOS / Safari — أيقونة الشاشة الرئيسية
+       ═══════════════════════════════════════════════════════════════════ -->
+  <link rel="apple-touch-icon" href="./assets/ios/apple-touch-icon.png" />
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       iOS / Safari — شاشات البداية (Splash Screens)
+       تمنع ظهور "وميض أبيض" لحظة فتح التطبيق من الشاشة الرئيسية.
+       كل سطر يستهدف مقاس جهاز مختلف عبر media query دقيق.
+       ═══════════════════════════════════════════════════════════════════ -->
+  <link rel="apple-touch-startup-image" href="./assets/ios/splash-iphone6-7-8-se2.png"
+        media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" />
+  <link rel="apple-touch-startup-image" href="./assets/ios/splash-iphone11-xr.png"
+        media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)" />
+  <link rel="apple-touch-startup-image" href="./assets/ios/splash-iphonexsmax-11promax.png"
+        media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)" />
+  <link rel="apple-touch-startup-image" href="./assets/ios/splash-iphonex-11pro-12mini.png"
+        media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)" />
+  <link rel="apple-touch-startup-image" href="./assets/ios/splash-iphone12-13-14.png"
+        media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3)" />
+  <link rel="apple-touch-startup-image" href="./assets/ios/splash-iphone14pro-15.png"
+        media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3)" />
+  <link rel="apple-touch-startup-image" href="./assets/ios/splash-iphone12-13promax.png"
+        media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3)" />
+  <link rel="apple-touch-startup-image" href="./assets/ios/splash-iphone14-15promax.png"
+        media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3)" />
+  <link rel="apple-touch-startup-image" href="./assets/ios/splash-ipad10.png"
+        media="(device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2)" />
+  <link rel="apple-touch-startup-image" href="./assets/ios/splash-ipadpro11.png"
+        media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)" />
+  <link rel="apple-touch-startup-image" href="./assets/ios/splash-ipadpro12.png"
+        media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)" />
+
+  <title>أخضر شبتوت بحري</title>
+
+  <!-- =====================================================================
+       STYLESHEET — شبتوت بحري
+       ١١ جزءًا مُدمَجًا (css/bundle-*.css) بدل ٦٧ رابطًا منفصلًا؛ تغيير أي ملف CSS
+       يُنزّل جزءه فقط عند المستخدمين (لا الحزمة كلها). المصدر يبقى الملفات المنفصلة تحت
+       css/ كالمعتاد — عدّل عليها ثم أعد توليد الحزمة بـ:
+           node build/bundle-css.js
+       التفاصيل الكاملة في build/BUILD-PROCESS.md
+       ===================================================================== -->
+  <!-- MODULEPRELOAD:START — مولَّد بـ node build/gen-modulepreload.js، لا تعدّله يدويًا -->
+  <link rel="modulepreload" href="./js/core/router.js" />
+  <link rel="modulepreload" href="./js/core/header.js" />
+  <link rel="modulepreload" href="./js/shared/img.js" />
+  <link rel="modulepreload" href="./js/pages/not-found.js" />
+  <link rel="modulepreload" href="./js/shared/connectivity.js" />
+  <link rel="modulepreload" href="./js/shared/toast.js" />
+  <link rel="modulepreload" href="./js/shared/share.js" />
+  <link rel="modulepreload" href="./js/shared/icons.js" />
+  <link rel="modulepreload" href="./js/shared/resume-position.js" />
+  <link rel="modulepreload" href="./js/data/auth.js" />
+  <link rel="modulepreload" href="./js/data/runtime-config.js" />
+  <link rel="modulepreload" href="./js/data/supabase-client.js" />
+  <link rel="modulepreload" href="./js/shared/notif-badge.js" />
+  <link rel="modulepreload" href="./js/data/db.js" />
+  <link rel="modulepreload" href="./js/shared/relative-time.js" />
+  <link rel="modulepreload" href="./js/data/adapters/supabase-data-adapter.js" />
+  <link rel="modulepreload" href="./js/data/cache-stamps.js" />
+  <link rel="modulepreload" href="./js/data/read-cache.js" />
+  <link rel="modulepreload" href="./js/data/adapters/rate-guard.js" />
+  <link rel="modulepreload" href="./js/shared/comment-hearts.js" />
+  <link rel="modulepreload" href="./js/data/idea-box-data.js" />
+  <link rel="modulepreload" href="./js/data/retention.js" />
+  <link rel="modulepreload" href="./js/shared/submission-guard.js" />
+  <link rel="modulepreload" href="./js/data/moderation-config.js" />
+  <link rel="modulepreload" href="./js/shared/device-id.js" />
+  <link rel="modulepreload" href="./js/data/local-data.js" />
+  <link rel="modulepreload" href="./js/data/interaction-config.js" />
+  <link rel="modulepreload" href="./js/data/adapters/supabase-content-adapter.js" />
+  <link rel="modulepreload" href="./js/data/hosts.js" />
+  <link rel="modulepreload" href="./js/data/adapters/sb-helpers.js" />
+  <link rel="modulepreload" href="./js/data/videos-events-data.js" />
+  <link rel="modulepreload" href="./js/data/adapters/supabase-library-adapter.js" />
+  <link rel="modulepreload" href="./js/data/history-data.js" />
+  <link rel="modulepreload" href="./js/data/association-journey-data.js" />
+  <link rel="modulepreload" href="./js/data/gallery-data.js" />
+  <link rel="modulepreload" href="./js/data/contacts-seed-data.js" />
+  <link rel="modulepreload" href="./js/data/adapters/supabase-misc-adapter.js" />
+  <link rel="modulepreload" href="./js/data/adapters/supabase-adapter.js" />
+  <link rel="modulepreload" href="./js/data/storage-overflow.js" />
+  <link rel="modulepreload" href="./js/shared/arabic-search.js" />
+  <link rel="modulepreload" href="./js/data/contact-recipients-data.js" />
+  <link rel="modulepreload" href="./js/data/occasion-categories.js" />
+  <link rel="modulepreload" href="./js/shared/section-badges.js" />
+  <link rel="modulepreload" href="./js/shared/content-freshness.js" />
+  <link rel="modulepreload" href="./js/shared/ios-install-prompt.js" />
+  <link rel="modulepreload" href="./js/shared/permission-onboarding.js" />
+  <link rel="modulepreload" href="./js/shared/push.js" />
+  <link rel="modulepreload" href="./js/shared/keyboard-scroll.js" />
+  <link rel="modulepreload" href="./js/shared/app-splash.js" />
+  <link rel="modulepreload" href="./js/shared/theme.js" />
+  <link rel="modulepreload" href="./js/pages/home/home.js" />
+  <link rel="modulepreload" href="./js/data/did-you-know-data.js" />
+  <link rel="modulepreload" href="./js/shared/urgent-announcement.js" />
+  <link rel="modulepreload" href="./js/shared/sanitize.js" />
+<!-- MODULEPRELOAD:END -->
+
+  <!-- خطوط الإقلاع: تُطلب مبكرًا بدل ما تنتظر تحليل CSS (تأتي من كاش الـ service worker) -->
+  <link rel="preload" href="./assets/fonts/Cairo-Variable.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="./assets/fonts/Tajawal-Regular.woff2" as="font" type="font/woff2" crossorigin />
+
+  <!-- شاشة التحميل الأولى: الـCSS كبير (~٤٧٠KB قبل الضغط) وكان يحجب أول رسم، فعلى أول تثبيت ببطء النت تظهر شاشة بيضاء
+       ولا يعرف المستخدم أن التطبيق ينزل. الآن: ستايل صغير مضمّن + شاشة بالنص تظهر فورًا، والـCSS يُحمَّل بلا حجب،
+       وبعد وصوله تُشال الشاشة ويبدأ التطبيق (app.js) كما كان تمامًا (بعد جاهزية CSS وDOM).
+       المستخدم العائد (CSS من كاش الـservice worker) لا يرى النص لأنه يتأخر ١٫٢ث قبل الظهور. -->
+  <style>
+    html.bf-on{background:#113714}
+    #boot-fallback{position:fixed;inset:0;z-index:99998;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px;background:#113714;color:#f2f2e6;font:600 16px/1.9 Cairo,Tajawal,system-ui,sans-serif;text-align:center;direction:rtl}
+    #boot-fallback .bf-spin{width:34px;height:34px;border:3px solid rgba(242,205,111,.22);border-top-color:#f2cd6f;border-radius:50%;opacity:0;animation:bf-in .3s ease 1.2s forwards,bf-spin 1s linear 1.2s infinite}
+    #boot-fallback .bf-msg{opacity:0;max-width:300px;animation:bf-in .4s ease 1.2s forwards}
+    #boot-fallback .bf-msg small{display:block;margin-top:6px;font-weight:500;opacity:.78;font-size:13px}
+    #boot-fallback button{margin-top:6px;padding:10px 22px;border-radius:12px;border:1px solid #5d7a3f;background:#26301f;color:#f2f2e6;font:600 15px Cairo,Tajawal,system-ui,sans-serif}
+    @keyframes bf-in{to{opacity:1}}
+    @keyframes bf-spin{to{transform:rotate(360deg)}}
+  </style>
+  <script>
+    (function () {
+      var started = false, cssDone = false, booted = false, failed = false;
+      document.documentElement.classList.add('bf-on'); // خلفية خضراء مؤقتة حتى يصل الـCSS (ثم تعود الخلفية للثيم)
+      function go() {
+        if (started) return; started = true;
+        import('./app.js').catch(function () {
+          // احتياط: لو فشل الاستيراد الديناميكي لأي سبب نرجع للطريقة العادية
+          var s = document.createElement('script'); s.type = 'module'; s.src = 'app.js'; document.head.appendChild(s);
+        });
+      }
+      // app.js كان module مؤجَّلًا: يبدأ بعد جاهزية DOM. نحافظ على نفس الشرط (+ جاهزية CSS).
+      function start() {
+        if (booted) return; booted = true;
+        setTimeout(function () {
+          var s = document.getElementById('app-splash');
+          if (s) { s.classList.add('app-splash--hide'); setTimeout(function () { s.remove(); }, 900); }
+        }, 7000);
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go, { once: true });
+        else go();
+      }
+      window.__akdarCssLoaded = function () {
+        if (cssDone) return; cssDone = true;
+        var b = document.getElementById('boot-fallback'); if (b) b.remove();
+        document.documentElement.classList.remove('bf-on');
+        start();
+      };
+      // الـCSS أجزاء (css/bundle-*.css): نبدأ التطبيق بعد وصول كل الأجزاء، وكل جزء يوسَم data-ok عند وصوله
+      window.__akdarCssPart = function () {
+        var parts = document.querySelectorAll('link[data-css-part]');
+        for (var i = 0; i < parts.length; i++) if (!parts[i].dataset.ok) return;
+        window.__akdarCssLoaded();
+      };
+      window.__akdarCssFailed = function () {
+        if (failed || cssDone) return; failed = true;
+        // لم يصل الـCSS (نت مقطوع أول مرة بلا كاش): رسالة واضحة + زر إعادة، ونشغّل التطبيق خلف الشاشة كما كان يحدث سابقًا
+        var b = document.getElementById('boot-fallback');
+        if (b) b.innerHTML = '<div class="bf-msg" style="opacity:1;animation:none">تعذّر تحميل التطبيق — تأكد من الإنترنت وحاول مرة ثانية<small>أول مرة بس محتاج اتصال</small></div><button type="button" onclick="location.reload()">إعادة المحاولة</button>';
+        start();
+      };
+      // نت بطيء جدًا: بعد ٢٠ث نوضّح بدل ما تبقى الدوّامة وحدها
+      setTimeout(function () {
+        var m = document.querySelector('#boot-fallback .bf-msg');
+        if (m && !cssDone) m.innerHTML = 'النت بطيء هسّع — لسه بنحمّل التطبيق، اصبر شوية<small>أو تأكد من الاتصال وأعد فتح التطبيق</small>';
+      }, 20000);
+    })();
+  </script>
+  <!-- CSS-LINKS:START — مولَّد بـ node build/bundle-css.js، لا تعدّله يدويًا -->
+  <link rel="stylesheet" href="css/bundle-base.css" media="print" data-css-part
+        onload="this.onload=null;this.media='all';this.dataset.ok=1;window.__akdarCssPart()" onerror="window.__akdarCssFailed()" />
+  <link rel="stylesheet" href="css/bundle-components.css" media="print" data-css-part
+        onload="this.onload=null;this.media='all';this.dataset.ok=1;window.__akdarCssPart()" onerror="window.__akdarCssFailed()" />
+  <link rel="stylesheet" href="css/bundle-home.css" media="print" data-css-part
+        onload="this.onload=null;this.media='all';this.dataset.ok=1;window.__akdarCssPart()" onerror="window.__akdarCssFailed()" />
+  <link rel="stylesheet" href="css/bundle-tanjalab.css" media="print" data-css-part
+        onload="this.onload=null;this.media='all';this.dataset.ok=1;window.__akdarCssPart()" onerror="window.__akdarCssFailed()" />
+  <link rel="stylesheet" href="css/bundle-reader.css" media="print" data-css-part
+        onload="this.onload=null;this.media='all';this.dataset.ok=1;window.__akdarCssPart()" onerror="window.__akdarCssFailed()" />
+  <link rel="stylesheet" href="css/bundle-services.css" media="print" data-css-part
+        onload="this.onload=null;this.media='all';this.dataset.ok=1;window.__akdarCssPart()" onerror="window.__akdarCssFailed()" />
+  <link rel="stylesheet" href="css/bundle-misc.css" media="print" data-css-part
+        onload="this.onload=null;this.media='all';this.dataset.ok=1;window.__akdarCssPart()" onerror="window.__akdarCssFailed()" />
+  <link rel="stylesheet" href="css/bundle-community.css" media="print" data-css-part
+        onload="this.onload=null;this.media='all';this.dataset.ok=1;window.__akdarCssPart()" onerror="window.__akdarCssFailed()" />
+  <link rel="stylesheet" href="css/bundle-occasions.css" media="print" data-css-part
+        onload="this.onload=null;this.media='all';this.dataset.ok=1;window.__akdarCssPart()" onerror="window.__akdarCssFailed()" />
+  <link rel="stylesheet" href="css/bundle-sub.css" media="print" data-css-part
+        onload="this.onload=null;this.media='all';this.dataset.ok=1;window.__akdarCssPart()" onerror="window.__akdarCssFailed()" />
+  <link rel="stylesheet" href="css/bundle-theme.css" media="print" data-css-part
+        onload="this.onload=null;this.media='all';this.dataset.ok=1;window.__akdarCssPart()" onerror="window.__akdarCssFailed()" />
+  <noscript><link rel="stylesheet" href="css/bundle-base.css" /><link rel="stylesheet" href="css/bundle-components.css" /><link rel="stylesheet" href="css/bundle-home.css" /><link rel="stylesheet" href="css/bundle-tanjalab.css" /><link rel="stylesheet" href="css/bundle-reader.css" /><link rel="stylesheet" href="css/bundle-services.css" /><link rel="stylesheet" href="css/bundle-misc.css" /><link rel="stylesheet" href="css/bundle-community.css" /><link rel="stylesheet" href="css/bundle-occasions.css" /><link rel="stylesheet" href="css/bundle-sub.css" /><link rel="stylesheet" href="css/bundle-theme.css" /></noscript>
+  <!-- CSS-LINKS:END -->
+
+  <script src="./assets/vendor/lucide/lucide-lite.js" defer></script>
+</head>
+
+<body>
+  <!-- شاشة التحميل الأولى (ستايلها مضمّن أعلاه) — تُشال تلقائيًا فور وصول أجزاء الـCSS (css/bundle-*.css) -->
+  <div id="boot-fallback" role="status" aria-live="polite">
+    <div class="bf-spin" aria-hidden="true"></div>
+    <div class="bf-msg">جاري تحميل بيانات التطبيق… انتظر شوية<small>أول مرة بس — بعدها يفتح بسرعة وحتى من غير نت</small></div>
+  </div>
+
+  <!-- الإنترو (شاشة فتح التطبيق): خلفية ليلية هادئة، شعار النخلة بلون رملي
+       واحد يطلع من الضبابية فوق حلقات ماء رقيقة ولمعة ناعمة، وذرّات رملية صغيرة تصعد ببطء. بدون توقيع.
+       مش splash نظامي (أندرويد بيتحكم فيه من manifest.json) — دي شاشة من
+       عندنا فوق كل حاجة، بتتشال تلقائيًا بعد لحظات أو بلمسة (app-splash.js).
+       الشعار بيتلوّن عبر mask على الصورة (icon-mark.png شفافة). -->
+  <div id="app-splash" class="app-splash" aria-hidden="true">
+    <div class="app-splash__center">
+      <span class="app-splash__glow"></span>
+      <div class="app-splash__mark">
+       <div class="app-splash__sway">
+        <div class="app-splash__logo"
+             style="-webkit-mask-image:url(./assets/icons/icon-mark.png);mask-image:url(./assets/icons/icon-mark.png)"></div>
+        <div class="app-splash__shine"
+             style="-webkit-mask-image:url(./assets/icons/icon-mark.png);mask-image:url(./assets/icons/icon-mark.png)"></div>
+       </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="app" class="app-shell">
+
+    <!-- الـ router يملأ محتوى الهيدير ويتحكم في إظهاره -->
+    <header class="app-header" id="app-header" style="display:none"></header>
+
+    <main class="app-content" id="app-content"></main>
+
+    <nav class="app-bottom-nav" id="app-bottom-nav" style="display:none">
+      <button class="nav-tab" data-page="home" aria-label="الرئيسية">
+        <i class="nav-tab__icon" data-lucide="home"></i>
+        <span class="nav-tab__label">الرئيسية</span>
+      </button>
+      <button class="nav-tab" data-page="services" aria-label="الخدمات">
+        <i class="nav-tab__icon" data-lucide="grid-2x2"></i>
+        <span class="nav-badge-count" id="services-badge-count" aria-hidden="true"></span>
+        <span class="nav-tab__label">الخدمات</span>
+      </button>
+      <button class="nav-tab" data-page="notifications" aria-label="الرسائل">
+        <i class="nav-tab__icon" data-lucide="bell"></i>
+        <span class="nav-badge-count" id="notif-badge-count" aria-hidden="true"></span>
+        <span class="nav-tab__label">الرسائل</span>
+      </button>
+      <button class="nav-tab" data-page="settings" aria-label="الإعدادات">
+        <i class="nav-tab__icon" data-lucide="settings"></i>
+        <span class="nav-tab__label">الإعدادات</span>
+      </button>
+    </nav>
+
+  </div>
+
+  <!-- app.js يبدأه محمّل الإقلاع أعلاه (بعد جاهزية CSS وDOM) بدل script module مباشر -->
+
+  <!-- شبكة أمان للإنترو: لو app.js ما اتحمّلش (نت ضعيف/انقطاع أثناء استيراد
+       Firebase) الإنترو ما يفضلش حاجب التطبيق للأبد. -->
+  <!-- (المؤقّت نفسه صار يبدأ من محمّل الإقلاع أعلاه بعد وصول CSS — كي لا يُزال الإنترو قبل أن يظهر على النت البطيء) -->
+
+  <!-- رسالة أول تشغيل: على الهواتف الضعيفة/النت البطيء أول فتح بياخد وقت (تحميل ملفات التطبيق
+       والمحتوى في الخلفية) والمستخدم الجديد ما بيعرف ده فيظن التطبيق معطّل. لو التطبيق ما جهزش
+       خلال ٢٫٥ ثانية في أول مرة بس، نطلّع شريط توضيحي ونشيله بعد ١٤ ثانية (أو بلمسة).
+       مكتوبة هنا (مش في app.js) لأن app.js نفسه هو اللي بيتأخر على الهواتف الضعيفة. -->
+  <script>
+    (function () {
+      try { if (localStorage.getItem('akdar_boot_hint_done')) return; } catch (e) { return; }
+      var tries = 0;
+      function tryShow() {
+        if (window.__akdarReady) return;               // التطبيق جهز بسرعة — ما في داعي
+        // شاشة التحميل الأولى (#boot-fallback) ما زالت تشرح للمستخدم — لا نكرر الرسالة فوقها
+        if (document.getElementById('boot-fallback')) { if (++tries < 90) setTimeout(tryShow, 1000); return; }
+        if (!tryShow.after) { tryShow.after = true; setTimeout(tryShow, 1500); return; } // بعد وصول CSS: نمهل التطبيق لحظة قبل التوضيح
+        try { localStorage.setItem('akdar_boot_hint_done', '1'); } catch (e) {}
+        var bar = document.createElement('div');
+        bar.setAttribute('role', 'status');
+        bar.dir = 'rtl';
+        bar.style.cssText = 'position:fixed;left:12px;right:12px;bottom:calc(16px + env(safe-area-inset-bottom,0px));' +
+          'z-index:99999;padding:14px 16px;border-radius:14px;background:#26301f;color:#f2f2e6;' +
+          'border:1px solid #5d7a3f;box-shadow:0 8px 24px rgba(0,0,0,.35);font:600 15px/1.7 Cairo,Tajawal,sans-serif;text-align:center';
+        bar.textContent = 'أول مرة تفتح التطبيق — بنجهّز المحتوى في الخلفية، فممكن تحس ببطء شوية. اصبر دقيقة بس، وبعدها يشتغل بسرعة وحتى من غير نت.';
+        var close = function () { if (bar.parentNode) bar.remove(); };
+        bar.addEventListener('click', close);
+        document.body.appendChild(bar);
+        setTimeout(close, 14000);
+      }
+      setTimeout(tryShow, 2500);
+    })();
+  </script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      // هل كان فيه service worker متحكّم قبل ما الصفحة تفتح؟ لو لأ، ده أول تثبيت
+      // للتطبيق (مش تحديث) — فما نطلعش شريط "تحديث جديد" وقتها.
+      const hadController = !!navigator.serviceWorker.controller;
+
+      navigator.serviceWorker.register('./service-worker.js').then(reg => {
+        // فحص فوري عن نسخة جديدة كل مرة يرجع فيها التطبيق للواجهة
+        // (بدل الاعتماد على فحص المتصفح التلقائي اللي بياخد وقت طويل)
+        document.addEventListener('visibilitychange', () => {
+          // .catch: أوفلاين، reg.update() بترفض الوعد بخطأ شبكة — بدون ده
+          // كان بيظهر كخطأ "unhandled" في كل مرة التطبيق يرجع للواجهة.
+          if (document.visibilityState === 'visible') reg.update().catch(() => {});
+        });
+      });
+
+      // استقبال رسالة التحديث من SW — شريط واحد فقط مهما تكررت الرسالة
+      navigator.serviceWorker.addEventListener('message', e => {
+        if (e.data?.type === 'SW_UPDATED' && hadController) {
+          import('./js/shared/update-banner.js').then(({ showUpdateBanner }) => showUpdateBanner());
+        }
+      });
+    }
+  </script>
+
+</body>
+
+</html>

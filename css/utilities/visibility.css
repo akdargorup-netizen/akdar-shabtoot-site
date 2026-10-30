@@ -1,0 +1,43 @@
+/* ==========================================================================
+   VISIBILITY UTILITIES — شبتوت بحري
+   Show/hide helpers for responsive logic and JS state toggling.
+   Consumes: tokens.css
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   BASIC VISIBILITY
+-------------------------------------------------------------------------- */
+
+.hidden          { display: none !important; }
+
+.visible         { visibility: visible; }
+
+
+
+/* --------------------------------------------------------------------------
+   RESPONSIVE VISIBILITY
+   Mobile-first. Show/hide per breakpoint band.
+   Usage: .hide-on-mobile, .show-on-tablet-up
+-------------------------------------------------------------------------- */
+
+/* Hidden below 480px (mobile-only content) */
+
+
+/* Hidden at 480px and above */
+
+
+/* Hidden below 768px */
+
+
+/* Hidden at 768px and above */
+
+
+/* --------------------------------------------------------------------------
+   JS STATE VISIBILITY
+   Used by JavaScript to show/hide elements dynamically.
+-------------------------------------------------------------------------- */
+
+[data-state="hidden"]    { display: none !important; }
+[data-state="visible"]   { display: block; }
+[data-state="invisible"] { visibility: hidden; }
+

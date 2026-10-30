@@ -1,0 +1,78 @@
+/* ==========================================================================
+   THEME DARK PLUS — شبتوت بحري
+   مقابل theme-light-plus.css للثيم الداكن. بتُحمَّل بعده (آخر ملف في الحزمة).
+
+   كل القواعد بـ [data-scheme="dark"] — القيمة المحلولة من js/shared/theme.js
+   (اللي "تلقائي" على جهاز داكن بتوصل له أوتوماتيك). تخصيصها (0,2,0) فتكسب
+   على قواعد الصفحات الأحادية من غير !important.
+
+   الهدف: رفع التباين لعناصر طلعت تحت الحد (نص ٤.٥:١ — أيقونات ٣:١) في فحص
+   آلي لكل الصفحات، من غير ما نغيّر هوية الداكن: نفس العائلات اللونية، درجات
+   أفتح أو أعمق بحسب الخلفية. ما فيش أي تغيير في عناصر عدّت الفحص.
+   ========================================================================== */
+
+[data-scheme="dark"] {
+  color-scheme: dark;
+
+  /* نص خافت مضمون التباين (٥.٧:١ على الخلفية الأساسية، ٣.١:١ على الأسطح المرفوعة) */
+  --text-faint: var(--color-neutral-400);
+}
+
+/* ── الأزرار الأساسية: نص فاتح فوق أخضر فاتح (٢.٣:١) → نفس تدرّج الفاتح الأعمق
+   (٤.٩:١). النطاق محدّد عمداً (.btn--primary ونموذج الإبلاغ/المساهمة) — باقي
+   أزرار .cta-button ليها هوية لونية خاصة بصفحاتها (بيت المناسبات، مصنع الأفكار،
+   بطاقات الطوارئ…) وعدّت الفحص، فما نلمسهاش. ── */
+[data-scheme="dark"] .btn--primary,
+[data-scheme="dark"] .contact-form-card .cta-button {
+  background: linear-gradient(155deg, var(--color-brand-500) 0%, var(--color-brand-600) 100%);
+  color: var(--color-neutral-000);
+}
+[data-scheme="dark"] .btn--primary:hover,
+[data-scheme="dark"] .contact-form-card .cta-button:hover {
+  background: var(--color-brand-500);
+}
+[data-scheme="dark"] .btn--primary svg,
+[data-scheme="dark"] .contact-form-card .cta-button svg { color: inherit; }
+
+/* ── زر "المزيد" في بطاقة "هل تعلم" (ذهبي فاتح + نص فاتح = ٢.٧:١) ── */
+[data-scheme="dark"] .home-fact-card__more {
+  background: linear-gradient(155deg, var(--color-accent-500) 0%, var(--color-accent-600) 100%);
+  color: var(--color-neutral-000);
+}
+[data-scheme="dark"] .home-fact-card__more:hover {
+  background: linear-gradient(155deg, var(--color-accent-400) 0%, var(--color-accent-500) 100%);
+}
+
+/* ── ذهبي النصوص الصغيرة فوق الأسطح الزيتونية (٣.٥–٣.٩:١ → ≥٤.٧:١) ── */
+[data-scheme="dark"] .home-fact-card__badge,
+[data-scheme="dark"] .home-fact-card__label { color: var(--color-accent-200); }
+[data-scheme="dark"] .nlang-search-card__count { color: var(--color-accent-100); }
+
+/* ── شارات المقالات (أخضر ٣.٩:١ → brand-200) ── */
+[data-scheme="dark"] .article-badge { color: var(--color-brand-200); }
+
+/* ── أسهم البطاقات: كانت رمادية/ذهبية داكنة (٢–٢.٩:١) ── */
+[data-scheme="dark"] .article-arrow,
+[data-scheme="dark"] .article-arrow__svg,
+[data-scheme="dark"] .home-feature-card__arrow,
+[data-scheme="dark"] .nlang-index-card__arrow { color: var(--color-neutral-300); }
+[data-scheme="dark"] .nlang-index-card__arrow svg { color: var(--color-accent-200); }
+
+/* ── أيقونات الحالة الفارغة: neutral-600 على الخلفية (١.٨:١) → neutral-400 (≥٣:١) ── */
+[data-scheme="dark"] .empty-state__icon,
+[data-scheme="dark"] .empty-state > svg { color: var(--color-neutral-400); }
+/* داخل بطاقة مرفوعة (خلفية أفتح — مثلاً "عن التطبيق") neutral-400 يهبط لـ ٢.٣:١ → neutral-300 */
+[data-scheme="dark"] .settings-list .empty-state__icon,
+[data-scheme="dark"] .settings-list .empty-state > svg { color: var(--color-neutral-300); }
+
+/* ── نصوص التذييل والملاحظات الصغيرة (٤.٤:١ → ٥.٧:١) ── */
+[data-scheme="dark"] .notif-note,
+[data-scheme="dark"] .app-version,
+[data-scheme="dark"] .about-footer__copy { color: var(--text-faint); }
+
+/* ── نص الحقول البديل (placeholder): كان ٢.٤:١ على خلفية الحقل ── */
+[data-scheme="dark"] input::placeholder,
+[data-scheme="dark"] textarea::placeholder {
+  color: #bdbfa4;
+  opacity: 1;
+}

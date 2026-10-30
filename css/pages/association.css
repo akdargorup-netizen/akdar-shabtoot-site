@@ -1,0 +1,178 @@
+/* ==========================================================================
+   ASSOCIATION PAGE — شبتوت بحري  v12
+   فهرس الرابطة — 4 بطاقات تنقل رئيسية + CTA
+   ========================================================================== */
+
+.association-page {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+  isolation: isolate;
+}
+
+/* توهج "الغبار" — أخضر البراند، هوية بطاقة "الرابطة" في الصفحة
+   الرئيسية (home-card--green) — نفس بنية وحركة الغبار في باقي الأقسام. */
+.association-page::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  right: -80px;
+  width: 260px;
+  height: 260px;
+  background: radial-gradient(
+    circle,
+    rgba(var(--color-brand-400-rgb), 0.16) 0%,
+    transparent 70%
+  );
+  filter: blur(18px);
+  z-index: -1;
+  pointer-events: none;
+  animation: pulse-subtle 14s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .association-page::before { animation: none; }
+}
+
+
+/* --------------------------------------------------------------------------
+   PAGE INTRO
+-------------------------------------------------------------------------- */
+
+.association-page .page-intro {
+  padding-bottom: var(--space-5);
+}
+
+.association-page .page-intro p {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: var(--leading-relaxed);
+}
+
+/* --------------------------------------------------------------------------
+   INDEX GRID + INDEX CARD
+
+   انتقلا لـ css/components/index-card.css (كانا مطابقين حرفياً لـ
+   community-index-card) — بدون أي تغيير بصري، فقط توحيد المصدر.
+-------------------------------------------------------------------------- */
+
+
+/* --------------------------------------------------------------------------
+   CTA BOX — طلب انضمام
+-------------------------------------------------------------------------- */
+
+
+
+
+
+/* خط علوي خفيف */
+
+
+/* ↑ نص CTA أوضح */
+
+
+
+
+
+
+
+
+/* --------------------------------------------------------------------------
+   بطاقة الانضمام للرابطة — أخضر الهوية (brand) كباقي التطبيق
+   رأس (أيقونة + عنوان + وصف) وزر عريض بسهم، مع خط زخرفي رفيع وتوهج هادئ.
+-------------------------------------------------------------------------- */
+.association-join-card {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(var(--color-brand-400-rgb), 0.3);
+  background:
+    radial-gradient(120% 120% at 100% 0%, rgba(var(--color-brand-400-rgb), 0.2) 0%, transparent 60%),
+    linear-gradient(150deg, rgba(var(--color-brand-500-rgb), 0.14) 0%, rgba(var(--color-brand-600-rgb), 0.05) 100%),
+    var(--surface-raised);
+  box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(var(--color-highlight-rgb), 0.07);
+}
+/* خط زخرفي متدرّج في الحافة العليا */
+.association-join-card__orn {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, rgba(var(--color-brand-400-rgb), 0.9) 30%, rgba(var(--color-accent-400-rgb), 0.7) 70%, transparent);
+  pointer-events: none;
+}
+
+.association-join-card__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.association-join-card__icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-lg);
+  color: var(--color-brand-100);
+  background: linear-gradient(145deg, rgba(var(--color-brand-400-rgb), 0.34), rgba(var(--color-brand-600-rgb), 0.28));
+  border: 1px solid rgba(var(--color-brand-400-rgb), 0.5);
+  box-shadow: 0 4px 14px rgba(var(--color-brand-600-rgb), 0.28);
+}
+.association-join-card__icon i,
+.association-join-card__icon svg { width: 22px; height: 22px; stroke-width: 1.8; }
+
+.association-join-card__text { min-width: 0; }
+.association-join-card__title {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-snug);
+  color: var(--text-brand);
+}
+.association-join-card__desc {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+}
+
+.association-join-card__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+  min-height: 38px;
+  padding: 0 var(--space-4);
+  border: 0;
+  border-radius: var(--radius-full);
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  color: #f3faee;
+  background: linear-gradient(135deg, var(--color-brand-500) 0%, var(--color-brand-600) 100%);
+  box-shadow: 0 3px 10px rgba(var(--color-brand-600-rgb), 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out), filter var(--duration-fast) var(--ease-out);
+}
+.association-join-card__btn svg { width: 18px; height: 18px; }
+.association-join-card__btn:hover { filter: brightness(1.08); }
+.association-join-card__btn:active { transform: scale(0.98); box-shadow: 0 3px 8px rgba(var(--color-brand-600-rgb), 0.3); }
+
+[data-scheme="light"] .association-join-card__icon { color: var(--color-brand-700); }
+[data-scheme="light"] .association-join-card__title { color: var(--color-brand-700); }

@@ -1,0 +1,142 @@
+/* ==========================================================================
+   ADMIN BATCH — شبتوت بحري
+   وضع التعديل المجمّع: شريط سفلي بالتعديلات المعلّقة، شارة "تعديل معلّق"
+   على الصفوف، وشاشة المراجعة. Consumes: tokens.css, button.css, modal.css
+   ========================================================================== */
+
+/* الشريط السفلي — تحت النوافذ (z-overlay) عشان ما يغطي نموذج مفتوح */
+.admin-batch-bar {
+  position: fixed;
+  inset-inline: 0;
+  bottom: var(--bottom-nav-height);   /* فوق شريط التنقّل السفلي مباشرة */
+  z-index: calc(var(--z-overlay) - 10);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--spacing-page-x);
+  background-color: var(--surface-raised);
+  border-top: 1px solid var(--status-warning-border);
+  box-shadow: 0 -6px 18px rgba(0, 0, 0, 0.28);
+}
+
+.admin-batch-bar[hidden] { display: none; }
+
+/* الكيبورد مفتوح: شريط التنقّل مخفي، فنلزق الشريط بحافة المنطقة المرئية */
+body.kb-open .admin-batch-bar { bottom: var(--kb-inset, 0px); }
+
+.admin-batch-bar__info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  color: var(--status-warning-text);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+}
+
+.admin-batch-bar__info svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+.admin-batch-bar__text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-batch-bar__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+/* مساحة تحت الصفحة كي لا يغطي الشريط آخر صف */
+body.has-batch-bar #app-content { padding-bottom: 88px; }
+
+/* شارة "تعديل معلّق" على صف أو بلاطة معدّلة لم تُحفظ بعد */
+.admin-pending { position: relative; border-color: var(--status-warning-border); }
+
+.admin-pending::after {
+  content: 'تعديل معلّق';
+  position: absolute;
+  inset-block-start: var(--space-2);
+  inset-inline-end: var(--space-2);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-full);
+  background-color: var(--status-warning-bg);
+  border: 1px solid var(--status-warning-border);
+  color: var(--status-warning-text);
+  font-family: var(--font-display);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-bold);
+  line-height: 1.4;
+  pointer-events: none;
+}
+
+/* شاشة المراجعة */
+.admin-batch-note {
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: var(--leading-relaxed);
+}
+
+.admin-batch-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.admin-batch-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background-color: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+}
+
+.admin-batch-item--error { border-color: var(--status-error-border); }
+
+.admin-batch-item__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.admin-batch-item__section {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.admin-batch-item__title {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-batch-item__error {
+  font-size: var(--text-xs);
+  color: var(--status-error-text);
+  line-height: var(--leading-snug);
+}
+
+/* ── أنواع العمليات المعلّقة (إضافة / تعديل) ── */
+.admin-pending[data-pending-kind="add"]::after { content: 'إضافة معلّقة'; }
+
+.admin-batch-item--delete {
+  border-color: var(--status-error-border);
+}
+
+.admin-batch-item--delete .admin-batch-item__title {
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}

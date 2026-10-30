@@ -1,0 +1,244 @@
+/* ==========================================================================
+   BUTTON — شبتوت بحري  v11
+   BEM: .btn → .btn--[variant] → .btn--[size]
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   BASE
+-------------------------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-display);
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-sm);
+  letter-spacing: var(--tracking-wide);
+  line-height: 1;
+  border-radius: var(--radius-lg);
+  border: 1px solid transparent;
+  padding: 11px var(--space-6);
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+  overflow: hidden;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    border-color     var(--duration-fast) var(--ease-out),
+    color            var(--duration-fast) var(--ease-out),
+    box-shadow       var(--duration-base) var(--ease-out),
+    transform        var(--duration-base) var(--ease-spring);
+}
+
+/* Glass sheen */
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    180deg,
+    rgba(var(--overlay-white-rgb), 0.06) 0%,
+    transparent 55%
+  );
+  pointer-events: none;
+}
+
+.btn:disabled {
+  opacity: 0.36;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+:focus-visible.btn {
+  box-shadow: var(--shadow-focus);
+  outline: none;
+}
+
+/* --------------------------------------------------------------------------
+   VARIANT: PRIMARY
+-------------------------------------------------------------------------- */
+
+.btn--primary {
+  background: var(--gradient-brand);
+  color: var(--text-on-brand);
+  border-color: var(--color-brand-400);
+  box-shadow:
+    0 1px 0 rgba(var(--overlay-white-rgb), 0.12) inset,
+    var(--shadow-brand-sm),
+    0 2px 8px rgba(var(--color-brand-500-rgb), 0.18);
+}
+
+.btn--primary:hover:not(:disabled) {
+  background: var(--gradient-brand-hover);
+  border-color: var(--color-brand-300);
+  box-shadow:
+    0 1px 0 rgba(var(--overlay-white-rgb), 0.16) inset,
+    var(--shadow-brand-glow);
+  transform: translateY(-1px);
+}
+
+.btn--primary:active:not(:disabled) {
+  background: var(--color-brand-600);
+  border-color: var(--color-brand-500);
+  box-shadow: var(--shadow-inset-brand);
+  transform: scale(0.96);
+}
+
+/* --------------------------------------------------------------------------
+   VARIANT: SECONDARY
+-------------------------------------------------------------------------- */
+
+.btn--secondary {
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  border-color: var(--border-default);
+  box-shadow: var(--shadow-xs);
+}
+
+.btn--secondary:hover:not(:disabled) {
+  background: var(--surface-elevated);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+.btn--secondary:active:not(:disabled) {
+  background: var(--surface-raised);
+  box-shadow: none;
+  transform: scale(0.96);
+}
+
+/* --------------------------------------------------------------------------
+   VARIANT: GHOST
+-------------------------------------------------------------------------- */
+
+.btn--ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border-color: transparent;
+}
+
+.btn--ghost:hover:not(:disabled) {
+  background: var(--state-hover-bg);
+  color: var(--text-primary);
+  border-color: var(--border-subtle);
+}
+
+.btn--ghost:active:not(:disabled) {
+  background: var(--state-active-bg);
+}
+
+/* --------------------------------------------------------------------------
+   VARIANT: BRAND GHOST
+-------------------------------------------------------------------------- */
+
+
+
+
+
+/* --------------------------------------------------------------------------
+   VARIANT: DANGER
+-------------------------------------------------------------------------- */
+
+.btn--danger {
+  background: rgba(var(--color-alert-900-rgb), 0.18);
+  color: var(--status-error-text);
+  border-color: var(--status-error-border);
+}
+
+.btn--danger:hover:not(:disabled) {
+  background: rgba(var(--color-alert-900-rgb), 0.30);
+  transform: translateY(-1px);
+  box-shadow: 0 0 0 1px var(--status-error-border);
+}
+
+.btn--danger:active:not(:disabled) {
+  background: rgba(var(--color-alert-900-rgb), 0.40);
+  transform: scale(0.96);
+}
+
+/* --------------------------------------------------------------------------
+   SIZES
+-------------------------------------------------------------------------- */
+
+
+
+.btn--sm {
+  font-size: var(--text-xs);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  gap: var(--space-1);
+}
+
+
+
+/* --------------------------------------------------------------------------
+   ICON BUTTON
+-------------------------------------------------------------------------- */
+
+.btn--icon {
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  border-color: var(--border-subtle);
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-xs);
+}
+
+.btn--icon:hover:not(:disabled) {
+  background: var(--surface-elevated);
+  border-color: var(--border-brand);
+  box-shadow: var(--shadow-brand-sm);
+  transform: translateY(-1px);
+}
+
+.btn--icon:active:not(:disabled) {
+  background: var(--state-active-bg);
+  transform: scale(0.90);
+  box-shadow: none;
+}
+
+.btn--icon.btn--sm {
+  width: 40px;
+  height: 40px;
+}
+
+
+
+/* --------------------------------------------------------------------------
+   FULL WIDTH
+-------------------------------------------------------------------------- */
+
+.btn--full { width: 100%; }
+
+/* معدّل عرضي ممتد لعائلة .cta-button (idea-box, community-occasions) —
+   مصدر واحد للحقيقة عشان الزرين يتطابقا شكلاً بالضبط زي ما هو مطلوب */
+.cta-button--full {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+/* --------------------------------------------------------------------------
+   LOADING STATE
+-------------------------------------------------------------------------- */
+
+
+
+
+
+/* ⚡ أداء: opacity بدل background-position (بدون إعادة رسم) */
+@keyframes btn-shimmer {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.45; }
+}
