@@ -1,0 +1,299 @@
+/* ==========================================================================
+   HISTORY SUB-PAGES — شبتوت بحري
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   PAGE HEADER — أيقونة + عنوان + مقدمة
+-------------------------------------------------------------------------- */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* --------------------------------------------------------------------------
+   ARTICLE LIST — قائمة المقالات المرقمة
+-------------------------------------------------------------------------- */
+
+.article-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: linear-gradient(
+    150deg,
+    var(--surface-raised) 0%,
+    color-mix(in srgb, var(--surface-raised) 92%, var(--color-brand-950)) 100%
+  );
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  position: relative;
+  box-shadow:
+    var(--shadow-md),
+    inset 0 1px 0 rgba(var(--shimmer-base-rgb), 0.06);
+}
+
+.article-list::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(var(--shimmer-deep-rgb), 0.28) 40%,
+    rgba(var(--shimmer-deep-rgb), 0.28) 60%,
+    transparent
+  );
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   ARTICLE ITEM — عنصر مقال واحد ضمن قائمة موحّدة (بديل تكديس البطاقات
+   المنفصلة — كل عنصر الآن صف داخل حاوية واحدة، مفصول بخط رفيع فقط،
+   بدل صندوق مستقل بحدوده وظله الخاص لكل عنصر)
+-------------------------------------------------------------------------- */
+
+.article-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+  padding: var(--space-4) var(--space-5);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border-subtle);
+  border-radius: 0;
+  box-shadow: none;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    padding-right var(--duration-base) var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+  text-align: right;
+  position: relative;
+}
+
+.article-item:last-child {
+  border-bottom: none;
+}
+
+.article-item:hover {
+  background-color: rgba(var(--color-brand-700-rgb), 0.10);
+  padding-right: calc(var(--space-5) + 2px);
+}
+
+.article-item:active {
+  background-color: rgba(var(--color-brand-700-rgb), 0.16);
+}
+
+/* ─── رقم المقال ─── */
+.article-number {
+  font-family: var(--font-heading);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  color: var(--color-brand-300);
+  background: rgba(var(--color-brand-700-rgb), 0.14);
+  border: 1px solid rgba(var(--color-brand-700-rgb), 0.22);
+  border-radius: var(--radius-md);
+  min-width: 26px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+.article-item:hover .article-number {
+  background: rgba(var(--color-brand-700-rgb), 0.22);
+  color: var(--color-brand-200);
+}
+
+/* ─── محتوى (الشارة فوق العنوان) ─── */
+.article-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  text-align: right;
+}
+
+.article-title {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  color: var(--text-secondary);
+  line-height: var(--leading-snug);
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.article-item:hover .article-title {
+  color: var(--text-primary);
+}
+
+/* ─── سهم الدخول ─── */
+.article-arrow {
+  color: var(--color-neutral-500);
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  opacity: 0.45;
+  transition:
+    opacity var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
+}
+
+.article-item:hover .article-arrow {
+  opacity: 0.9;
+  color: var(--color-brand-300);
+  transform: translateX(-3px);
+}
+
+/* ─── فاصل بين المقالات ─── */
+.article-divider {
+  display: none;
+}
+
+/* ==========================================================================
+   ARTICLE ARROW — سهم تفاعلي محسّن (دائرة + شيفرون + خط)
+   ========================================================================== */
+
+.article-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  transition:
+    opacity var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+  color: var(--color-neutral-500);
+  opacity: 0.45;
+}
+
+.article-arrow__svg {
+  width: 100%;
+  height: 100%;
+}
+
+.article-arrow__ring {
+  transition: stroke-opacity var(--duration-fast) var(--ease-out);
+  stroke-opacity: 0.5;
+}
+
+.article-arrow__line {
+  stroke-dasharray: 7 3;
+  stroke-dashoffset: 0;
+  transition:
+    stroke-dashoffset 0.22s var(--ease-out),
+    opacity 0.22s var(--ease-out);
+  opacity: 0;
+}
+
+/* عند hover: الخط يظهر ويتحرك، الدائرة تزداد وضوحاً */
+.article-item:hover .article-arrow {
+  opacity: 1;
+  color: var(--color-brand-300);
+  transform: translateX(-4px);
+}
+
+.article-item:hover .article-arrow__ring {
+  stroke-opacity: 0.85;
+}
+
+.article-item:hover .article-arrow__line {
+  opacity: 1;
+  stroke-dashoffset: -4px;
+}
+
+/* حالة الضغط */
+.article-item:active .article-arrow {
+  transform: translateX(-2px);
+  color: var(--color-brand-200);
+}
+
+/* --------------------------------------------------------------------------
+   v11 FIXES: icon border token, article list radius
+-------------------------------------------------------------------------- */
+
+
+
+.article-list {
+  border-radius: var(--radius-xl);
+}
+
+
+/* ── "تعرّف على سياسة التحرير" — شريط صغير هادئ تحت التبويبات (لا يزاحمها ولا يطغى على القائمة) ── */
+.article-policy { padding: 0; }
+
+/* ── ضمان ظهور التبويبات فوق/تحت بطاقة السياسة دائمًا ──
+   التبويبات (.article-filters) حاوية overflow-x:auto، وده بيخلّي أقل ارتفاع تلقائي
+   ليها صفر، فهي العنصر الوحيد القابل للانكماش جوّه عمود flex (.history-articles-page).
+   أي ضغط على ارتفاع الصفحة كان بيطبّقها لصفر وتختفي خلف بطاقة السياسة (اللي بتحتفظ
+   بحجمها). هنا: ما تنكمشش أبدًا، وترتيب الرسم صريح — التبويبات فوق البطاقة لو تلامسوا. */
+.history-articles-page > .article-policy  { flex: 0 0 auto; position: relative; z-index: 1; }
+.history-articles-page > .article-filters { flex: 0 0 auto; position: relative; z-index: 2; min-height: 48px; }
+
+.policy-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  min-height: 44px;
+  text-align: right;
+  cursor: pointer;
+  color: var(--text-primary);
+  background: rgba(var(--color-brand-700-rgb), 0.12);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  -webkit-tap-highlight-color: transparent;
+  transition: transform var(--duration-fast) var(--ease-out), background-color var(--duration-fast) var(--ease-out);
+}
+.policy-card:active { transform: scale(0.985); }
+
+.policy-card__icon {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  background: rgba(var(--color-brand-500-rgb), 0.16);
+  color: var(--color-brand-300);
+}
+.policy-card__icon i, .policy-card__icon svg { width: 16px; height: 16px; }
+
+.policy-card__body { flex: 1; min-width: 0; display: flex; flex-direction: row; align-items: baseline; flex-wrap: wrap; gap: 2px var(--space-2); }
+.policy-card__title {
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+}
+.policy-card__cta {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+.policy-card__arrow { flex: 0 0 auto; display: grid; place-items: center; color: var(--text-muted); }
+.policy-card__arrow i, .policy-card__arrow svg { width: 16px; height: 16px; }
