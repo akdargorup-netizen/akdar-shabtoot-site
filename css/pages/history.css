@@ -1,0 +1,325 @@
+/* ==========================================================================
+   HISTORY PAGE — شبتوت بحري
+   "تاريخنا" — دمج قسمي التاريخ والذاكرة القديمين. فهرس بثلاثة فروع
+   (مقالاتنا / صورنا / صوتنا) + شاشة المقالات الموحّدة (article-*
+   بفلاتر تصنيف وشارات، history-articles.js).
+   Consumes: tokens.css
+   ========================================================================== */
+
+/* ==========================================================================
+   HISTORY INDEX — فهرس "تاريخنا" (ثلاثة فروع: مقالاتنا / صورنا / صوتنا)
+   ========================================================================== */
+
+.history-page {
+  position: relative;
+  isolation: isolate;
+}
+
+/* توهج "الغبار" — أخضر البراند، هوية بطاقة "التاريخ" في الصفحة
+   الرئيسية (home-card--green) — نفس بنية وحركة الغبار في باقي الأقسام. */
+.history-page::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  right: -80px;
+  width: 260px;
+  height: 260px;
+  background: radial-gradient(
+    circle,
+    rgba(var(--color-brand-400-rgb), 0.16) 0%,
+    transparent 70%
+  );
+  filter: blur(18px);
+  z-index: -1;
+  pointer-events: none;
+  animation: pulse-subtle 14s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .history-page::before { animation: none; }
+}
+
+.history-index {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding-bottom: var(--space-4);
+}
+
+.history-index-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* بطاقة الفهرس — محسّنة مع شكل أفضل */
+.history-index-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  background: linear-gradient(
+    145deg,
+    var(--surface-raised) 0%,
+    color-mix(in srgb, var(--surface-raised) 90%, var(--color-brand-950)) 100%
+  );
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-4) var(--space-5);
+  min-height: 84px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition:
+    border-color var(--duration-base) var(--ease-out),
+    box-shadow   var(--duration-base) var(--ease-out),
+    transform    var(--duration-base) var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+  box-shadow:
+    var(--shadow-sm),
+    inset 0 1px 0 rgba(var(--color-highlight-rgb), 0.07);
+}
+
+.history-index-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(var(--shimmer-deep-rgb), 0.30) 40%,
+    rgba(var(--shimmer-deep-rgb), 0.30) 60%,
+    transparent
+  );
+  pointer-events: none;
+}
+
+.history-index-card:hover {
+  border-color: var(--color-brand-500);
+  box-shadow:
+    var(--shadow-lg),
+    0 0 0 1px rgba(var(--color-brand-400-rgb), 0.16),
+    inset 0 1px 0 rgba(var(--color-highlight-rgb), 0.12);
+  transform: translateY(-3px);
+}
+
+.history-index-card:active {
+  transform: translateY(0) scale(0.99);
+  box-shadow: var(--shadow-sm);
+}
+
+.history-index-card__icon {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: rgba(var(--color-brand-500-rgb), 0.12);
+  border: 1px solid rgba(var(--color-brand-400-rgb), 0.22);
+  border-radius: var(--radius-lg);
+  color: var(--color-brand-200);
+  transition:
+    background    var(--duration-fast) var(--ease-out),
+    border-color  var(--duration-fast) var(--ease-out),
+    color         var(--duration-fast) var(--ease-out);
+}
+
+.history-index-card__icon svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 1.75;
+}
+
+.history-index-card:hover .history-index-card__icon {
+  background: rgba(var(--color-brand-400-rgb), 0.22);
+  border-color: rgba(var(--shimmer-deep-rgb), 0.38);
+  color: var(--color-brand-100);
+}
+
+.history-index-card__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.history-index-card__title {
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  color: var(--text-brand);
+  line-height: var(--leading-snug);
+  margin: 0;
+}
+
+.history-index-card__desc {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.history-index-card__arrow {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  color: var(--color-brand-400);
+  opacity: 0.6;
+  transition:
+    opacity var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.history-index-card__arrow svg {
+  width: 32px;
+  height: 32px;
+}
+
+.history-index-card:hover .history-index-card__arrow {
+  opacity: 1;
+  color: var(--color-brand-200);
+  transform: translateX(-3px);
+}
+
+/* ==========================================================================
+   HISTORY ARTICLES PAGE — مقالاتنا (فرع "تاريخنا")
+   ========================================================================== */
+
+.history-articles-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  /* 2026-10: حاوية الفهرس تتمدد جانبيًا — الهامش الجانبي للصفحة يصغر
+     من space-4 إلى space-2 (الفلاتر تحتفظ بمحاذاتها القديمة بحشوة خاصة) */
+  padding-inline: var(--space-2);
+}
+.history-articles-page .article-filters { padding-inline: var(--space-2); }
+
+/* شريط فلاتر التصنيف — نفس مظهر .filter-chip المعرّف في events.css،
+   بمسافة تفصله بصريًا عن القائمة تحته */
+.article-filters {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  padding: var(--space-1) 0 var(--space-2);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.article-filters::-webkit-scrollbar {
+  display: none;
+}
+
+/* شارة تصنيف صغيرة — دباجة فوق العنوان، بلون البراند الهادئ */
+/* صف الشارات فوق العنوان — التصنيف + شارة "مهم" لو موجودة */
+.article-tags {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.article-badge {
+  align-self: flex-start;
+  font-family: var(--font-display);
+  font-size: 10.5px;
+  font-weight: var(--weight-semibold);
+  color: var(--color-brand-300);
+  background-color: var(--state-selected-bg);
+  border: 1px solid var(--border-brand);
+  border-radius: var(--radius-full);
+  padding: 2px 9px;
+  letter-spacing: var(--tracking-wide);
+  line-height: 1.6;
+}
+
+/* علامة "مهم" — نجمة بس، بدون كلمة "مهم" ولا شكل شارة/بادج، عشان ما
+   توحيش (ولو بشكل غير مباشر) إن باقي المقالات "غير مهمة". مجرد تلميح
+   بصري خفيف بلون accent، مش تصنيف صريح. */
+.article-badge--important {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent-300);
+}
+
+.article-badge--important i,
+.article-badge--important svg {
+  width: 13px;
+  height: 13px;
+  fill: currentColor;
+  stroke: currentColor;
+}
+
+/* صف المقال المهم — تلميح بصري خفيف (شريط جانبي رفيع بلون accent) */
+.article-item--important {
+  box-shadow: inset 3px 0 0 rgba(var(--color-accent-400-rgb), 0.55);
+}
+
+/* رقم المقال أثناء التحميل (سكيلتون) */
+.article-number--skeleton {
+  background: var(--surface-overlay);
+  border-color: var(--border-subtle);
+  color: transparent;
+}
+
+/* --------------------------------------------------------------------------
+   v11 FIXES: unified tokens, spacing consistency, interaction polish
+-------------------------------------------------------------------------- */
+
+/* Refined index card hover */
+.history-index-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md), 0 0 0 1px rgba(var(--color-brand-400-rgb), 0.12);
+  border-color: var(--color-brand-600);
+}
+
+.history-index-card:active {
+  transform: translateY(0) scale(0.985);
+  box-shadow: var(--shadow-xs);
+}
+
+/* Arrow nudge on hover */
+.history-index-card:hover .history-index-card__arrow {
+  transform: translateX(-4px);
+  opacity: 1;
+  color: var(--color-brand-200);
+}
+
+/* Refined filter button */
+
+
+/* --------------------------------------------------------------------------
+   v12: بطاقات التاريخ أغنى + نص أوضح
+-------------------------------------------------------------------------- */
+
+.history-index-card {
+  background: linear-gradient(
+    148deg,
+    var(--surface-raised) 0%,
+    color-mix(in srgb, var(--surface-raised) 84%, var(--color-brand-950)) 100%
+  );
+  border-color: var(--border-default);
+  box-shadow: var(--shadow-md), inset 0 1px 0 rgba(var(--shimmer-base-rgb), 0.07);
+}
+
+/* ↑ عنوان أخضر بتوقيع البراند، وصف أبيض عادي للتباين */
+.history-index-card__title {
+  color: var(--text-brand);
+  font-weight: var(--weight-bold);  /* كان semibold — كانت بتلغي bold المعرّف فوق سطر 535 سهوًا، توحيد مع وزن عنوان الهيدر */
+}
+
+.history-index-card__desc {
+  color: var(--text-secondary);
+}

@@ -1,0 +1,1025 @@
+/* ==========================================================================
+   NOTIFICATIONS PAGE — شبتوت بحري
+   Consumes: tokens.css
+   ========================================================================== */
+
+
+
+/* --------------------------------------------------------------------------
+   .notifications-feed  ←  <section>
+-------------------------------------------------------------------------- */
+
+.notifications-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 8px 16px 24px;
+}
+
+
+/* --------------------------------------------------------------------------
+   .notification-group  ←  <div>
+-------------------------------------------------------------------------- */
+
+.notification-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+
+/* --------------------------------------------------------------------------
+   .group-title  ←  <h3>
+-------------------------------------------------------------------------- */
+
+.group-title {
+  font-family: var(--font-heading);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0 4px;
+  margin-bottom: 6px;
+}
+
+
+/* --------------------------------------------------------------------------
+   .notification-item  ←  <div>
+-------------------------------------------------------------------------- */
+
+.notification-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background-color: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  transition: var(--transition-color);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.notification-item:active {
+  background-color: var(--state-active-bg);
+}
+
+.notification-item--skeleton {
+  height: 74px;
+  background: linear-gradient(
+    90deg,
+    var(--surface-overlay) 25%,
+    var(--surface-elevated) 50%,
+    var(--surface-overlay) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-sweep 1.6s ease-in-out infinite;
+}
+
+/* حالة غير مقروء — شريط جانبي واحد واضح بدل نقطتين متضاربتين */
+.notification-item.unread {
+  border-color: var(--border-brand);
+  background-color: rgba(var(--color-brand-500-rgb), 0.08);
+  box-shadow: var(--shadow-xs);
+  position: relative;
+  padding-inline-start: calc(var(--space-4) + 3px);
+}
+
+.notification-item.unread::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  top: var(--space-3);
+  bottom: var(--space-3);
+  width: 3px;
+  border-radius: var(--radius-full);
+  background: var(--color-brand-400);
+}
+
+
+/* --------------------------------------------------------------------------
+   .notification-icon  ←  <div>
+-------------------------------------------------------------------------- */
+
+.notification-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-md);
+  background-color: var(--surface-overlay);
+  border: 1px solid var(--border-default);
+  color: var(--text-brand);
+  flex-shrink: 0;
+}
+
+.notification-icon svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 1.75;
+}
+
+
+/* --------------------------------------------------------------------------
+   تلوين حسب التصنيف — data-type على .notification-item
+   (خبر / مناسبة / تكافل / تبريك / تعزية / مجتمع / تنبيه عام)
+-------------------------------------------------------------------------- */
+
+.notification-item[data-type="news"]        .notification-icon { background-color: var(--notif-news-bg);       border-color: var(--notif-news-border);       color: var(--notif-news-text); }
+.notification-item[data-type="event"]       .notification-icon { background-color: var(--notif-event-bg);      border-color: var(--notif-event-border);      color: var(--notif-event-text); }
+.notification-item[data-type="solidarity"]  .notification-icon { background-color: var(--notif-solidarity-bg); border-color: var(--notif-solidarity-border); color: var(--notif-solidarity-text); }
+.notification-item[data-type="congrats"]    .notification-icon { background-color: var(--notif-congrats-bg);   border-color: var(--notif-congrats-border);   color: var(--notif-congrats-text); }
+.notification-item[data-type="condolence"]  .notification-icon { background-color: var(--notif-condolence-bg); border-color: var(--notif-condolence-border); color: var(--notif-condolence-text); }
+.notification-item[data-type="community"]   .notification-icon { background-color: var(--notif-community-bg);  border-color: var(--notif-community-border);  color: var(--notif-community-text); }
+.notification-item[data-type="project"]     .notification-icon { background-color: var(--notif-project-bg);    border-color: var(--notif-project-border);    color: var(--notif-project-text); }
+.notification-item[data-type="idea"]        .notification-icon { background-color: var(--notif-idea-bg);       border-color: var(--notif-idea-border);       color: var(--notif-idea-text); }
+.notification-item[data-type="system"]      .notification-icon { background-color: var(--notif-system-bg);     border-color: var(--notif-system-border);     color: var(--notif-system-text); }
+
+.notification-item[data-type="news"]        .notification-chip { background-color: var(--notif-news-bg);       border-color: var(--notif-news-border);       color: var(--notif-news-text); }
+.notification-item[data-type="event"]       .notification-chip { background-color: var(--notif-event-bg);      border-color: var(--notif-event-border);      color: var(--notif-event-text); }
+.notification-item[data-type="solidarity"]  .notification-chip { background-color: var(--notif-solidarity-bg); border-color: var(--notif-solidarity-border); color: var(--notif-solidarity-text); }
+.notification-item[data-type="congrats"]    .notification-chip { background-color: var(--notif-congrats-bg);   border-color: var(--notif-congrats-border);   color: var(--notif-congrats-text); }
+.notification-item[data-type="condolence"]  .notification-chip { background-color: var(--notif-condolence-bg); border-color: var(--notif-condolence-border); color: var(--notif-condolence-text); }
+.notification-item[data-type="community"]   .notification-chip { background-color: var(--notif-community-bg);  border-color: var(--notif-community-border);  color: var(--notif-community-text); }
+.notification-item[data-type="project"]     .notification-chip { background-color: var(--notif-project-bg);    border-color: var(--notif-project-border);    color: var(--notif-project-text); }
+.notification-item[data-type="idea"]        .notification-chip { background-color: var(--notif-idea-bg);       border-color: var(--notif-idea-border);       color: var(--notif-idea-text); }
+.notification-item[data-type="system"]      .notification-chip { background-color: var(--notif-system-bg);     border-color: var(--notif-system-border);     color: var(--notif-system-text); }
+
+
+/* --------------------------------------------------------------------------
+   .notification-content  ←  <div>
+-------------------------------------------------------------------------- */
+
+.notification-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+  flex: 1;
+}
+
+.notification-content__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.notification-title {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.notification-chip {
+  flex-shrink: 0;
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wide);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-full);
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+/* شارة "تجريبية" — لوحة الإدارة بس، توضّح إن الرسالة دي مش مبثوثة
+   فعلياً لأي مستخدم، ظاهرة بس على جهاز المطوّر اللي أرسلها */
+.notification-chip--dev {
+  background-color: var(--status-warning-bg);
+  border-color: var(--status-warning-border);
+  color: var(--status-warning-text);
+}
+
+.notification-text {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.notification-time {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* نقطة الغير مقروء بجانب المحتوى — المؤشر الوحيد للجديد (مع الشريط الجانبي) */
+.notification-dot {
+  flex-shrink: 0;
+  align-self: center;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: var(--color-brand-400);
+  box-shadow: 0 0 6px rgba(var(--color-brand-400-rgb), 0.5);
+}
+
+
+/* --------------------------------------------------------------------------
+   v11 FIXES: replace hardcoded values with tokens
+-------------------------------------------------------------------------- */
+
+
+
+.notifications-feed {
+  gap: var(--space-6);
+  padding: var(--space-2) var(--spacing-page-x) var(--space-6);
+}
+
+.notification-group {
+  gap: var(--space-1);
+}
+
+.group-title {
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-widest);
+  padding: 0 var(--space-1);
+  margin-bottom: var(--space-2);
+}
+
+
+/* ==========================================================================
+   2026-09-28 — بطاقة الرسالة (.notification-item--rich)
+   • ترتيب واضح: (التصنيف + الوقت) فوق، بعدها العنوان بعرض البطاقة كله،
+     بعدها النص — العنوان بقى ياخد سطره كامل بدل ما كان بيتزاحم مع شارة
+     التصنيف في نفس الصف.
+   • المحتوى الطويل ما بيغيّرش شكل البطاقة: العنوان ينقطع عند سطرين،
+     والنص عند 3 أسطر مع تلاشي ناعم في آخره، وزر "قراءة المزيد" بيفرد
+     النص داخل البطاقة (بيظهر فقط لو النص فعلاً اتقصّ).
+   • لوحة الإدارة بتستخدم نفس الكلاسات القديمة (من غير --rich) فما اتأثرتش.
+   ========================================================================== */
+
+.notification-group {
+  gap: var(--space-3);
+}
+
+.group-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+  letter-spacing: normal;
+  text-transform: none;
+  margin-bottom: var(--space-1);
+}
+
+.group-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to left, var(--border-default), transparent);
+}
+
+.notification-item--rich {
+  /* شبكة من عمودين: الأيقونة + صف (التصنيف/الوقت) فوق، والعنوان والنص
+     بعرض البطاقة كله تحتهم — مساحة أكبر للنص بدل ما عمود الأيقونة
+     كان بياكل من عرضه (مهم مع الخط الكبير). */
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: var(--space-3);
+  row-gap: var(--space-2);
+  padding: var(--space-4);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(
+    148deg,
+    var(--surface-raised) 0%,
+    color-mix(in srgb, var(--surface-raised) 90%, var(--color-brand-950)) 100%
+  );
+  border: 1px solid var(--border-default);
+  box-shadow: var(--shadow-sm, var(--shadow-xs));
+  cursor: pointer;
+  position: relative;
+  transition:
+    transform var(--duration-base) var(--ease-out),
+    border-color var(--duration-base) var(--ease-out),
+    background-color var(--duration-base) var(--ease-out);
+}
+
+.notification-item--rich:active {
+  transform: scale(0.985);
+}
+
+/* الجديدة: حدود وخلفية بلمسة البراند — والنقطة (في صف التصنيف) هي
+   المؤشر الوحيد، فاتشال الشريط الجانبي القديم لأنه كان بيتلاصق بالحافة */
+.notification-item--rich.unread {
+  border-color: var(--border-brand);
+  background: linear-gradient(
+    148deg,
+    color-mix(in srgb, var(--surface-raised) 90%, var(--color-brand-700)) 0%,
+    color-mix(in srgb, var(--surface-raised) 94%, var(--color-brand-900)) 100%
+  );
+  padding-inline-start: var(--space-4);
+}
+
+.notification-item--rich.unread::before {
+  content: none;
+}
+
+.notification-item--rich .notification-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-lg);
+}
+
+.notification-item--rich .notification-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* صف التصنيف + الوقت + نقطة الجديد */
+.notification-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.notification-meta .notification-time {
+  margin: 0;
+  margin-inline-start: auto;
+  white-space: nowrap;
+}
+
+.notification-meta .notification-dot {
+  align-self: center;
+}
+
+/* العنوان: سطران كحد أقصى — عنوان طويل ما يكبّرش البطاقة */
+.notification-item--rich .notification-title {
+  font-size: var(--text-md);
+  line-height: var(--leading-snug);
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* النص: 3 أسطر كحد أقصى مع تلاشي في آخره */
+.notification-item--rich .notification-text {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* بعد الفرد: النص كامل من غير قص ولا تلاشي */
+.notification-item--rich.is-expanded .notification-text {
+  display: block;
+  -webkit-line-clamp: unset;
+  overflow: visible;
+}
+
+/* زر قراءة المزيد */
+.notification-more {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-top: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  min-height: 36px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-subtle);
+  background: rgba(var(--color-brand-400-rgb), 0.10);
+  color: var(--text-brand);
+  font-family: var(--font-heading);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.notification-more[hidden] {
+  display: none;
+}
+
+.notification-more:active {
+  background: rgba(var(--color-brand-400-rgb), 0.20);
+}
+
+.notification-more__chevron {
+  width: 16px;
+  height: 16px;
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+.notification-item--rich.is-expanded .notification-more__chevron {
+  transform: rotate(180deg);
+}
+
+.notification-item--skeleton {
+  height: 118px;
+  border-radius: var(--radius-xl);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .notification-item--rich,
+  .notification-more__chevron {
+    transition: none;
+  }
+}
+
+
+.notification-item--rich .notification-content {
+  display: contents;
+}
+
+.notification-item--rich .notification-meta {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.notification-item--rich .notification-title,
+.notification-item--rich .notification-text,
+.notification-item--rich .notification-more {
+  grid-column: 1 / -1;
+}
+
+.notification-item--rich .notification-icon {
+  width: 44px;
+  height: 44px;
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.notification-item--rich .notification-text {
+  line-height: var(--leading-normal);
+}
+
+.notification-item--rich .notification-more {
+  justify-self: start;
+}
+
+.notification-item--rich .notification-chip {
+  font-size: 0.7rem;
+  padding: 3px var(--space-3);
+}
+
+
+/* ==========================================================================
+   2026-10-01 — تصنيفات جديدة: العبادة / آنداندي
+   (مصنع الأفكار والفعاليات تستخدم ألوان idea / event الموجودة)
+   ========================================================================== */
+
+.notification-item[data-type="worship"] {
+  --notif-accent-bg:     rgba(var(--stone-tint-rgb), 0.20);
+  --notif-accent-border: rgba(var(--stone-tint-rgb), 0.55);
+  --notif-accent-text:   var(--text-stone-strong);
+}
+
+.notification-item[data-type="nubian"] {
+  --notif-accent-bg:     rgba(var(--color-brand-500-rgb), 0.16);
+  --notif-accent-border: var(--border-brand);
+  --notif-accent-text:   var(--text-brand);
+}
+
+.notification-item[data-type="worship"] .notification-icon,
+.notification-item[data-type="worship"] .notification-chip,
+.notification-item[data-type="nubian"]  .notification-icon,
+.notification-item[data-type="nubian"]  .notification-chip {
+  background-color: var(--notif-accent-bg);
+  border-color:     var(--notif-accent-border);
+  color:            var(--notif-accent-text);
+}
+
+
+/* ==========================================================================
+   2026-10-01 — إعادة تصميم بطاقة الرسالة (.notification-item--rich)
+   • هرمية واضحة: أيقونة + (تصنيف/وقت) + العنوان جنب بعض، والنص تحتهم
+     بخط فاصل رفيع
+   • شريط لون التصنيف على حافة البطاقة، وبطاقة "جديد" بتوهّج هادئ
+   • عناوين المجموعات (جديد / سابق) بشكل أنيق مع عدّاد
+   ========================================================================== */
+
+.notifications-feed {
+  gap: var(--space-5);
+}
+
+.notification-group {
+  gap: var(--space-3);
+}
+
+/* عنوان المجموعة */
+.group-title {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  color: var(--text-secondary);
+  padding: 0 var(--space-1);
+  margin: 0 0 var(--space-1);
+}
+
+.group-title::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+
+/* البطاقة */
+.notification-item--rich {
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto auto auto;
+  align-items: center;
+  column-gap: var(--space-3);
+  row-gap: 0;
+  padding: var(--space-4) var(--space-4) var(--space-3);
+  border-radius: 20px;
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-raised);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.10), 0 6px 18px -8px rgba(0, 0, 0, 0.28);
+  overflow: hidden;
+}
+
+/* شريط لون التصنيف على الحافة */
+.notification-item--rich::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 4px;
+  background: var(--notif-bar, var(--border-default));
+  opacity: 0.9;
+}
+
+.notification-item--rich[data-type="news"]       { --notif-bar: var(--notif-news-border); }
+.notification-item--rich[data-type="event"]      { --notif-bar: var(--notif-event-border); }
+.notification-item--rich[data-type="solidarity"] { --notif-bar: var(--notif-solidarity-border); }
+.notification-item--rich[data-type="congrats"]   { --notif-bar: var(--notif-congrats-border); }
+.notification-item--rich[data-type="condolence"] { --notif-bar: var(--notif-condolence-border); }
+.notification-item--rich[data-type="community"]  { --notif-bar: var(--notif-community-border); }
+.notification-item--rich[data-type="project"]    { --notif-bar: var(--notif-project-border); }
+.notification-item--rich[data-type="idea"]       { --notif-bar: var(--notif-idea-border); }
+.notification-item--rich[data-type="system"]     { --notif-bar: var(--notif-system-border); }
+.notification-item--rich[data-type="worship"]    { --notif-bar: var(--notif-accent-border); }
+.notification-item--rich[data-type="nubian"]     { --notif-bar: var(--notif-accent-border); }
+
+.notification-item--rich.unread {
+  border-color: rgba(var(--color-brand-400-rgb), 0.45);
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--surface-raised) 88%, var(--color-brand-600)) 0%,
+    var(--surface-raised) 70%
+  );
+  box-shadow:
+    0 0 0 1px rgba(var(--color-brand-400-rgb), 0.10),
+    0 8px 22px -10px rgba(var(--color-brand-500-rgb), 0.45);
+}
+
+/* الأيقونة: تمتد على صفّي الميتا والعنوان */
+.notification-item--rich .notification-icon {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  align-self: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  border-width: 1px;
+}
+
+.notification-item--rich .notification-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* الصف الأول: التصنيف + الوقت */
+.notification-item--rich .notification-meta {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: end;
+  padding-bottom: 2px;
+}
+
+.notification-item--rich .notification-chip {
+  font-size: 0.72rem;
+  padding: 2px var(--space-3);
+}
+
+.notification-item--rich .notification-time {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+/* الصف الثاني: العنوان بجانب الأيقونة */
+.notification-item--rich .notification-title {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: start;
+  font-size: var(--text-md);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-snug);
+  color: var(--text-primary);
+  margin-top: 2px;
+}
+
+/* الصف الثالث: النص تحت خط فاصل رفيع بعرض البطاقة */
+.notification-item--rich .notification-text {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-subtle);
+  font-size: var(--text-sm);
+  line-height: 1.85;
+  color: var(--text-secondary);
+}
+
+/* الصف الرابع: قراءة المزيد — رابط أنيق بدل زر ثقيل */
+.notification-item--rich .notification-more {
+  grid-column: 1 / -1;
+  grid-row: 4;
+  justify-self: start;
+  margin: var(--space-1) 0 0;
+  padding: var(--space-1) var(--space-3);
+  min-height: 34px;
+  border: 0;
+  background: rgba(var(--color-brand-400-rgb), 0.12);
+  color: var(--text-brand);
+}
+
+.notification-item--rich .notification-more:active {
+  background: rgba(var(--color-brand-400-rgb), 0.22);
+}
+
+.notification-item--rich .notification-dot {
+  width: 8px;
+  height: 8px;
+}
+
+/* هيكل التحميل */
+.notification-item--skeleton {
+  height: 128px;
+  border-radius: 20px;
+  box-shadow: none;
+}
+
+.notification-item--skeleton::after { content: none; }
+
+
+/* ══════════════════════════════════════════════════════════════
+   عنوان بطاقة الرسالة — أصغر وبعرض البطاقة كاملًا (2026-10-03)
+   كان العنوان بالحجم الكبير (--text-md) ومحشورًا في العمود الأضيق بجانب
+   الأيقونة، فحتى العنوان القصير يلتف على سطرين مع الخط الكبير. الآن:
+   الأيقونة والتصنيف/الوقت في الصف الأول، والعنوان تحتهما بعرض البطاقة.
+   سطران كحد أقصى للعناوين الطويلة (line-clamp أعلاه) كما هو.
+   ══════════════════════════════════════════════════════════════ */
+.notification-item--rich .notification-icon {
+  grid-row: 1;
+}
+
+.notification-item--rich .notification-title {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  font-size: 0.9375rem;
+  line-height: var(--leading-snug);
+  margin-top: var(--space-2);
+}
+
+
+/* ==========================================================================
+   2026-10-05 — هامش جانبي أصغر لواجهة الرسائل
+   كان الهامش مضاعفًا: .page (16px) + .notifications-feed (16px) = 32px
+   من كل جهة. الآن 8px فقط، فتتّسع بطاقات الرسائل ويتّسع نصّها.
+   ========================================================================== */
+
+.page.notifications-page {
+  padding-inline: var(--space-2);
+}
+
+.notifications-feed {
+  padding-inline: 0;
+}
+
+.notification-item--rich {
+  padding: var(--space-3) var(--space-4);
+}
+
+
+/* ==========================================================================
+   2026-10-10 — النص هو البطل (Akdar_312)
+   بدل ما نكبّر النص، صغّرنا كل ما حوله: الأيقونة والتصنيف والوقت والعنوان
+   صاروا خفيفين وهادئين، والنص بحجم القراءة المريحة ولون أساسي واضح.
+   ========================================================================== */
+.notification-item--rich .notification-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+}
+
+.notification-item--rich .notification-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.notification-item--rich .notification-meta {
+  gap: var(--space-2);
+  align-self: center;
+  padding-bottom: 0;
+}
+
+.notification-item--rich .notification-chip {
+  font-size: 0.62rem;
+  line-height: 1.5;
+  padding: 1px var(--space-2);
+  font-weight: var(--weight-medium);
+  opacity: 0.85;
+}
+
+.notification-item--rich .notification-time {
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  opacity: 0.85;
+}
+
+.notification-item--rich .notification-dot {
+  width: 6px;
+  height: 6px;
+}
+
+/* العنوان: صغير وهادئ — سطر تعريف، مش عنوان صارخ */
+.notification-item--rich .notification-title {
+  font-size: 0.8125rem;
+  font-weight: var(--weight-semibold);
+  color: var(--text-secondary);
+  margin-top: var(--space-2);
+}
+
+/* النص: البطل — حجم القراءة الكامل ولون أساسي، بدون خط فاصل ثقيل */
+.notification-item--rich .notification-text {
+  font-size: var(--text-base);
+  line-height: 1.9;
+  color: var(--text-primary);
+  margin-top: var(--space-1);
+  padding-top: 0;
+  border-top: 0;
+}
+
+
+/* ==========================================================================
+   2026-10-14 — البطاقات الناعمة (تصميم معتمد)
+   • أيقونة 44px بجانب (التصنيف · الوقت) فوق العنوان، والنص بعرض البطاقة
+   • عنوان 16px واضح، نص 15px بتباعد مريح، تصنيف كنص ملوّن بلا إطار
+   • الجديد: خلفية خضراء خفيفة + نقطة (بدون شريط جانبي ولا تدرّج)
+   • هذه الكتلة آخر الملف عمدًا: تُلغي طبقات التعديل السابقة أعلاه
+   ========================================================================== */
+
+.notifications-feed { gap: var(--space-5); }
+.notification-group { gap: var(--space-3); }
+
+.group-title {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  color: var(--text-muted);
+}
+.group-title::before { content: none; }
+
+.notification-item--rich {
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto auto auto;
+  column-gap: var(--space-3);
+  row-gap: 2px;
+  padding: var(--space-4);
+  border-radius: 18px;
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-xs);
+  overflow: visible;
+}
+
+.notification-item--rich::after { content: none; }
+
+.notification-item--rich.unread {
+  background:
+    linear-gradient(rgba(var(--color-brand-400-rgb), 0.10), rgba(var(--color-brand-400-rgb), 0.10)),
+    var(--surface-raised);
+  border-color: rgba(var(--color-brand-400-rgb), 0.40);
+  box-shadow: var(--shadow-xs);
+}
+
+/* الأيقونة: مربع ناعم يمتد على صفّي (التصنيف) و(العنوان) */
+.notification-item--rich .notification-icon {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  align-self: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+}
+.notification-item--rich .notification-icon svg { width: 22px; height: 22px; stroke-width: 1.75; }
+
+/* التصنيف · الوقت · نقطة الجديد — فوق العنوان */
+.notification-item--rich .notification-meta {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: end;
+  gap: var(--space-2);
+  padding: 0;
+}
+.notification-item--rich .notification-chip {
+  background: none;
+  border: 0;
+  padding: 0;
+  opacity: 1;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  line-height: 1.4;
+}
+.notification-item--rich .notification-time {
+  margin: 0;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  opacity: 1;
+  color: var(--text-muted);
+}
+.notification-item--rich .notification-time::before {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.6;
+  vertical-align: middle;
+  margin-inline-end: var(--space-2);
+}
+.notification-item--rich .notification-dot {
+  width: 8px;
+  height: 8px;
+  margin-inline-start: auto;
+}
+
+/* العنوان بجانب الأيقونة */
+.notification-item--rich .notification-title {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: start;
+  margin: 0;
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-snug);
+  color: var(--text-primary);
+}
+.notification-item--rich:not(.unread) .notification-title { font-weight: var(--weight-semibold); }
+
+/* النص بعرض البطاقة */
+.notification-item--rich .notification-text {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  border: 0;
+  font-size: 0.9375rem;
+  line-height: 1.9;
+  color: var(--text-secondary);
+}
+
+/* قراءة المزيد: رابط خفيف */
+.notification-item--rich .notification-more {
+  grid-column: 1 / -1;
+  grid-row: 4;
+  justify-self: start;
+  margin: 0;
+  padding: var(--space-1) 0;
+  min-height: 32px;
+  background: none;
+  border: 0;
+  color: var(--text-brand);
+}
+.notification-item--rich .notification-more:active { background: none; opacity: 0.7; }
+
+.notification-item--skeleton { height: 132px; border-radius: 18px; }
+
+
+/* ==========================================================================
+   2026-10-14 — بطاقة الرسالة بشريط جانبي ملوّن حسب النوع
+   • شريط عريض على الحافة (بنفس لون نوع الرسالة) + أيقونة في مربع ناعم
+   • تسلسل واضح: النوع والوقت ← العنوان ← النص، وكلها بمحاذاة واحدة
+     جنب الأيقونة بدل ما النص يرجع تحتها
+   • غير المقروءة: خلفية بلمسة النوع + نقطة نابضة خفيفة
+   ========================================================================== */
+
+.notification-item--rich {
+  --nt:    var(--notif-system-text);
+  --nt-bg: var(--notif-system-bg);
+  --nt-bd: var(--notif-system-border);
+  grid-template-columns: 48px 1fr;
+  align-items: start;
+  column-gap: var(--space-3);
+  row-gap: var(--space-1);
+  padding: var(--space-4) var(--space-4) var(--space-4) var(--space-3);
+  border: 1px solid var(--border-subtle);
+  border-inline-start: 5px solid var(--nt);
+  border-radius: 18px;
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-xs);
+  overflow: hidden;
+}
+.notification-item--rich[data-type="news"]       { --nt: var(--notif-news-text);       --nt-bg: var(--notif-news-bg);       --nt-bd: var(--notif-news-border); }
+.notification-item--rich[data-type="event"]      { --nt: var(--notif-event-text);      --nt-bg: var(--notif-event-bg);      --nt-bd: var(--notif-event-border); }
+.notification-item--rich[data-type="solidarity"] { --nt: var(--notif-solidarity-text); --nt-bg: var(--notif-solidarity-bg); --nt-bd: var(--notif-solidarity-border); }
+.notification-item--rich[data-type="congrats"]   { --nt: var(--notif-congrats-text);   --nt-bg: var(--notif-congrats-bg);   --nt-bd: var(--notif-congrats-border); }
+.notification-item--rich[data-type="condolence"] { --nt: var(--notif-condolence-text); --nt-bg: var(--notif-condolence-bg); --nt-bd: var(--notif-condolence-border); }
+.notification-item--rich[data-type="community"]  { --nt: var(--notif-community-text);  --nt-bg: var(--notif-community-bg);  --nt-bd: var(--notif-community-border); }
+.notification-item--rich[data-type="project"]    { --nt: var(--notif-project-text);    --nt-bg: var(--notif-project-bg);    --nt-bd: var(--notif-project-border); }
+.notification-item--rich[data-type="idea"]       { --nt: var(--notif-idea-text);       --nt-bg: var(--notif-idea-bg);       --nt-bd: var(--notif-idea-border); }
+
+.notification-item--rich.unread {
+  background:
+    linear-gradient(90deg, transparent 0%, var(--nt-bg) 100%),
+    var(--surface-raised);
+  border-color: var(--nt-bd);
+  border-inline-start-color: var(--nt);
+  padding-inline-start: var(--space-3);
+}
+
+/* الأيقونة: مربع ناعم يمتد على صفوف العنوان والنص */
+.notification-item--rich .notification-icon {
+  grid-column: 1;
+  grid-row: 1 / span 3;
+  align-self: start;
+  width: 48px;
+  height: 48px;
+  border-radius: 15px;
+}
+.notification-item--rich .notification-icon svg { width: 23px; height: 23px; }
+
+/* كل المحتوى في العمود الثاني، بمحاذاة واحدة */
+.notification-item--rich .notification-meta  { grid-column: 2; grid-row: 1; }
+.notification-item--rich .notification-title { grid-column: 2; grid-row: 2; }
+.notification-item--rich .notification-text  { grid-column: 2; grid-row: 3; }
+.notification-item--rich .notification-more  { grid-column: 2; }
+
+/* النوع كنص ملوّن بدل شارة ثقيلة */
+.notification-item--rich .notification-chip {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--nt);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.01em;
+}
+.notification-item--rich .notification-time { color: var(--text-muted); font-size: var(--text-xs); }
+
+.notification-item--rich .notification-title {
+  font-size: var(--text-md);
+  font-weight: 800;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+.notification-item--rich:not(.unread) .notification-title { font-weight: var(--weight-bold); }
+.notification-item--rich .notification-text { line-height: 1.8; }
+
+.notification-item--rich .notification-more {
+  background: var(--nt-bg);
+  border-color: var(--nt-bd);
+  color: var(--nt);
+}
+
+.notification-item--rich .notification-dot {
+  width: 9px;
+  height: 9px;
+  background: var(--nt);
+  box-shadow: 0 0 0 0 var(--nt);
+  animation: notif-pulse 2.4s var(--ease-out) infinite;
+}
+@keyframes notif-pulse {
+  0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--nt) 45%, transparent); }
+  70%  { box-shadow: 0 0 0 7px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .notification-item--rich .notification-dot { animation: none; }
+}
+
+
+/* ==========================================================================
+   2026-10-18 — إشعارات التفاعل الشخصي بلا عنوان ("علّق فلان على منشورك")
+   بعد حذف العنوان بقي صف فارغ + هامش علوي للنص فيظهر فراغ. الآن النص يصعد
+   مباشرة تحت (التصنيف · الوقت) في الصف الثاني بلا هامش زائد.
+   ========================================================================== */
+.notification-item--rich.notification-item--no-title {
+  grid-template-rows: auto auto;
+  row-gap: 2px;
+}
+.notification-item--rich.notification-item--no-title .notification-icon { grid-row: 1 / span 2; }
+.notification-item--rich.notification-item--no-title .notification-text {
+  grid-row: 2;
+  margin-top: 0;
+}
+.notification-item--rich.notification-item--no-title .notification-more { grid-row: 3; }

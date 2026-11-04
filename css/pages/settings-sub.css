@@ -1,0 +1,792 @@
+/* ==========================================================================
+   SETTINGS SUB-PAGES — شبتوت بحري
+   Appearance · Notifications Settings · About App
+   Consumes: tokens.css, settings.css, components/
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   SHARED — section label (shared across all three sub-pages)
+-------------------------------------------------------------------------- */
+
+.appearance-section-label, .about-app-page .appearance-section-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 0 var(--space-2);
+  margin: var(--space-6) 0 var(--space-3);
+}
+
+.appearance-section-label::before {
+  content: '';
+  width: 10px;
+  height: 2px;
+  border-radius: var(--radius-full);
+  background: var(--color-brand-500);
+  flex-shrink: 0;
+}
+
+.settings-page > .appearance-section-label:first-of-type,
+.about-app-page > .appearance-section-label:first-of-type {
+  margin-top: var(--space-2);
+}
+
+/* --------------------------------------------------------------------------
+   APPEARANCE PAGE
+-------------------------------------------------------------------------- */
+
+.appearance-page {
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Theme picker strip */
+.appearance-list {
+  display: flex;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+.appearance-option {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-2);
+  border-radius: var(--radius-xl);
+  border: 1.5px solid var(--border-subtle);
+  background: linear-gradient(
+    160deg,
+    var(--surface-raised) 0%,
+    var(--surface-modal) 100%
+  );
+  box-shadow: inset 0 1px 0 rgba(200, 220, 180, 0.08), var(--shadow-sm);
+  cursor: pointer;
+  transition:
+    border-color var(--duration-base) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-spring);
+  position: relative;
+}
+
+.appearance-option:hover {
+  border-color: var(--color-brand-600);
+  transform: translateY(-1px);
+  box-shadow: inset 0 1px 0 rgba(200, 220, 180, 0.10), var(--shadow-md);
+}
+
+.appearance-option:active {
+  transform: scale(0.97);
+  background: var(--state-active-bg);
+}
+
+.appearance-option--active {
+  border-color: var(--color-brand-400);
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--surface-raised) 78%, var(--color-brand-800)) 0%,
+    color-mix(in srgb, var(--surface-modal) 85%, var(--color-brand-900)) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(170, 220, 130, 0.14),
+    var(--shadow-brand-sm);
+}
+
+/* Preview mini-dots */
+.appearance-option__preview {
+  width: 100%;
+  height: 42px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  overflow: hidden;
+}
+.appearance-preview--light { background-color: var(--preview-light-swatch); }
+.appearance-preview--dark { background-color: var(--preview-dark-swatch); }
+.appearance-preview--system {
+  background: linear-gradient(135deg, var(--preview-dark-swatch) 50%, var(--preview-light-swatch) 50%);
+}
+
+.preview-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-brand-400);
+  opacity: 0.8;
+}
+.appearance-preview--light .preview-dot { background-color: var(--color-brand-600); }
+
+.appearance-option__label {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  color: var(--text-muted);
+}
+
+.appearance-option--active .appearance-option__label {
+  color: var(--color-brand-200);
+}
+
+/* Checkmark inside active theme option */
+.appearance-check {
+  display: none;
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  width: 16px;
+  height: 16px;
+  color: var(--color-brand-300);
+}
+.appearance-check svg { width: 14px; height: 14px; }
+.appearance-option--active .appearance-check { display: block; }
+
+/* Tick for list items (text size, font) */
+.appearance-tick {
+  width: 20px;
+  height: 20px;
+  color: var(--color-neutral-600);
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease-out),
+              color    var(--duration-fast) var(--ease-out);
+}
+.appearance-tick svg { width: 20px; height: 20px; }
+.appearance-tick--on {
+  color: var(--color-brand-300);
+  opacity: 1;
+}
+
+/* --------------------------------------------------------------------------
+   NOTIFICATIONS SETTINGS PAGE
+-------------------------------------------------------------------------- */
+
+
+
+.notif-note {
+  font-size: var(--text-xs);
+  color: var(--text-disabled);
+  line-height: var(--leading-relaxed);
+  text-align: center;
+  padding: var(--space-2) var(--space-6);
+  margin-top: 0;
+}
+
+/* بديل البطاقة: قصة أخضر مروية كخط زمني حقيقي — فكرة → رعاية → تنفيذ
+   → دورة إطلاق هو تسلسل فعلي بترتيب منطقي، فخط عمودي واصل بين
+   الأيقونات مناسب هنا (مش مجرد ديكور رقمي). */
+.about-story-list {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--space-6);
+}
+
+.about-story-item {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding: 0 0 var(--space-6);
+}
+
+.about-story-item:last-child {
+  padding-bottom: 0;
+}
+
+/* الخط الواصل بين نقاط الخط الزمني — يمر خلف كل أيقونة */
+.about-story-item:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  top: 40px;
+  bottom: 0;
+  inset-inline-start: 19px;
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    var(--color-brand-600) 0%,
+    rgba(var(--color-brand-400-rgb), 0.15) 100%
+  );
+}
+
+.about-story-item__icon {
+  position: relative;
+  z-index: 1;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-brand-600);
+  border: 1px solid var(--color-brand-400);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 4px var(--surface-base);
+}
+
+.about-story-item__icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.about-story-item__content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-top: var(--space-2);
+}
+
+.about-story-item__content h4 {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  line-height: var(--leading-snug);
+  margin: 0;
+}
+
+.about-story-item__content p {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   ABOUT APP PAGE
+-------------------------------------------------------------------------- */
+
+.about-app-page {
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Hero — الشعار بدون خلفية أو إطار: علامة النخلة الشفافة بلون الثيم مباشرة */
+.about-app-page .privacy-hero--about {
+  position: relative;
+  padding-top: var(--space-4);
+  padding-bottom: var(--space-4);
+}
+
+.about-logo-mark {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--text-brand-strong);
+  -webkit-mask: url(../assets/icons/icon-mark.png) center / contain no-repeat;
+          mask: url(../assets/icons/icon-mark.png) center / contain no-repeat;
+}
+
+
+/* Info card */
+
+
+/* Stats strip */
+
+
+/* no-hover for info-only items */
+
+
+
+/* بطاقة الملاحظة الختامية — هوية خاصة بصفحة "عن التطبيق": حد جانبي
+   أخضر بارز وخلفية متدرجة خفيفة بدل الصندوق المحايد العام */
+.about-app-page .privacy-note-card {
+  background: linear-gradient(
+    155deg,
+    color-mix(in srgb, var(--surface-raised) 88%, var(--color-brand-900)) 0%,
+    var(--surface-raised) 100%
+  );
+  border: 1px solid var(--border-subtle);
+  border-inline-start: 3px solid var(--color-brand-500);
+}
+
+.about-app-page .privacy-note-card__icon {
+  color: var(--color-brand-300);
+}
+
+/* توقيع ختامي أسفل صفحة "عن التطبيق": يستعمل نفس .settings-footer + .about-footer__copy
+   المستعملين أسفل الإعدادات ("© 2027 جميع الحقوق محفوظة") — نفس الشكل والحجم تمامًا */
+
+/* Footer */
+
+
+.about-footer__copy {
+  font-size: var(--text-xs);
+  color: var(--text-disabled);
+}
+
+
+/* ==========================================================================
+   OFFLINE MODE PAGE
+   ========================================================================== */
+
+
+
+.settings-item--danger:active {
+  background-color: rgba(var(--color-alert-900-rgb), 0.10);
+}
+
+/* ==========================================================================
+   PRIVACY PAGE
+   ========================================================================== */
+
+.privacy-page {
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+}
+
+.privacy-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-3);
+  padding: var(--space-8) var(--space-4) var(--space-4);
+}
+
+.privacy-hero__icon {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-2xl);
+  background-color: rgba(var(--color-live-rgb), 0.12);
+  border: 1px solid var(--color-brand-700);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-brand-200);
+}
+.privacy-hero__icon svg { width: 30px; height: 30px; }
+
+/* الشعار الفعلي (About page) — مش أيقونة glyph، فمعاملته مختلفة تماماً:
+   بدون الخلفية الملونة والحدود المخصصتين لأيقونة صغيرة، حجم أكبر يليق
+   بواجهة "عن التطبيق"، وقصّ بشكل "سكوير" متوافق مع أيقونات PWA الحديثة. */
+.privacy-hero__icon--logo {
+  width: 104px;
+  height: 104px;
+  padding: 0;
+  overflow: visible;
+  background: none;
+  border: none;
+  border-radius: 0;
+}
+
+/* "عن التطبيق": مقدمة أهدأ — أيقونة أصغر، وعنوان بنفس هيئة عنوان
+   هيدير الصفحة (header-page-title + الخط الأخضر تحته) بدل عنوان
+   ضخم منفصل عن هوية التطبيق البصرية */
+.privacy-hero__icon--logo-sm {
+  width: 58px;
+  height: 72px;
+}
+
+/* "عن التطبيق": الشعار وحده — متوسط (صُغّر قليلًا 2026-10-15، ثم مرة أخرى: 88×108 ← 76×94)، بتدرّج أخضر هادئ وهالة مزدوجة ناعمة وطفو خفيف */
+.privacy-hero__icon--logo-lg {
+  width: 54px;   /* 2026-10-18: صُغّر درجتين (76×94 ← 54×67) */
+  height: 67px;
+  position: relative;
+  margin-block: var(--space-4);
+  animation: about-logo-float 6s ease-in-out 0.8s infinite;
+}
+
+.privacy-hero__icon--logo-lg::before {
+  content: '';
+  position: absolute;
+  inset: -34% -52%;
+  background: radial-gradient(closest-side, rgba(var(--color-brand-400-rgb), 0.30), transparent 74%);
+  filter: blur(10px);
+  pointer-events: none;
+  animation: about-logo-glow 6s ease-in-out 0.8s infinite;
+}
+
+.privacy-hero__icon--logo-lg::after {
+  content: '';
+  position: absolute;
+  inset: -10% -24%;
+  border-radius: 50%;
+  border: 1px solid rgba(var(--color-brand-400-rgb), 0.22);
+  box-shadow: 0 0 0 10px rgba(var(--color-brand-400-rgb), 0.05), inset 0 0 24px rgba(var(--color-brand-400-rgb), 0.08);
+  pointer-events: none;
+}
+
+.privacy-hero__icon--logo-lg .about-logo-mark {
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(180deg, var(--color-brand-200) 0%, var(--text-brand-strong) 45%, var(--color-brand-400) 100%);
+  filter: drop-shadow(0 8px 18px rgba(var(--color-brand-400-rgb), 0.42));
+  animation: about-logo-in 0.7s var(--ease-out, ease-out) both;
+}
+
+@keyframes about-logo-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.92); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes about-logo-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+
+@keyframes about-logo-glow {
+  0%, 100% { opacity: 0.75; }
+  50%      { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .privacy-hero__icon--logo-lg,
+  .privacy-hero__icon--logo-lg::before,
+  .privacy-hero__icon--logo-lg .about-logo-mark { animation: none; }
+}
+
+[data-scheme="light"] .privacy-hero__icon--logo-lg .about-logo-mark {
+  background: linear-gradient(180deg, var(--color-brand-500) 0%, var(--text-brand-strong) 70%, var(--color-brand-700) 100%);
+  filter: drop-shadow(0 6px 14px rgba(var(--color-brand-600-rgb), 0.30));
+}
+
+.privacy-hero--about .header-title-wrap {
+  gap: 6px;
+}
+
+.privacy-hero__title {
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+}
+
+
+
+.privacy-hero--about .header-title-line {
+  width: 32px;
+}
+
+.privacy-hero__sub {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: var(--leading-relaxed);
+  max-width: 280px;
+}
+
+.privacy-note-card {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  background-color: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  margin-top: var(--space-4);
+}
+.privacy-note-card__icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  color: var(--color-brand-300);
+  margin-top: 2px;
+}
+.privacy-note-card p {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: var(--leading-relaxed);
+}
+
+/* ==========================================================================
+   SHARE APP PAGE
+   ========================================================================== */
+
+.share-page {
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Channel grid */
+
+
+/* Ready message */
+
+
+/* QR box */
+
+
+/* ==========================================================================
+   CONTACT ADMIN PAGE
+   ========================================================================== */
+
+.contact-admin-page {
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  justify-content: center;
+}
+
+/* نص تعريفي فقط أعلى صفحات الإعدادات الفرعية — بدون تكرار العنوان
+   (موجود أصلاً في هيدير الصفحة) ولا الأيقونة (موجودة أصلاً في
+   الواجهة). موحّد الآن مع شكل إنترو "متابعة المشاريع"/"مصنع
+   الأفكار" (page-intro في layout.css): فقرة صغيرة هادئة اللون
+   محاذية لبداية السطر، بدل التوسيط والخط الكبير القديم. */
+.contact-admin-intro {
+  padding: var(--space-4) 0 var(--space-2);
+}
+
+.contact-admin-intro__sub {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: var(--leading-relaxed);
+  margin: 0;
+}
+
+/* Type tabs */
+
+
+
+
+
+
+
+/* Form — الحقول نفسها بقت بتستخدم .input-group/.input المشتركة من forms.css،
+   هنا بس شكل البطاقة اللي بتحويهم + الزر */
+.contact-form-card {
+  background-color: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.contact-admin-page .cta-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 54px;
+  background: var(--gradient-brand);
+  border: 1px solid var(--color-brand-400);
+  border-radius: var(--radius-lg);
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--text-on-brand);
+  cursor: pointer;
+  transition: var(--transition-color), var(--transition-transform);
+  box-shadow: var(--shadow-brand-sm);
+  -webkit-tap-highlight-color: transparent;
+}
+.contact-admin-page .cta-button:hover  { background: var(--gradient-brand-hover); }
+.contact-admin-page .cta-button:active { transform: scale(0.97); }
+.contact-admin-page .cta-button svg { width: 18px; height: 18px; }
+
+/* Success screen */
+.contact-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-12) var(--space-4);
+  text-align: center;
+  animation: fade-up var(--duration-slow) var(--ease-out) both;
+}
+.contact-success__icon {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-full);
+  background-color: rgba(var(--color-live-rgb), 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-brand-200);
+}
+.contact-success__icon svg { width: 32px; height: 32px; }
+.contact-success h3 {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+}
+.contact-success p {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+/* hidden utility */
+.hidden { display: none !important; }
+
+/* --------------------------------------------------------------------------
+   v11 FIXES: token unification, semantic colors
+-------------------------------------------------------------------------- */
+
+/* Replace raw brand rgba with tokens */
+.appearance-option {
+  background: var(--surface-raised);
+}
+
+/* Toggle switch sizing polish */
+.toggle-track {
+  border-radius: var(--radius-full);
+}
+
+/* Fix raw rgba brand colors → semantic tokens */
+
+
+/* --------------------------------------------------------------------------
+   GOLD CONTRIBUTORS — المساهمون الذهبيون: قالب واحد هادئ يجمع الفئات،
+   بإطار ذهبي خافت وفواصل رفيعة بين الفئات (بدل بطاقات متفرقة متوهجة)
+-------------------------------------------------------------------------- */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* --------------------------------------------------------------------------
+   طلب الانضمام للرابطة (association-join) — صفوف الإقرار + رابط الدستور
+-------------------------------------------------------------------------- */
+.join-check-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background: var(--surface-base);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  line-height: var(--leading-snug);
+}
+
+.join-regs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  align-items: flex-start;
+}
+
+
+/* ── تعليمات "الإشعارات ما بتوصلني" — نص مباشر على الخلفية بدون بطاقة ── */
+.notif-help {
+  margin-top: var(--space-8);
+  padding: 0 var(--space-2);
+}
+
+.notif-help__question {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-snug);
+  color: var(--color-brand-300);
+  margin: 0 0 var(--space-3);
+}
+
+[data-scheme="light"] .notif-help__question { color: var(--color-brand-600); }
+
+.notif-help__intro,
+.notif-help__outro {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+  margin: 0 0 var(--space-5);
+}
+
+.notif-help__outro { margin: var(--space-5) 0 0; color: var(--text-muted); }
+
+.notif-help__steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: notif-step;
+  display: flex;
+  flex-direction: column;
+}
+
+.notif-help__step {
+  position: relative;
+  counter-increment: notif-step;
+  padding-inline-start: 52px;
+  padding-bottom: var(--space-5);
+}
+
+.notif-help__step:last-child { padding-bottom: 0; }
+
+.notif-help__step::before {
+  content: counter(notif-step);
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  background: var(--color-brand-600);
+  border: 1px solid var(--color-brand-400);
+  box-shadow: 0 0 0 4px var(--surface-base);
+}
+
+.notif-help__step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  inset-inline-start: 17px;
+  top: 36px;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--color-brand-600) 0%, rgba(var(--color-brand-400-rgb), 0.15) 100%);
+}
+
+.notif-help__step h4 {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  line-height: var(--leading-snug);
+  margin: 0 0 var(--space-1);
+  padding-top: 6px;
+}
+
+.notif-help__step p {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+  margin: 0;
+}

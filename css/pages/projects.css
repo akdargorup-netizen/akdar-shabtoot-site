@@ -1,0 +1,849 @@
+/* ==========================================================================
+   PROJECTS — شبتوت بحري
+   فهرس "مشاريعنا" (projects.js) + صفحة تفاصيل المشروع (project-detail.js).
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   فهرس مشاريعنا — تنويه مختصر أسفل بطاقتَي متابعة/اقتراح
+-------------------------------------------------------------------------- */
+
+.projects-disclaimer {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+  padding: 0 var(--space-2);
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  line-height: var(--leading-relaxed);
+  opacity: 0.85;
+}
+
+.projects-disclaimer i {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  color: var(--text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   متابعة المشاريع — دعوة "اقتراح أفكار" داخل صفحة القائمة
+   ملحوظة: هنا مقصود شكل أخف بكتير من history-index-card (المستخدمة في
+   فهرس مشاريعنا نفسه، projects.js) — جوّه صفحة قائمة مشاريع فعلية،
+   بطاقة تنقّل كاملة الحجم كانت بتبين مقحمة/غريبة وسط الفلاتر والكروت،
+   فبدّلناها بشريط رفيع بنفس إزاحة باقي محتوى الصفحة (page-intro)
+   بدل ما يمتد لعرض مختلف.
+-------------------------------------------------------------------------- */
+
+.project-idea-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0 var(--spacing-page-x) var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  border: 1px dashed var(--border-brand);
+  background-color: rgba(var(--color-brand-500-rgb), 0.06);
+  cursor: pointer;
+  transition: var(--transition-all);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.project-idea-banner:hover {
+  background-color: rgba(var(--color-brand-500-rgb), 0.11);
+  border-color: var(--color-brand-400);
+}
+
+.project-idea-banner:active {
+  transform: scale(0.985);
+}
+
+.project-idea-banner:focus-visible {
+  outline: 2px solid var(--border-brand);
+  outline-offset: 2px;
+}
+
+.project-idea-banner__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: var(--radius-full);
+  background-color: rgba(var(--color-brand-500-rgb), 0.16);
+  color: var(--color-brand-300);
+}
+
+.project-idea-banner__icon i {
+  width: 16px;
+  height: 16px;
+}
+
+.project-idea-banner__text {
+  flex: 1;
+  margin: 0;
+  font-size: var(--text-xs);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+}
+
+.project-idea-banner__text strong {
+  color: var(--text-brand);
+  font-weight: var(--weight-semibold);
+}
+
+.project-idea-banner__arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--color-brand-300);
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.project-idea-banner__arrow i {
+  width: 16px;
+  height: 16px;
+}
+
+.project-idea-banner:hover .project-idea-banner__arrow {
+  transform: translateX(-4px);
+}
+
+/* --------------------------------------------------------------------------
+   متابعة المشاريع — الفلاتر + قائمة المشاريع
+   (اتنقلت هنا من village.css بعد دمج القسمين تحت "مشاريعنا"، وأُعيد
+   تصميمها بصريًا: شارة حالة بأيقونة، شريط لون جانبي يوضّح الحالة من
+   نظرة واحدة، ونبضة حياة هادية للمشاريع الشغالة فعلاً — نفس أنيميشن
+   شارة "عاجل" الموجودة أصلاً، إعادة استخدام مش اختراع حاجة جديدة)
+-------------------------------------------------------------------------- */
+
+.project-filters {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  padding: 0 var(--spacing-page-x) var(--space-3);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.project-filters::-webkit-scrollbar {
+  display: none;
+}
+
+.filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-shrink: 0;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--text-muted);
+  background-color: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  cursor: pointer;
+  transition: var(--transition-all);
+  white-space: nowrap;
+}
+
+.filter-btn i {
+  width: 15px;
+  height: 15px;
+}
+
+.filter-btn:active {
+  transform: scale(0.95);
+}
+
+.filter-btn.active {
+  color: var(--color-brand-100);
+  background-color: var(--state-selected-bg);
+  border-color: var(--border-brand);
+  box-shadow: var(--shadow-brand-sm);
+}
+
+/* feed المشاريع */
+.projects-feed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: 0 var(--spacing-page-x) var(--space-8);
+}
+
+/* كرت مشروع */
+.project-card {
+  position: relative;
+  background-color: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-all);
+}
+
+/* شريط لون جانبي يعكس حالة المشروع — يبان من نظرة واحدة حتى قبل
+   ما تقرا الشارة نفسها */
+.project-card::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background-color: var(--border-subtle);
+}
+
+.project-card[data-status="active"]::before  { background-color: rgba(var(--color-live-rgb), 0.85); }
+.project-card[data-status="planned"]::before { background-color: var(--status-warning-border); }
+.project-card[data-status="paused"]::before  { background-color: var(--border-default); }
+
+.project-card:hover {
+  border-color: var(--border-brand);
+  box-shadow: var(--shadow-brand-sm);
+  transform: translateY(-1px);
+}
+
+/* الكارت قابل للضغط (بيفتح صفحة تفاصيل المشروع) — رد فعل لحظي بدل
+   ما المستخدم يستنى وصول الصفحة عشان يتأكد إن لمسته سجّلت */
+.project-card:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: var(--shadow-sm);
+}
+
+.project-card:focus-visible {
+  outline: 2px solid var(--border-brand);
+  outline-offset: 2px;
+}
+
+/* صورة المشروع */
+.project-image {
+  position: relative;
+  width: 100%;
+  height: 176px;
+  overflow: hidden;
+  background-color: var(--surface-overlay);
+}
+
+.project-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  opacity: 0.85;
+}
+
+/* لسه ما اترفعتش صورة حقيقية للمشروع — بدل مستطيل فاضي تمامًا،
+   تدرّج بلون البراند + أيقونة وسطية هادية (نفس معالجة صورة الغلاف
+   الفاضية في project-detail-hero__img--empty، عشان يبقى نفس الإحساس
+   البصري بين كارت القائمة وصفحة التفاصيل) */
+.project-image--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    135deg,
+    rgba(var(--color-brand-500-rgb), 0.16),
+    rgba(var(--color-brand-500-rgb), 0.03)
+  );
+}
+
+.project-image__placeholder-icon {
+  width: 34px;
+  height: 34px;
+  color: var(--color-brand-300);
+  opacity: 0.5;
+}
+
+/* شارة الحالة — أيقونة + نص، بدل نص لوحده */
+.project-status {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wide);
+  backdrop-filter: blur(4px);
+}
+
+.project-status i {
+  width: 12px;
+  height: 12px;
+}
+
+.project-status.active {
+  background-color: rgba(var(--color-live-rgb), 0.80);
+  color: var(--color-brand-100);
+  border: 1px solid var(--color-brand-500);
+}
+
+.project-status.planned {
+  background-color: rgba(130, 95, 15, 0.70);
+  color: var(--status-warning-text);
+  border: 1px solid rgba(212, 170, 74, 0.40);
+}
+
+.project-status.paused {
+  background-color: rgba(80, 80, 80, 0.70);
+  color: var(--color-neutral-200);
+  border: 1px solid var(--border-default);
+}
+
+/* محتوى الكرت */
+.project-content {
+  padding: var(--space-4) var(--space-5) var(--space-5);
+}
+
+.project-title {
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  line-height: var(--leading-snug);
+  margin: 0 0 var(--space-4) 0;
+}
+
+.project-progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* زرار "قراءة التفاصيل" — تأكيد بصري واضح إن الكارت قابل للفتح،
+   بجانب إمكانية الضغط على الكارت كله. عنصر <button> حقيقي (مش
+   لوحده role) عشان يبقى أول محطة للوحة المفاتيح ولقارئ الشاشة. */
+.project-card__cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin-top: var(--space-4);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-brand);
+  background-color: var(--state-selected-bg);
+  color: var(--color-brand-100);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+  transition: var(--transition-all);
+}
+
+.project-card__cta i {
+  width: 15px;
+  height: 15px;
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.project-card__cta:hover {
+  background-color: rgba(var(--color-brand-500-rgb), 0.22);
+  border-color: var(--color-brand-400);
+}
+
+.project-card__cta:hover i {
+  transform: translateX(-3px);
+}
+
+.project-card__cta:active {
+  transform: scale(0.97);
+}
+
+.project-card__cta:focus-visible {
+  outline: 2px solid var(--border-brand);
+  outline-offset: 2px;
+}
+
+
+/* --------------------------------------------------------------------------
+   HERO — صورة/شارة المشروع أعلى صفحة التفاصيل
+-------------------------------------------------------------------------- */
+
+.project-detail-hero {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  background-color: var(--surface-overlay);
+  box-shadow: var(--shadow-md);
+}
+
+.project-detail-hero__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  opacity: 0.85;
+}
+
+.project-detail-hero__img--empty {
+  background: linear-gradient(
+    135deg,
+    rgba(var(--color-brand-500-rgb), 0.18),
+    rgba(var(--color-brand-500-rgb), 0.04)
+  );
+}
+
+/* تدرّج هادي أسفل الصورة — عمق بصري بسيط، مش نص فوقها (العنوان
+   تحت الهيرو مش عليها، فمفيش داعي لتباين نص)، بس بيدي إحساس
+   "غلاف" احترافي بدل صورة مستطيلة فجّة */
+.project-detail-hero__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.22), transparent 55%);
+  pointer-events: none;
+}
+
+.project-detail-hero .project-status {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  box-shadow: var(--shadow-sm);
+}
+
+/* --------------------------------------------------------------------------
+   BODY — عنوان، تقدّم، وصف، زرار المساهمة
+-------------------------------------------------------------------------- */
+
+.project-detail-body {
+  margin-top: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.project-detail-title {
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  line-height: var(--leading-snug);
+}
+
+.project-detail-progress {
+  margin-top: calc(-1 * var(--space-2));
+}
+
+.project-detail-desc {
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+}
+
+.project-detail-cta {
+  width: 100%;
+  justify-content: center;
+}
+
+/* --------------------------------------------------------------------------
+   أقسام التفاصيل (مساهمة / مالية / منفذين / مساهمين) — كل قسم بطاقة
+   مرفوعة (surface-raised + shadow) بدل خط فاصل مسطّح، عشان الصفحة
+   تبقى متدرّجة ومنظّمة بصريًا زي باقي التطبيق، مش قايمة نصوص طويلة
+-------------------------------------------------------------------------- */
+
+.project-detail-section {
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-sm);
+}
+
+.project-detail-section__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-4);
+}
+
+/* شارة أيقونة دائرية لعنوان القسم — نفس معالجة project-people-list__icon
+   عشان يبقى في لغة بصرية واحدة متكررة داخل الصفحة */
+.project-detail-section__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: var(--radius-full);
+  background-color: rgba(var(--color-brand-500-rgb), 0.14);
+  color: var(--color-brand-300);
+}
+
+.project-detail-section__icon i {
+  width: 17px;
+  height: 17px;
+}
+
+.project-detail-section__lead {
+  font-size: var(--text-xs);
+  line-height: var(--leading-relaxed);
+  color: var(--text-muted);
+  margin-bottom: var(--space-3);
+}
+
+/* empty-state العام مصمَّم لصفحة كاملة (min-height 240px) — جوّه
+   كارت قسم صغير هنا بيبان ضخم بلا داعي، فبنقلّل حجمه هنا بس */
+.project-detail-section .empty-state {
+  min-height: 0;
+  padding: var(--space-4) var(--space-2);
+}
+
+.project-detail-section .empty-state__icon {
+  width: 36px;
+  height: 36px;
+}
+
+/* قسم "ربط بطرق المساهمة" — أول حاجة المستخدم بيشوفها بعد الوصف،
+   ومعاها إخلاء المسؤولية بشكل مباشر (مش مدفون في الفهرس بس) */
+.project-detail-section--contribute {
+  border: 1px solid var(--border-brand);
+  background-color: rgba(var(--color-brand-500-rgb), 0.08);
+}
+
+.project-detail-section--contribute .project-detail-section__icon {
+  background-color: rgba(var(--color-brand-500-rgb), 0.22);
+}
+
+.project-detail-section--contribute .project-detail-section__lead {
+  color: var(--text-secondary);
+}
+
+/* --------------------------------------------------------------------------
+   القسم المالي — شفافية بأمانة، مش سجل تدقيق
+-------------------------------------------------------------------------- */
+
+.project-finance__notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  margin-bottom: var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  background-color: var(--surface-overlay);
+  font-size: var(--text-xs);
+  line-height: var(--leading-relaxed);
+  color: var(--text-muted);
+}
+
+.project-finance__notice i {
+  flex-shrink: 0;
+  width: 15px;
+  height: 15px;
+  margin-top: 2px;
+}
+
+.project-finance__notice strong {
+  color: var(--text-secondary);
+  font-weight: var(--weight-semibold);
+}
+
+.project-finance__amounts {
+  display: flex;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.project-finance__amount {
+  flex: 1;
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-overlay);
+  border: 1px solid var(--border-subtle);
+  text-align: center;
+}
+
+.project-finance__amount--goal {
+  background-color: transparent;
+}
+
+.project-finance__amount-label {
+  display: block;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin-bottom: var(--space-1);
+}
+
+.project-finance__amount-value {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+}
+
+.project-finance__bar {
+  margin-bottom: var(--space-2);
+}
+
+.project-finance__remaining {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin-bottom: var(--space-4);
+}
+
+/* --------------------------------------------------------------------------
+   تفصيل المصروفات — "ماذا صرفنا؟" (خيار ذكي إضافي فوق أرقام
+   المطلوب/اتجمع/متبقي، إجابة على السؤال الثالث في شفافية القسم المالي)
+-------------------------------------------------------------------------- */
+
+.project-finance__subheading {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  margin: var(--space-4) 0 var(--space-2);
+}
+
+.project-finance__subheading i {
+  width: 15px;
+  height: 15px;
+  color: var(--color-brand-300);
+}
+
+.project-finance__expenses-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.project-finance__expense-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  border-bottom: 1px dashed var(--border-subtle);
+  font-size: var(--text-sm);
+}
+
+.project-finance__expense-row:last-child {
+  border-bottom: none;
+}
+
+.project-finance__expense-desc {
+  color: var(--text-secondary);
+}
+
+.project-finance__expense-amount {
+  flex-shrink: 0;
+  font-family: var(--font-display);
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.project-finance__expenses-total {
+  margin-top: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--border-default);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
+  text-align: end;
+}
+
+/* --------------------------------------------------------------------------
+   المواد أو الاحتياجات الناقصة — "محتاجين كمان" (خيار ذكي إضافي،
+   مش بالضرورة أرقام مالية — ممكن تكون مواد عينية)
+-------------------------------------------------------------------------- */
+
+.project-finance__needed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.project-finance__needed-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.project-finance__needed-item i {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  color: var(--color-accent-400);
+}
+
+.project-finance__needed-bullet {
+  width: 5px;
+  height: 5px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background-color: var(--color-accent-400);
+}
+
+.project-finance__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding-top: var(--space-3);
+  border-top: 1px dashed var(--border-subtle);
+}
+
+.project-finance__updated {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.project-finance__updated i {
+  width: 13px;
+  height: 13px;
+}
+
+.project-finance__report {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-default);
+  background: none;
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  transition: var(--transition-all);
+}
+
+.project-finance__report i {
+  width: 13px;
+  height: 13px;
+}
+
+.project-finance__report:hover {
+  border-color: var(--border-brand);
+  color: var(--color-brand-200);
+}
+
+.project-finance__report:active {
+  transform: scale(0.96);
+}
+
+/* --------------------------------------------------------------------------
+   قوائم الأشخاص/الجهات (منفذين ومساهمين)
+-------------------------------------------------------------------------- */
+
+.project-people-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.project-people-list__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-overlay);
+  border: 1px solid var(--border-subtle);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.project-people-list__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: var(--radius-full);
+  background-color: rgba(var(--color-brand-500-rgb), 0.14);
+  color: var(--color-brand-300);
+}
+
+.project-people-list__icon i {
+  width: 15px;
+  height: 15px;
+}
+
+
+/* --------------------------------------------------------------------------
+   طرق المساهمة — بطاقة المستلمين والحسابات (project-detail)
+-------------------------------------------------------------------------- */
+.project-methods {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.project-method {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background: var(--surface-raised);
+  border: 1.5px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+}
+
+.project-method__text {
+  min-width: 0;
+  flex: 1;
+}
+
+.project-method__name {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  line-height: var(--leading-snug);
+}
+
+.project-method__account {
+  margin: var(--space-1) 0 0;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: var(--leading-snug);
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+
+.project-method__copy {
+  flex-shrink: 0;
+}
+
+.project-methods__note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--status-warning-text);
+  line-height: var(--leading-snug);
+}
