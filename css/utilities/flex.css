@@ -1,0 +1,52 @@
+/* ==========================================================================
+   FLEX UTILITIES — شبتوت بحري
+   Layout composition helpers. For one-off adjustments only.
+   Consumes: tokens.css
+   ========================================================================== */
+
+/* Display */
+
+.d-flex   { display: flex !important; }
+.d-grid   { display: grid !important; }
+
+
+
+/* Direction */
+
+
+
+
+/* Sizing */
+
+
+
+/* Alignment */
+
+
+
+
+/* Justification */
+
+
+
+
+/* Sizing helpers */
+
+
+
+
+/* Overflow */
+
+
+
+/* Position */
+.relative { position: relative; }
+
+
+/* Misc */
+
+
+
+
+
+

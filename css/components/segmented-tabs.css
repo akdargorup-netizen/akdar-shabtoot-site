@@ -1,0 +1,187 @@
+/* ==========================================================================
+   SEGMENTED TABS — شكل موحّد لكل التبويبات/التصنيفات في التطبيق
+   المرجع: "مفتاح التصفية المقسوم" في فهرس سور القرآن (.quran-chips).
+   حاوية مدوّرة بتدرّج خفيف + أزرار متساوية، والزر النشط معبّأ بلون القسم.
+   كل قسم يحدّد لونه بمتغيّرين فقط:
+     --seg-rgb   : مكوّنات RGB للون القسم (للخلفية والحد)
+     --seg-text  : لون نص الزر النشط
+   الافتراضي أخضر البراند؛ الاستثناءات (نيلي/ذهبي/قصب) أسفل الملف.
+   ========================================================================== */
+
+/* ── 1) الحاوية ── */
+:is(
+  .events-filters,
+  .voice-filters,
+  .gallery-filters,
+  .project-filters,
+  .occasions-filters,
+  .regs-filters,
+  .nlang-filters,
+  .article-filters,
+  .history-articles-page .article-filters
+) {
+  --seg-rgb:  var(--color-brand-400-rgb);
+  --seg-text: var(--text-brand-strong);
+
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  margin-top: var(--space-1);
+  margin-bottom: var(--space-3);
+  background: rgba(var(--seg-rgb), 0.10);
+  border: 1px solid rgba(var(--seg-rgb), 0.18);
+  border-radius: var(--radius-full);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+:is(
+  .events-filters,
+  .voice-filters,
+  .gallery-filters,
+  .project-filters,
+  .occasions-filters,
+  .regs-filters,
+  .nlang-filters,
+  .article-filters
+)::-webkit-scrollbar { display: none; }
+
+/* الصفحات اللي كانت حاويتها بهامش جانبي خاص بالصفحة */
+:is(.voice-filters, .gallery-filters, .project-filters) {
+  margin-inline: var(--spacing-page-x);
+}
+.occasions-filters { margin-inline: var(--space-1); }
+
+/* ── 2) الأزرار ── */
+:is(
+  .events-filters,
+  .voice-filters,
+  .gallery-filters,
+  .project-filters,
+  .occasions-filters,
+  .regs-filters,
+  .nlang-filters,
+  .article-filters
+) :is(.filter-chip, .filter-btn) {
+  flex: 1 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 38px;
+  padding: 0 var(--space-3);
+  border: 1px solid transparent;
+  border-radius: var(--radius-full);
+  background: transparent;
+  box-shadow: none;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background var(--duration-fast) var(--ease-out),
+              color var(--duration-fast) var(--ease-out),
+              border-color var(--duration-fast) var(--ease-out);
+}
+
+:is(
+  .events-filters,
+  .voice-filters,
+  .gallery-filters,
+  .project-filters,
+  .occasions-filters,
+  .regs-filters,
+  .nlang-filters,
+  .article-filters
+) :is(.filter-chip, .filter-btn):active { transform: none; }
+
+:is(
+  .events-filters,
+  .voice-filters,
+  .gallery-filters,
+  .project-filters,
+  .occasions-filters,
+  .regs-filters,
+  .nlang-filters,
+  .article-filters
+) :is(.filter-chip, .filter-btn) :is(svg, i) { width: 16px; height: 16px; }
+
+/* ── 3) الزر النشط ── */
+:is(
+  .events-filters,
+  .voice-filters,
+  .gallery-filters,
+  .project-filters,
+  .occasions-filters,
+  .regs-filters,
+  .nlang-filters,
+  .article-filters
+) :is(.filter-chip, .filter-btn).active {
+  background: rgba(var(--seg-rgb), 0.34);
+  border-color: rgba(var(--seg-rgb), 0.55);
+  color: var(--seg-text);
+  box-shadow: var(--shadow-xs);
+}
+
+/* ── 3-ب) الزر النشط في الوضع الفاتح ──
+   قالب الوضع الفاتح العام (themes.css: [data-scheme="light"] .filter-chip.active)
+   كان بنفس الأولوية وأحدث ترتيبًا في الـbundle، فكان بيلغي لون القسم ويرجّع
+   كل التبويبات خضراء (الرُطانة/المناسبات/مسيرة الرابطة/اللوائح). الأولوية هنا
+   أعلى بدرجة (0,4,0 مقابل 0,3,0) فيفضل لون القسم شغّال في الوضعين. */
+[data-scheme="light"] :is(
+  .events-filters,
+  .voice-filters,
+  .gallery-filters,
+  .project-filters,
+  .occasions-filters,
+  .regs-filters,
+  .nlang-filters,
+  .article-filters
+) :is(.filter-chip, .filter-btn).active {
+  background: rgba(var(--seg-rgb), 0.34);
+  border-color: rgba(var(--seg-rgb), 0.55);
+  color: var(--seg-text);
+  box-shadow: var(--shadow-xs);
+}
+
+/* مفتاح "الأسبوع دا" في المناسبات: زر عادي في نفس الشكل (بدون حد متقطّع) */
+.occasions-filters .filter-chip[data-time-toggle] {
+  border-style: solid;
+  margin-inline-start: 0;
+}
+
+/* ── 4) لون كل قسم ── */
+/* ⚠️ حاوية الأساس فوق فيها العنصر `.history-articles-page .article-filters`
+   (أولوية 0,2,0) فبتاخد :is() كلها أولوية 0,2,0. لو كتبنا هنا `.nlang-filters`
+   لوحدها (0,1,0) هتخسر قدام الأساس وتفضل كل التبويبات خضراء — ده اللي كان
+   حاصل. لذلك كل استثناء لوني بأولوية 0,2,0 (تكرار الكلاس) عشان يتعادل مع
+   الأساس ويكسب بالترتيب (هو أحدث). أي قسم جديد بلون خاص يتبع نفس النمط. */
+
+/* العبادة: حجري (فهرس القرآن + الأذكار) — نفس القيم الأصلية */
+.quran-chips {
+  --seg-rgb:  var(--stone-tint-rgb);
+  --seg-text: var(--text-stone-strong);
+}
+
+/* الجمعية (مسيرة الرابطة): نيلي.
+   الدستور واللوائح: تاخد أخضر البراند الافتراضي (هوية صفحتها نفسها —
+   أرقام الفصول والخطوط والحدود كلها brand) فمفيش استثناء هنا لـ .regs-filters. */
+.association-journey-page .article-filters {
+  --seg-rgb:  var(--color-nile-400-rgb);
+  --seg-text: var(--text-nile);
+}
+
+/* اللغة النوبية: ذهبي */
+.nlang-filters.nlang-filters {
+  --seg-rgb:  var(--color-accent-400-rgb);
+  --seg-text: var(--text-accent);
+}
+
+/* مناسبات المجتمع: قصب */
+.occasions-filters.occasions-filters {
+  --seg-rgb:  var(--color-reed-400-rgb);
+  --seg-text: color-mix(in srgb, var(--color-reed-500) 45%, var(--text-primary));
+}

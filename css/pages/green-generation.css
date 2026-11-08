@@ -1,0 +1,35 @@
+/* ==========================================================================
+   GREEN GENERATION PAGE — جيل أخضر (placeholder مؤقت)
+   الصفحة لسه empty-state بانتظار بلورة المحتوى (راجع تعليق
+   green-generation.js) — هنا بس توهج "الغبار" الأخضر (أخضر البراند،
+   هوية بطاقتها في الصفحة الرئيسية)، نفس بنية باقي الأقسام، عشان
+   الهوية اللونية تكون حاضرة من أول لحظة حتى قبل بناء المحتوى الفعلي.
+   Consumes: tokens.css
+   ========================================================================== */
+
+.green-generation-page {
+  position: relative;
+  isolation: isolate;
+}
+
+.green-generation-page::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  right: -80px;
+  width: 260px;
+  height: 260px;
+  background: radial-gradient(
+    circle,
+    rgba(var(--color-brand-400-rgb), 0.16) 0%,
+    transparent 70%
+  );
+  filter: blur(18px);
+  z-index: -1;
+  pointer-events: none;
+  animation: pulse-subtle 14s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .green-generation-page::before { animation: none; }
+}
