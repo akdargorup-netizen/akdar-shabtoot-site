@@ -1,0 +1,782 @@
+/* ==========================================================================
+   TOKENS — شبتوت بحري  v14
+   Single source of truth. Never hardcode values outside this file.
+
+   تحديث v14: سدّ فجوتين اكتُشفتا بفحص باقي ملفات CSS بحثاً عن قيم لونية
+   متكررة يدوياً بدل الرجوع لتوكن:
+   1) --color-nile-300-rgb كانت ناقصة رغم إن home.css بيكتب rgba(90,144,180)
+      يدوياً مرتين — وهي نفس --color-nile-300 بالظبط، بس من غير اسم.
+   2) --color-highlight-rgb توكن جديد كليًا: history.css وservices.css
+      وvillage.css كلهم بيستخدموا "وميض" علوي خفيف على الكروت (inset
+      highlight)، بس بقيمتين منحرفتين شوية عن بعض — rgba(170,210,140)
+      في 7 أماكن، وrgba(170,210,150) في 3 أماكن — نفس النية، لونين
+      مختلفين بالغلط. اتوحّدوا في قيمة واحدة.
+   3) --status-error-border-rgb كانت ناقصة، فـ --shadow-focus-error كان
+      بيكتب rgba(130, 40, 40, ...) يدوي بدل ما يرجع لتوكن اللون الدلالي
+      الموجود أصلاً (--status-error-border)، وده ضد قاعدة الملف نفسه
+      ("Never hardcode values outside this file" — كانت المخالفة جوّه
+      نفس الملف).
+   4) --gradient-brand/-hover و--gradient-accent/-hover توكنز جديدة:
+      تدرّج 155deg بين درجتين من نفس اللون (هوية الأزرار الأساسية) كان
+      مكتوباً بالحرف الواحد 3 مرات منفصلة (button.css، home.css،
+      community-occasions.css) — دمجناه في مرجع واحد.
+   5) --color-neutral-400-rgb كانت ناقصة رغم إن كل درجة تانية من BRAND/
+      ACCENT/NILE/DANGER ليها نسخة -rgb — search.css كانت مضطرة تكتب
+      الـ triplet يدوياً (147, 150, 124) مع تعليق "لو أضيف مستقبلاً".
+      أُضيفت هنا فالتعليق بقى غير لازم.
+
+   تحديث v13: الخط النهائي محسوم — Cairo للعناوين (--font-heading) و
+   Tajawal لنص الواجهة (--font-body)، Almarai لنص القراءة الطويلة في
+   صفحة القارئ. مفيش هجرة إضافية للعناوين. الدرجة الثالثة لحجم الخط
+   ("أكبر" — 28px) اتضافت في reset.css + إعدادات المظهر، فوق "عادي"
+   و"كبير" الموجودين. DANGER PALETTE و --text-on-brand مستخرجين من
+   قيم كانت hardcoded في village.css/home.css/button.css/breakpoints.css/
+   themes.css.
+   ========================================================================== */
+
+:root {
+
+  /* --------------------------------------------------------------------------
+     BRAND PALETTE — خضرة النيل الدافئة
+  -------------------------------------------------------------------------- */
+
+  --color-brand-950: #0a1605;
+  --color-brand-900: #102209;
+  --color-brand-800: #172f0f;
+  --color-brand-700: #234819;
+  --color-brand-600: #306328;
+  --color-brand-500: #47883a;
+  --color-brand-400: #60a84e;
+  --color-brand-300: #7ec86a;
+  --color-brand-200: #a8dc96;
+  --color-brand-100: #caeabc;
+  --color-brand-050: #e8f6e0;
+
+  /* --------------------------------------------------------------------------
+     PLAY PALETTE — أزرق ليلي (هوية لعبة تحدي التنجلاب فقط، 2026-10)
+     بديل خضرة البراند داخل اللعبة. الذهب (accent) يبقى لمسة التمييز.
+  -------------------------------------------------------------------------- */
+
+  --color-play-950: #080c22;
+  --color-play-900: #0d1333;
+  --color-play-800: #141c4a;
+  --color-play-700: #1f2a6b;
+  --color-play-600: #2d3b8f;
+  --color-play-500: #4054b8;
+  --color-play-400: #6277d6;
+  --color-play-300: #8a9bea;
+  --color-play-200: #b3bef5;
+  --color-play-100: #d6dcfa;
+  --color-play-050: #eef0fd;
+
+  /* --------------------------------------------------------------------------
+     ANDANDI PALETTE — هوية لعبة آنداندي (2026-10)
+     بُنّي الرقّ والكاسيت القديم + ذهب نوبي + طين محروق + أزرق النيل.
+     ألوان ثابتة في الثيمين (كل ما داخل مسرح اللعبة).
+  -------------------------------------------------------------------------- */
+
+  --color-nub-950: #140b03;
+  --color-nub-900: #1c1006;
+  --color-nub-800: #2b1a0a;
+  --color-nub-700: #3e2610;
+  --color-nub-parchment:     #fbf3dc;
+  --color-nub-parchment-dim: #f0e1b5;
+  --color-nub-ink:      #3b1a0a;
+  --color-nub-ink-soft: #7a5a2e;
+  --color-nub-gold-100: #fbe9b4;
+  --color-nub-gold-300: #f7da8b;
+  --color-nub-gold-400: #e8b53f;
+  --color-nub-gold-600: #b8770f;
+  --color-nub-gold-800: #8a5d12;
+  --color-nub-gold-950: #2b1b02;
+  --color-nub-clay-500: #b5532c;
+  --color-nub-clay-700: #8a3a1c;
+  --color-nub-nile-500: #2b6a8f;
+  --color-nub-nile-800: #15384f;
+  --color-nub-ok:  #2f8f4e;
+  --color-nub-bad: #c4453c;
+
+  /* --------------------------------------------------------------------------
+     ACCENT PALETTE — ذهب الضفاف
+  -------------------------------------------------------------------------- */
+
+  --color-accent-900: #1a1200;
+  --color-accent-800: #2e2000;
+  --color-accent-700: #4a3500;
+  --color-accent-600: #6b4e00;
+  --color-accent-500: #8c6800;
+  --color-accent-400: #b38620;
+  --color-accent-300: #c8a040;
+  --color-accent-200: #d4b468;
+  --color-accent-100: #e8d4a0;
+  --color-accent-050: #f5ead0;
+
+  /* --------------------------------------------------------------------------
+     NILE PALETTE — أزرق النيل
+  -------------------------------------------------------------------------- */
+
+  --color-nile-800: #0a1e2e;
+  --color-nile-700: #112d42;
+  --color-nile-600: #1a4260;
+  --color-nile-500: #245878;
+  --color-nile-400: #3a7298;
+  --color-nile-300: #5a90b4;
+  --color-nile-200: #88b4cc;
+  --color-nile-100: #bcd6e8;
+
+  /* --------------------------------------------------------------------------
+     VIOLET PALETTE — هوية قسم المجتمع (بنفسج ثقيل/ملكي)
+     مضافة بطلب صريح: بنفسج غامق متدرج للخلفيات، بنفسج فاتح للأزرار —
+     هوية لونية خاصة بقسم "المجتمع" وأقسامه الداخلية، منفصلة عمداً عن
+     BRAND (الأخضر بقى محجوز لـ"جيل أخضر" تحديداً بعد ما كان لون المجتمع
+     قديماً). نفس عمق سلّم BRAND/ACCENT/DANGER (950→050) عشان تغطي
+     خلفيات غامقة جداً وأزرار فاتحة كفاية بنفس الملف.
+     مُعدّلة مرة واحدة قبل كده: كانت بنفسجية (violet) في الأصل،
+     اتبدّلت بـ"طينية" (clay/terracotta) لعدم مناسبة البنفسجي لهوية
+     التطبيق. الطيني (clay) فضل موجود ومستخدم فعلياً في أماكن تانية
+     غير المجتمع (تصنيف إشعارات "مشاريع"، ومتغيرات gradient-clay
+     العامة) — فمتسابش هنا، لسه معرّف تحت زي ما هو.
+
+     المجتمع بذاته اتحوّل لعائلة جديدة كليًا: "القصب" (reed) — أخضر
+     نيلي/طحلبي. السبب إن الطيني كان قريب جداً بصرياً من عيلة
+     "الأخبار" (danger — أحمر دافئ) تحت خلفية زيتونية غامقة، فالكارتين
+     بقوا شبه متطابقين. reed من نفس مفردات المكان (نخيل + نيل) بدل
+     لون مستورد، لكنه بعيد فعلياً على عجلة الألوان عن الأخضر الصافي
+     (brand) والنيلي الصافي (nile) والأحمر (danger) والذهبي (accent)
+     والطيني (clay) نفسه. نفس عمق سلّم الدرجات (950→050).
+  -------------------------------------------------------------------------- */
+
+  --color-clay-950: #2b140a;
+  --color-clay-900: #3d1f12;
+  --color-clay-800: #5d2d19;
+  --color-clay-700: #804228;
+  --color-clay-600: #985133;
+  --color-clay-500: #b26645;
+  --color-clay-400: #cb8567;
+  --color-clay-300: #dba58d;
+  --color-clay-200: #e8c1b0;
+  --color-clay-100: #f2dcd2;
+  --color-clay-050: #f9eee9;
+
+  --color-clay-950-rgb: 43, 20, 10;      /* = --color-clay-950 */
+  --color-clay-700-rgb: 128, 66, 40;     /* = --color-clay-700 */
+  --color-clay-600-rgb: 152, 81, 51;     /* = --color-clay-600 */
+  --color-clay-500-rgb: 178, 102, 69;    /* = --color-clay-500 */
+  --color-clay-400-rgb: 203, 133, 103;   /* = --color-clay-400 */
+  --color-clay-300-rgb: 219, 165, 141;   /* = --color-clay-300 */
+
+  /* --------------------------------------------------------------------------
+     STONE PALETTE — "حجري دافئ"، هوية قسم العبادة الجديدة
+     نفس القصة اللي حصلت مع المجتمع: الطيني (clay) كان قريب بصريًا جداً
+     من عيلة DANGER (أحمر دافئ) تحت خلفية زيتونية غامقة، فكارت العبادة
+     وكارت الأخبار كانوا بيتقاربوا بصريًا. اتقيّم بديلين مشبّعين (نيلي
+     ليلي #3d4f9e، فيروزي مصحفي #1a8f8a) واترفضوا: أي لون مشبّع جديد
+     بيدخل عائلة الألوان المشبّعة المزدحمة أصلاً (brand/nile/danger/
+     accent/reed) وبيقدر يقع في نفس فخ التصادم الصدفي مع أي زوج تاني
+     على المدى الطويل. اتاختار بدل كده حجري دافئ (رمادي مائل للأزرق،
+     مُخفَّف التشبع عمداً) — بيقرا كـ"حياد راقي" مش كلون سابع في نفس
+     السباق، وبيناسب طابع العبادة (هدوء وتواضع) عكس باقي الأقسام
+     الحيوية. 500 هو اللون الأساسي اللي اتقرر (#6b7280) وثابت زي ما هو.
+
+     تعديل بعد أول معاينة فعلية على الجهاز: الدرجات الغامقة (950→600،
+     مستخدمة بس كخلفيات ممزوجة بنسب قليلة) فضلت بتشبّع منخفض زي ما
+     كانت. لكن الدرجات الفاتحة (400→050) كانت أصلاً بتشبّع منخفض جداً
+     (~7-9%) بنفس نسبة الدرجات الغامقة — وهي الدرجات اللي بتلوّن
+     الأيقونة والعنوان ونص التصنيف فعليًا، فظهرت كرمادي شبه أبيض بلا
+     هوية واضحة (أقل تشبّعًا حتى من نص التطبيق الثانوي العادي). اتصعّد
+     التشبّع تدريجيًا في 400→050 (لـ 13-21%) عشان اللون يبان بوضوح في
+     النص والأيقونات، مع ضبط الإضاءة (lightness) في نفس الوقت عشان درجة
+     300 (نص التصنيف الصغير --text-xs) توصل لتباين WCAG AA سليم
+     (4.65:1) بدل ما كانت (3.74:1، فاشلة).
+     بتستبدل clay في قسم العبادة فقط (كارت الرئيسية، الفهرس، صفحة
+     القراءة، السبحة، حصن المسلم) — clay فضلت زي ما هي في كل مكان تاني
+     (تصنيف إشعارات "مشاريع"، gradient-clay العامة).
+  -------------------------------------------------------------------------- */
+
+  --color-stone-950: #141619;
+  --color-stone-900: #202228;
+  --color-stone-800: #2e3138;
+  --color-stone-700: #3e424c;
+  --color-stone-600: #515662;
+  --color-stone-500: #6b7280;
+  --color-stone-400: #848fa4;
+  --color-stone-300: #aeb6c7;
+  --color-stone-200: #c1c8d7;
+  --color-stone-100: #dbdee6;
+  --color-stone-050: #eeeff2;
+
+  --color-stone-500-rgb: 107, 114, 128;  /* = --color-stone-500 */
+  --color-stone-400-rgb: 132, 143, 164;  /* = --color-stone-400 */
+  --color-stone-200-rgb: 193, 200, 215;  /* = --color-stone-200 */
+
+  /* عائلة "القصب" (REED) — أخضر نيلي/طحلبي، هوية المجتمع الجديدة
+     (راجع الشرح فوق). منفصلة تمامًا عن CLAY، مش استبدال ليها. */
+  --color-reed-950: #071a13;
+  --color-reed-900: #0d2b20;
+  --color-reed-800: #14402f;
+  --color-reed-700: #1c5843;
+  --color-reed-600: #257056;
+  --color-reed-500: #328a6c;
+  --color-reed-400: #4fa889;
+  --color-reed-300: #7ac4a9;
+  --color-reed-200: #a8dcc7;
+  --color-reed-100: #d0ede1;
+  --color-reed-050: #eaf7f1;
+
+  --color-reed-950-rgb: 7, 26, 19;       /* = --color-reed-950 */
+  --color-reed-700-rgb: 28, 88, 67;      /* = --color-reed-700 */
+  --color-reed-600-rgb: 37, 112, 86;     /* = --color-reed-600 */
+  --color-reed-500-rgb: 50, 138, 108;    /* = --color-reed-500 */
+  --color-reed-400-rgb: 79, 168, 137;    /* = --color-reed-400 */
+  --color-reed-300-rgb: 122, 196, 169;   /* = --color-reed-300 */
+
+  /* --------------------------------------------------------------------------
+     DANGER PALETTE — أحمر الطوارئ
+     مستخرجة من قيم كانت hardcoded في village.css و home.css (كارت الطوارئ،
+     هوية قسم الأخبار). مرجع واحد الآن بدل تكرارها يدوياً في كل ملف.
+  -------------------------------------------------------------------------- */
+
+  --color-danger-950: #200a0a;
+  --color-danger-900: #4a1717;
+  --color-danger-800: #6e2323;
+  --color-danger-700: #8c3636; /* كانت ناقصة — سلّم متقطع 800→600، أُضيفت للاكتمال. غير مُستخدمة حالياً في أي مكان. */
+  --color-danger-600: #a94848;
+  --color-danger-500: #c55c5c; /* كانت ناقصة — سلّم متقطع 600→400، أُضيفت للاكتمال. غير مُستخدمة حالياً في أي مكان. */
+  --color-danger-400: #e07070;
+  --color-danger-300: #e0a3a3;
+  --color-danger-200: #eab8b8;
+  --color-danger-100: #f5d4d4;
+  --color-danger-050: #ffe4e4;
+
+  /* --------------------------------------------------------------------------
+     ALERT PALETTE — أحمر الاستعجال (منفصل عن DANGER)
+     مستخرجة من قيم كانت hardcoded بشكل مستقل تماماً عن DANGER في:
+     button.css (حالات زر الخطر)، village.css (كارت الطوارئ)، home.css
+     (كارت التحذير)، idea-box.css (علم "عاجل"), settings.css/settings-sub.css,
+     events.css. كانت 6 أحمر مختلفة شوية عن بعض بلا اسم — دلوقتي مرجع واحد.
+  -------------------------------------------------------------------------- */
+
+  --color-alert-900-rgb: 130, 28, 28;
+  --color-alert-800-rgb: 122, 40, 40;
+  --color-alert-700-rgb: 180, 40, 40;
+  --color-alert-600-rgb: 168, 74, 74;
+  --color-alert-400-rgb: 196, 100, 100;
+  --color-alert-300-rgb: 220, 90, 90;
+
+  /* --------------------------------------------------------------------------
+     LIVE STATUS COLOR — أخضر "نشط/متصل الآن"
+     مستخرجة من قيمتين شبه متطابقتين (drift) كانتا مستخدمتين لنفس الغرض في
+     settings-sub.css, notifications.css, village.css, memory-sub.css,
+     services.css, events.css, admin-content.css — دُمجتا في قيمة واحدة.
+     ملاحظة: منفصل عمداً عن BRAND — ده أخضر أشبع مخصص لمؤشر "الآن/مباشر".
+  -------------------------------------------------------------------------- */
+
+  --color-live-rgb: 34, 96, 56;
+
+  /* --------------------------------------------------------------------------
+     RGB TRIPLETS — لاستخدام rgba(var(--x-rgb), شفافية) بدل تكرار الأرقام يدوياً
+     كل هذه القيم كانت موجودة كـ rgba خام في عشرات الأماكن بشفافيات مختلفة،
+     وبعضها كان يطابق ألوان ACCENT/BRAND الموجودة أصلاً بس مكتوبة يدوياً تاني.
+  -------------------------------------------------------------------------- */
+
+  --color-accent-500-rgb: 140, 104, 0;   /* = --color-accent-500 */
+  --color-accent-400-rgb: 179, 134, 32;  /* = --color-accent-400 */
+  --color-accent-200-rgb: 212, 180, 104; /* = --color-accent-200 */
+  --color-accent-700-rgb: 74, 53, 0;     /* = --color-accent-700 */
+  --color-accent-600-rgb: 107, 78, 0;    /* = --color-accent-600 — لازمة لـ --reader-history-bg تحت */
+  --color-brand-950-rgb:  10, 22, 5;     /* = --color-brand-950 */
+  --color-brand-900-rgb:  16, 34, 9;     /* = --color-brand-900 */
+  --color-brand-700-rgb:  35, 72, 25;    /* = --color-brand-700 */
+  --color-brand-600-rgb:  48, 99, 40;    /* = --color-brand-600 */
+  --color-brand-500-rgb:  71, 136, 58;   /* = --color-brand-500 */
+  --color-brand-400-rgb:  96, 168, 78;   /* = --color-brand-400 */
+  --color-brand-100-rgb:  202, 234, 188; /* = --color-brand-100 — مستخدمة في سطر ضوء بطاقة "جيل أخضر" (home.css) */
+  --color-play-950-rgb:   8, 12, 34;     /* = --color-play-950 */
+  --color-play-900-rgb:   13, 19, 51;    /* = --color-play-900 */
+  --color-play-400-rgb:   98, 119, 214;  /* = --color-play-400 */
+  --color-play-200-rgb:   179, 190, 245; /* = --color-play-200 */
+  --color-nub-gold-400-rgb:   232, 181, 63;  /* = --color-nub-gold-400 */
+  --color-nub-parchment-rgb:  251, 243, 220; /* = --color-nub-parchment */
+  --color-nub-ink-rgb:        59, 26, 10;    /* = --color-nub-ink */
+  --color-nub-950-rgb:        20, 11, 3;     /* = --color-nub-950 */
+  --color-nub-clay-500-rgb:   181, 83, 44;   /* = --color-nub-clay-500 */
+  --color-nub-ok-rgb:         47, 143, 78;   /* = --color-nub-ok */
+  --color-nub-bad-rgb:        196, 69, 60;   /* = --color-nub-bad */
+  --color-danger-600-rgb: 169, 72, 72;   /* = --color-danger-600 */
+  --color-neutral-400-rgb: 147, 150, 124; /* = --color-neutral-400 — كانت search.css بتكتبها يدوياً بتعليق "لو أضيف مستقبلاً" */
+
+  /* --------------------------------------------------------------------------
+     SHIMMER — أخضر البريق/التوهج الزخرفي
+     مستخدم ~90 مرة في card.css, index-card.css, navigation.css, header.css,
+     layout.css, memory.css, services.css, history.css, village.css,
+     association.css, news.css, settings.css, home.css — لون مستقل تماماً،
+     مش نسخة من أي درجة في BRAND، كان بيتكتب يدوياً كل مرة بلا اسم.
+  -------------------------------------------------------------------------- */
+
+  --shimmer-base-rgb:   200, 230, 160;
+  --shimmer-deep-rgb:   126, 200, 106;
+  --shimmer-bright-rgb: 210, 240, 170;
+  --shimmer-soft-rgb:   200, 220, 170;
+  --shimmer-vivid-rgb:  168, 220, 150;
+
+  /* وميض علوي خفيف (inset highlight) على حافة الكروت — مستخدم في
+     history.css/services.css/village.css بقيمتين منحرفتين شوية عن
+     بعض (170,210,140 و170,210,150) بنفس النية بالظبط. مرجع واحد الآن. */
+  --color-highlight-rgb: 170, 210, 145;
+
+  /* --------------------------------------------------------------------------
+     NILE — أزرق نهر النيل (إشعارات/معلومات)
+     3 درجات مستقلة عن BRAND، كانت مكتوبة يدوياً بلا اسم في home.css/events.css
+  -------------------------------------------------------------------------- */
+
+  --color-nile-700-rgb: 30, 70, 120;
+  --color-nile-600-rgb: 36, 88, 120;
+  --color-nile-400-rgb: 58, 114, 152;
+  --color-nile-300-rgb: 90, 144, 180; /* = --color-nile-300 — كانت مكتوبة يدوياً في home.css مرتين بلا اسم */
+
+  /* أبيض شفاف فوق خلفيات مشبعة (أزرار، كارت الطوارئ، الهيدر...) — بديل عن
+     تكرار rgba(255,255,255, شفافية) يدوياً بلا اسم في كل ملف */
+  --overlay-white-rgb: 255, 255, 255;
+
+  /* --------------------------------------------------------------------------
+     NEUTRAL PALETTE — بني-أخضر دافئ
+     ↑ وُسّعت الفروق بين 950-700: كانت البطاقات (800) بالكاد تتفصل
+     عن خلفية الصفحة (950) — تباين 1.32:1 فقط. بقت 1.75:1 تقريباً.
+  -------------------------------------------------------------------------- */
+
+  --color-neutral-950: #1b1c14;
+  --color-neutral-900: #323525;
+  --color-neutral-800: #444833;
+  --color-neutral-700: #565c41;
+  --color-neutral-600: #565944;
+  --color-neutral-500: #737660;
+  --color-neutral-400: #93967c;
+  --color-neutral-300: #b4b69a;
+  --color-neutral-200: #d0d0b4;
+  --color-neutral-100: #e4e4cc;
+  --color-neutral-050: #f2f2e6;
+  --color-neutral-000: #fafaf4;
+
+  /* --------------------------------------------------------------------------
+     SEMANTIC SURFACES
+  -------------------------------------------------------------------------- */
+
+  --surface-base:     var(--color-neutral-950);
+  --surface-raised:   var(--color-neutral-800);
+  --surface-elevated: var(--color-neutral-700);
+  --surface-modal:    var(--color-neutral-900);
+  --surface-overlay:  var(--color-neutral-900);
+  --surface-sunken:   var(--color-brand-950);
+
+  /* --------------------------------------------------------------------------
+     SEMANTIC TEXT — ↑ رُفع الوضوح والوزن البصري
+  -------------------------------------------------------------------------- */
+
+  /* النص الرئيسي: أبيض-عاجي ناصع أكثر */
+  --text-primary:      #f5f5e8;
+
+  /* النص الثانوي: رُفع من 88% → 94% — أقصى وضوح دون فقدان التدرّج عن الأساسي */
+  --text-secondary:    rgba(245, 245, 232, 0.94);
+
+  /* النص الخافت: رُفع من #b8b89c → #c6c6a8 — أوضح مع بقائه أخفت من الثانوي
+     ↑ رُفع أكثر (طلب المستخدم: كل الألوان أفتح قليلاً ما عدا الخلفية
+     والبطاقات) — #d4d4b4 */
+  --text-muted:        #d4d4b4;
+
+  /* النص المعطّل: رُفع قليلاً ليبقى مقروءاً (تواريخ، أوقات) مع تمييزه عن المخفت */
+  --text-disabled:     #838368;
+
+  --text-inverse:      var(--color-neutral-950);
+  /* نص فوق خلفية براند مشبعة (أزرار primary، إلخ) — بدل تكرار #fff يدوياً */
+  --text-on-brand:     var(--color-neutral-000);
+  /* ↑ text-brand وtext-brand-strong وtext-accent رُفعت درجة واحدة كل
+     واحدة (200→100، 100→050، 200→100) — نفس طلب رفع سطوع النصوص
+     والأيقونات (اللي بتستخدم هذي التوكنز) بدون لمس الخلفيات/الكروت */
+  --text-brand:        var(--color-brand-100);
+  --text-brand-strong: var(--color-brand-050);
+  --text-accent:       var(--color-accent-100);
+  --text-nile:         var(--color-nile-100);
+
+  /* نصوص/أيقونات قسم "العبادة" (هوية "الحجري" المستقلة — راجع
+     worship.css). قيم افتراضية (الثيم الغامق) هنا؛ الفاتح/التلقائي
+     بيعكسوا الاتجاه (درجات غامقة) في themes.css — بدل ما كل كلاس في
+     worship.css/worship-sub.css يستخدم --color-stone-1XX/2XX/3XX
+     مباشرة (قيم ثابتة مصمَّمة للخلفية الغامقة بس، فكانت تفضل باهتة
+     فوق الثيم الفاتح تمامًا). */
+  --text-stone:        var(--color-stone-300);
+  --text-stone-strong: var(--color-stone-100);
+  --border-stone:      var(--color-stone-500);
+  --stone-tint-rgb:    var(--color-stone-400-rgb);
+
+  /* --------------------------------------------------------------------------
+     SEMANTIC BORDERS
+  -------------------------------------------------------------------------- */
+
+  --border-subtle:     rgba(180, 182, 154, 0.22);
+  --border-default:    rgba(180, 182, 154, 0.32);
+  --border-strong:     rgba(180, 182, 154, 0.46);
+  --border-brand:      var(--color-brand-600);
+  --border-brand-glow: var(--color-brand-400);
+
+  /* --------------------------------------------------------------------------
+     CARD ACCENT STRIPE
+  -------------------------------------------------------------------------- */
+
+  --card-accent-stripe: 3px solid var(--color-brand-600);
+
+  /* --------------------------------------------------------------------------
+     INTERACTIVE STATES
+  -------------------------------------------------------------------------- */
+
+  --state-hover-bg:    rgba(var(--color-brand-500-rgb), 0.11);
+  --state-active-bg:   rgba(var(--color-brand-500-rgb), 0.20);
+  --state-focus-ring:  rgba(var(--color-brand-400-rgb), 0.44);
+  --state-selected-bg: rgba(var(--color-brand-500-rgb), 0.24);
+
+  /* --------------------------------------------------------------------------
+     STATUS COLORS
+  -------------------------------------------------------------------------- */
+
+  --status-success-bg:     rgba(var(--color-brand-600-rgb), 0.15);
+  --status-success-text:   var(--color-brand-200);
+  --status-success-border: var(--color-brand-700);
+
+  --status-warning-bg:     rgba(var(--color-accent-500-rgb), 0.17);
+  --status-warning-text:   var(--color-accent-200);
+  --status-warning-border: var(--color-accent-600);
+
+  --status-error-bg:       rgba(var(--color-alert-900-rgb), 0.18);
+  --status-error-text:     #e89898;
+  --status-error-border:   #7a2828;
+  --status-error-border-rgb: 122, 40, 40; /* = --status-error-border — كانت shadow-focus-error بتكتبها يدوياً */
+
+  /* دائرة معاينة الوضع الفاتح/الغامق في صفحة المظهر (settings-appearance) —
+     قيمتان مقصودتان لتمثيل بصري مبسّط للثيمين، مش مطابقتين حرفياً لأي
+     surface-base موجود (ده تصميم خاص بالمعاينة نفسها) — كانتا آخر لونين
+     hex خام متبقيين في كل المشروع خارج هذا الملف. */
+  --preview-dark-swatch:  #0c1510;
+  --preview-light-swatch: #f0f5ee;
+
+  --status-info-bg:        rgba(var(--color-nile-600-rgb), 0.18);
+  --status-info-text:      var(--color-nile-200);
+  --status-info-border:    var(--color-nile-600);
+
+  /* --------------------------------------------------------------------------
+     NOTIFICATION CATEGORY TOKENS
+     كل تصنيف إشعار (خبر/مناسبة/تكافل/تبريك/تعزية/مجتمع/تنبيه عام) بياخد
+     لونه من عائلة الألوان الأساسية الموجودة أصلاً — ولا لون جديد اتضاف.
+     المرجع الوحيد لأي مكوّن إشعار (نقطة، أيقونة، شريط تصنيف).
+  -------------------------------------------------------------------------- */
+
+  --notif-news-bg:          var(--status-info-bg);
+  --notif-news-text:        var(--status-info-text);
+  --notif-news-border:      var(--status-info-border);
+
+  --notif-event-bg:         rgba(var(--color-accent-500-rgb), 0.17);
+  --notif-event-text:       var(--color-accent-200);
+  --notif-event-border:     var(--color-accent-600);
+
+  --notif-congrats-bg:      var(--notif-event-bg);
+  --notif-congrats-text:    var(--notif-event-text);
+  --notif-congrats-border:  var(--notif-event-border);
+
+  /* تكافل — نيلي (nile)، بدل ما كانت بتشارك نفس أخضر البراند/النجاح
+     العام (--status-success). النيلي بيرمز للثقة والدعم الجماعي، وبيدّي
+     "تكافل" هوية مستقلة حقيقية بدل ما تدوب في نفس لغة الألوان اللي
+     مستخدمة أصلاً في كل حتة تانية بالتطبيق (الأزرار، الهيدر، الأفاتار). */
+  --notif-solidarity-bg:    rgba(var(--color-nile-400-rgb), 0.18);
+  --notif-solidarity-text:  var(--color-nile-100);
+  --notif-solidarity-border:var(--color-nile-500);
+
+  --notif-community-bg:     var(--notif-solidarity-bg);
+  --notif-community-text:   var(--notif-solidarity-text);
+  --notif-community-border: var(--notif-solidarity-border);
+
+  /* مشروع (متابعة المشاريع) — بنفسجي، عائلة لون غير مُستخدمة لأي
+     تصنيف إشعار تاني، فبتدّي "مشاريعنا" هوية بصرية واضحة لوحدها بدل
+     ما تتلخبط بألوان الأخبار أو التبريكات */
+  --notif-project-bg:        rgba(var(--color-clay-500-rgb), 0.16);
+  --notif-project-text:      var(--color-clay-200);
+  --notif-project-border:    var(--color-clay-600);
+
+  /* فكرة (اقتراح أفكار ومشاريع) — نفس عائلة "تبريك/مناسبة" (ذهبي)،
+     بنفس مبدأ congrats أعلاه (تشارك عائلة لون وتتفرّق بالأيقونة بس) */
+  --notif-idea-bg:           var(--notif-event-bg);
+  --notif-idea-text:         var(--notif-event-text);
+  --notif-idea-border:       var(--notif-event-border);
+
+  /* تعازي — نفس العيلة المحايدة، لكن حضور أوضح (خلفية أعمق، نص أفتح،
+     حد أبين) عشان يوصّل وقار حقيقي، ويتفرّق فعليًا عن "نظام" تحته
+     (كانوا قبل كده متطابقين تقريبًا). */
+  --notif-condolence-bg:      rgba(80, 86, 61, 0.42);
+  --notif-condolence-text:    var(--color-neutral-100);
+  --notif-condolence-border:  var(--color-neutral-500);
+
+  /* نظام — نفس العيلة، لكن أهدى وأخفت حضورًا بوضوح من تعازي (خلفية
+     أخف، نص أعتم، حد أرفّ) عشان يبان فعلاً إنه تنبيه خلفية/غير شخصي
+     مش حالة عزاء. */
+  --notif-system-bg:        rgba(80, 86, 61, 0.16);
+  --notif-system-text:      var(--color-neutral-400);
+  --notif-system-border:    var(--color-neutral-700);
+
+  /* شارة العداد الرقمي (نمط واتساب) على أيقونة التنبيهات في الناف السفلي */
+  --notif-badge-bg:    var(--status-error-border);
+  --notif-badge-text:  var(--color-neutral-000);
+
+  /* --------------------------------------------------------------------------
+     READER BADGE TOKENS — شارة نوع المحتوى + حالة الشكوى في صفحة القراءة
+     كانت الألوان الستة دي (أخبار/تاريخ/ذاكرة/شكوى/خدمة/رابطة) مكتوبة hex
+     خام جوّه js/pages/reader.js (inline style) — بره منظومة التوكنز
+     بالكامل، يعني ثيمها ثابت ومش بيتغيّر مع تبديل الثيم. النتيجة: نص فاتح
+     اللون (مصمم للخلفية الغامقة) بيتحط فوق خلفية الثيم الفاتح الكريمية
+     فيبقى شبه غير مقروء (تباين ~1.4:1–2.2:1 بدل الحد الأدنى 4.5:1).
+     اتنقلوا هنا كتوكنز عادية بنفس منطق NOTIFICATION CATEGORY TOKENS فوق،
+     وبقى ليهم نسخة ثيم فاتح مخصصة في themes.css (حبر غامق بدل الباستيل). */
+  --reader-news-bg:          rgba(var(--color-brand-700-rgb), 0.2);
+  --reader-news-text:        var(--color-brand-300);
+  --reader-news-border:      var(--color-brand-700);
+
+  --reader-history-bg:       rgba(var(--color-accent-600-rgb), 0.16);
+  --reader-history-text:     var(--color-accent-300);
+  --reader-history-border:   var(--color-accent-600);
+
+  --reader-memory-bg:        rgba(var(--color-nile-600-rgb), 0.16);
+  --reader-memory-text:      var(--color-nile-200);
+  --reader-memory-border:    var(--color-nile-600);
+
+  --reader-complaint-bg:     var(--status-error-bg);
+  --reader-complaint-text:   var(--status-error-text);
+  --reader-complaint-border: var(--status-error-border);
+
+  --reader-service-bg:       rgba(var(--color-brand-700-rgb), 0.12);
+  --reader-service-text:     var(--color-brand-200);
+  --reader-service-border:   var(--color-brand-800);
+
+  --reader-association-bg:      rgba(var(--color-brand-400-rgb), 0.14);
+  --reader-association-text:    var(--color-brand-200);
+  --reader-association-border:  var(--color-brand-700);
+
+  /* --------------------------------------------------------------------------
+     SPACING SCALE — Base-4
+  -------------------------------------------------------------------------- */
+
+  --space-0:  0px;
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-7:  28px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-11: 44px;
+  --space-12: 48px;
+  --space-14: 56px;
+  --space-16: 64px;
+  --space-18: 72px;
+  --space-20: 80px;
+  --space-24: 96px;
+  --space-32: 128px;
+
+  --spacing-page-x:     var(--space-4);
+  --spacing-section-y:  var(--space-10);
+  --spacing-card-inner: var(--space-5);
+  --spacing-input-x:    var(--space-5);
+  --spacing-input-y:    var(--space-4);
+
+  /* --------------------------------------------------------------------------
+     TYPOGRAPHY — ↑ رُفع الوزن الافتراضي
+  -------------------------------------------------------------------------- */
+
+  --font-heading:    'Cairo', sans-serif;
+  --font-display:    var(--font-heading); /* كانت مكررة يدوياً بنفس القيمة بالضبط — بقت alias */
+  --font-body:       'Tajawal', sans-serif;
+
+  /* كانت 'Tajawal' هنا بالغلط — سياسة الخط المعتمدة: Almarai لنصوص القراءة
+     الطويلة (صفحة القارئ reader.css) مقابل Tajawal لنص الواجهة العادي.
+     ⚠️ ملفات الخط الفعلية (Almarai-*.ttf) مش موجودة في assets/fonts حالياً —
+     لازم تُضاف + @font-face في typography.css عشان يتفعّل بصرياً، وإلا
+     المتصفح هيرجع لـ Tajawal تلقائياً (fallback أدناه) بدون ما ينكسر شيء. */
+  --font-long-text:  'Almarai', 'Tajawal', sans-serif;
+  --font-mono:       'IBM Plex Mono', ui-monospace, monospace;
+
+  --text-xs:   0.75rem;
+  --text-2xs:  0.55rem;
+  --text-sm:   0.875rem;
+  --text-base: 1rem;
+  --text-md:   1.0625rem;
+  --text-lg:   1.125rem;
+  --text-xl:   1.25rem;
+
+  /* ↓ Fluid — تتكيّف مع عرض الشاشة تلقائياً (clamp: حد أدنى، قيمة مرنة rem+vw، حد أقصى) */
+  --text-2xl:  clamp(1.4rem,  1.35rem + 0.6vw, 1.58rem);
+  --text-3xl:  clamp(1.75rem, 1.68rem + 0.8vw, 1.98rem);
+  --text-4xl:  clamp(2.1rem,  2rem   + 1vw,   2.38rem);
+  --text-5xl:  clamp(2.8rem,  2.65rem + 1.3vw, 3.18rem);
+
+  /* Tajawal: أوزان حقيقية مقصودة (بدون تغيير) */
+  --weight-regular:  500;
+  --weight-medium:   700; /* ⚠️ نفس رقم --weight-bold بالصدفة — دي وزن Tajawal الحقيقي، مش نسخة من Cairo. القيمتان منفصلتان عمداً حتى لو تطابق الرقم رقمياً. */
+  /* Cairo: أوزان حقيقية الآن بفضل Variable Font — كانت 800 مصطنعة (ExtraBold وهمي)، الآن SemiBold/Bold حقيقيين — يعالج "انتفاخ" الكلمات القصيرة */
+  --weight-semibold: 600;
+  --weight-bold:     700;
+
+  --leading-tight:   1.2;
+  --leading-snug:    1.35;
+  --leading-normal:  1.55;
+  --leading-relaxed: 1.75;
+  --leading-loose:   2.0;
+
+  --tracking-tight:   0;
+  --tracking-normal:   0;
+  --tracking-wide:     0.03em;
+  --tracking-widest:   0.08em;
+
+  /* --------------------------------------------------------------------------
+     ICONS
+  -------------------------------------------------------------------------- */
+
+  --icon-xs: 14px;
+  --icon-sm: 18px;
+  --icon-md: 22px;
+  --icon-lg: 26px;
+  --icon-xl: 32px;
+
+  /* --------------------------------------------------------------------------
+     BORDER RADIUS
+  -------------------------------------------------------------------------- */
+
+  --radius-none: 0;
+  --radius-xs:   2px;
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   14px;
+  --radius-xl:   18px;
+  --radius-2xl:  24px;
+  --radius-3xl:  32px;
+  --radius-full: 9999px;
+
+  /* --------------------------------------------------------------------------
+     SHADOWS — Layered, warm-tinted depth
+  -------------------------------------------------------------------------- */
+
+  --shadow-xs: 0 1px 3px rgba(var(--color-brand-950-rgb), 0.55),
+               0 1px 1px rgba(var(--color-brand-950-rgb), 0.35);
+
+  --shadow-sm: 0 2px 6px  rgba(var(--color-brand-950-rgb), 0.50),
+               0 1px 2px  rgba(var(--color-brand-950-rgb), 0.34);
+
+  --shadow-md: 0 4px 14px rgba(var(--color-brand-950-rgb), 0.56),
+               0 2px 4px  rgba(var(--color-brand-950-rgb), 0.38);
+
+  --shadow-lg: 0 8px 28px rgba(var(--color-brand-950-rgb), 0.62),
+               0 3px 8px  rgba(var(--color-brand-950-rgb), 0.42);
+
+  --shadow-xl: 0 16px 48px rgba(var(--color-brand-950-rgb), 0.68),
+               0 6px 14px  rgba(var(--color-brand-950-rgb), 0.48);
+
+  --shadow-brand-sm:    0 0 0 1px var(--color-brand-700),
+                        0 2px 8px rgba(var(--color-brand-500-rgb), 0.20);
+
+  --shadow-reed-sm:     0 0 0 1px var(--color-reed-700),
+                        0 2px 8px rgba(var(--color-reed-500-rgb), 0.20);
+
+  --shadow-nile-sm:     0 0 0 1px var(--color-nile-700),
+                        0 2px 8px rgba(var(--color-nile-400-rgb), 0.20);
+
+  /* ↓ هالة أزرار البراند مخفّفة (كانت 0.30/0.10 بامتداد 20px/40px) —
+     وهج ألطف وأبرد بدل الوميض الأخضر القوي حول الأزرار عند التفاعل */
+  --shadow-brand-glow:  0 0 0 1px var(--color-brand-600),
+                        0 0 14px rgba(var(--color-brand-500-rgb), 0.20),
+                        0 0 28px rgba(var(--color-brand-500-rgb), 0.06);
+
+  --shadow-accent-sm:   0 0 0 1px var(--color-accent-700),
+                        0 2px 8px rgba(var(--color-accent-500-rgb), 0.26);
+
+  --shadow-focus:       0 0 0 3px var(--state-focus-ring);
+  --shadow-focus-error: 0 0 0 3px rgba(var(--status-error-border-rgb), 0.35);
+
+  --shadow-inset:       inset 0 1px 4px rgba(var(--color-brand-950-rgb), 0.52);
+  --shadow-inset-brand: inset 0 1px 0 rgba(var(--color-brand-400-rgb), 0.11);
+
+  /* --------------------------------------------------------------------------
+     GRADIENTS — هوية الأزرار الأساسية
+     زاوية 155deg بين درجتين من نفس اللون كانت مكتوبة يدوياً بالحرف الواحد
+     في button.css (.btn--primary) وhome.css (.home-fact-card__more) و
+     community-occasions.css (.cta-button) — نفس القرار البصري بالظبط،
+     3 مرات. مرجع واحد الآن؛ أي تعديل مستقبلي على "شكل الزر الأساسي"
+     (الزاوية، الدرجات) يصير في مكان واحد بدل 3.
+  -------------------------------------------------------------------------- */
+
+  --gradient-brand:       linear-gradient(155deg, var(--color-brand-300) 0%, var(--color-brand-400) 100%);
+  --gradient-brand-hover: linear-gradient(155deg, var(--color-brand-200) 0%, var(--color-brand-300) 100%);
+  --gradient-accent:       linear-gradient(155deg, var(--color-accent-300) 0%, var(--color-accent-400) 100%);
+  --gradient-accent-hover: linear-gradient(155deg, var(--color-accent-200) 0%, var(--color-accent-300) 100%);
+  --gradient-clay:       linear-gradient(155deg, var(--color-clay-300) 0%, var(--color-clay-400) 100%);
+  --gradient-clay-hover: linear-gradient(155deg, var(--color-clay-200) 0%, var(--color-clay-300) 100%);
+  --gradient-reed:       linear-gradient(155deg, var(--color-reed-300) 0%, var(--color-reed-400) 100%);
+  --gradient-reed-hover: linear-gradient(155deg, var(--color-reed-200) 0%, var(--color-reed-300) 100%);
+
+  /* --------------------------------------------------------------------------
+     TRANSITIONS
+  -------------------------------------------------------------------------- */
+
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in:     cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-inout:  cubic-bezier(0.45, 0, 0.55, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  --duration-instant: 60ms;
+  --duration-fast:    100ms;
+  --duration-base:    180ms;
+  --duration-slow:    300ms;
+  --duration-slower:  460ms;
+
+  --transition-color:     color            var(--duration-fast) var(--ease-out),
+                          background-color var(--duration-fast) var(--ease-out),
+                          border-color     var(--duration-fast) var(--ease-out);
+  --transition-transform: transform  var(--duration-base) var(--ease-out);
+  --transition-opacity:   opacity    var(--duration-base) var(--ease-out);
+  --transition-shadow:    box-shadow var(--duration-base) var(--ease-out);
+  --transition-all:       all        var(--duration-base) var(--ease-out);
+
+  /* --------------------------------------------------------------------------
+     LAYOUT
+  -------------------------------------------------------------------------- */
+
+  --header-height:     56px;
+  --bottom-nav-height: 62px;
+  --sidebar-width:     240px;
+  --content-max-w:     680px;
+  --page-max-w:        1280px;
+
+  /* --------------------------------------------------------------------------
+     Z-INDEX
+  -------------------------------------------------------------------------- */
+
+  --z-base:     0;
+  --z-raised:   10;
+  --z-dropdown: 100;
+  --z-sticky:   200;
+  --z-overlay:  300;
+  --z-modal:    400;
+  --z-toast:    500;
+  --z-top:      600;
+}
+
+
+/* ==========================================================================
+   احتياط الهواتف الضعيفة (WebView أقدم من Chrome 79 لا يعرف clamp()):
+   var(--text-3xl) كانت تصير "غير صالحة" فيسقط العنوان لحجم موروث خاطئ.
+   نعطيها قيمًا ثابتة بوحدة rem تساوي الحد الأدنى/الوسط للقيم المرنة.
+   ========================================================================== */
+@supports not (font-size: clamp(1rem, 1vw, 2rem)) {
+  :root {
+    --text-2xl: 1.45rem;
+    --text-3xl: 1.8rem;
+    --text-4xl: 2.15rem;
+    --text-5xl: 2.85rem;
+  }
+}

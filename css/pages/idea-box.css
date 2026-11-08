@@ -1,0 +1,821 @@
+/* ==========================================================================
+   IDEA BOX PAGE — شبتوت بحري  v1
+   صندوق الأفكار — قائمة، فلترة/فرز، تصويت، شريط تأييد
+   Consumes: tokens.css, components/card.css, components/forms.css (badge),
+             components/states.css (empty-state, page-skeleton__line)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   PAGE INTRO + CTA (نفس نمط history.css/association.css، محلي للصفحة)
+-------------------------------------------------------------------------- */
+
+.idea-box-page .page-intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  /* .page-intro العامة بتضيف padding أفقي كمان — نفس مشكلة الهامش
+     المضاعف مع .page الأب، فبنصفّرها هنا بس (محليًا لهذي الصفحة) */
+  padding-inline: 0;
+}
+
+.idea-box-page .cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-display);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-sm);
+  letter-spacing: var(--tracking-wide);
+  line-height: 1;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-brand-400);
+  padding: var(--space-3) var(--space-6);
+  background-color: var(--color-brand-500);
+  color: var(--color-neutral-050);
+  box-shadow: var(--shadow-brand-sm);
+  cursor: pointer;
+  transition: var(--transition-color), var(--transition-shadow), var(--transition-transform);
+  white-space: nowrap;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.idea-box-page .cta-button:hover {
+  background-color: var(--color-brand-400);
+  border-color: var(--color-brand-300);
+}
+
+.idea-box-page .cta-button:active {
+  transform: scale(0.97);
+}
+
+.idea-box-page .cta-button i {
+  width: 18px;
+  height: 18px;
+}
+
+.idea-box-page .cta-button--full {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+/* --------------------------------------------------------------------------
+   FEED
+-------------------------------------------------------------------------- */
+
+.idea-box-feed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  /* بدون padding أفقي هنا — .page الأب فوق بيدّي الهامش الجانبي
+     أصلاً، وتكراره هنا كان بيضيّق البطاقات ظلمًا (هامش مضاعف) */
+  padding: var(--space-4) 0 var(--space-8);
+}
+
+/* --------------------------------------------------------------------------
+   IDEA CARD
+-------------------------------------------------------------------------- */
+
+.idea-card {
+  background-color: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-card-inner);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-all);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  animation: fade-up var(--duration-slow) var(--ease-out) both;
+}
+
+.idea-box-feed .idea-card:nth-child(1) { animation-delay:  60ms; }
+.idea-box-feed .idea-card:nth-child(2) { animation-delay: 120ms; }
+.idea-box-feed .idea-card:nth-child(3) { animation-delay: 180ms; }
+.idea-box-feed .idea-card:nth-child(4) { animation-delay: 240ms; }
+.idea-box-feed .idea-card:nth-child(5) { animation-delay: 300ms; }
+
+.idea-card:hover {
+  border-color: var(--border-brand);
+  box-shadow: var(--shadow-brand-sm);
+}
+
+.idea-card--skeleton {
+  gap: var(--space-3);
+}
+
+.idea-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.idea-card__tags .badge i {
+  width: 12px;
+  height: 12px;
+}
+
+/* صاحب الفكرة — بارز في أعلى البطاقة، بتنسيق يحفّز صاحب الفكرة على المشاركة */
+.idea-card__author {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.idea-card__author .avatar {
+  font-size: var(--text-sm);
+}
+
+.idea-card__author-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.idea-card__author-label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  color: var(--text-muted);
+  line-height: 1.2;
+}
+
+.idea-card__author-name {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  color: var(--text-brand-strong);
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.idea-card__tags {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: calc(var(--space-2) * -1);
+}
+
+.idea-card__tags .badge { flex-shrink: 0; }
+
+.idea-card__top-badge {
+  color: var(--color-accent-200);
+  background: rgba(var(--color-accent-200-rgb), 0.14);
+  border-color: rgba(var(--color-accent-200-rgb), 0.35);
+}
+
+.idea-card__top-badge i { fill: currentColor; }
+
+.idea-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.idea-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.idea-card__title {
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  line-height: var(--leading-snug);
+}
+
+.idea-card__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.idea-card__dot {
+  opacity: 0.5;
+}
+
+.idea-card__entity {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  background-color: var(--surface-overlay);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2) var(--space-3);
+}
+
+.idea-card__entity-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--color-brand-700) 0%, var(--color-brand-900) 100%);
+  border: 1px solid var(--border-brand);
+}
+
+.idea-card__entity-icon i {
+  width: 15px;
+  height: 15px;
+  color: var(--color-brand-200);
+}
+
+.idea-card__entity-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.idea-card__entity-label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  color: var(--text-muted);
+  line-height: 1.2;
+}
+
+.idea-card__entity-value {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
+  line-height: 1.35;
+}
+
+/* شريط نسبة التأييد — نفس نمط .progress-bar/.progress-fill في village.css */
+.idea-card__progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.idea-card__progress .progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.idea-card__progress .progress-label {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.idea-card__progress .progress-value {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--text-brand);
+}
+
+.idea-card__progress .progress-bar {
+  height: 6px;
+  background-color: var(--surface-overlay);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.idea-card__progress .progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-brand-500), var(--color-brand-300));
+  border-radius: var(--radius-full);
+  transition: width 0.6s var(--ease-out);
+}
+
+/* حالة "العدد لسه قليل" — تعبير بصري إن الرقم مش نهائي بعد، مش مجرد
+   إخفاء المشكلة. لون محايد بدل تدرّج البراند الواثق + نص توضيحي هادئ. */
+.idea-card__progress--pending .progress-value {
+  color: var(--text-muted);
+  font-weight: var(--weight-medium);
+}
+
+.idea-card__progress--pending .progress-fill {
+  background: repeating-linear-gradient(
+    135deg,
+    var(--border-strong) 0px,
+    var(--border-strong) 6px,
+    var(--border-default) 6px,
+    var(--border-default) 12px
+  );
+}
+
+.idea-card__progress-hint {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  line-height: var(--leading-snug);
+}
+
+/* --------------------------------------------------------------------------
+   CARD FOOTER — تصويت + تفاصيل
+-------------------------------------------------------------------------- */
+
+.idea-card__footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.idea-vote-buttons {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.idea-vote-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  min-height: 40px;
+  border-radius: var(--radius-full);
+  border: 1px solid transparent;
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+  transition: var(--transition-color), var(--transition-shadow), var(--transition-transform);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.idea-vote-btn__label {
+  white-space: nowrap;
+}
+
+.idea-vote-btn i {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+.idea-vote-btn:active {
+  transform: scale(0.97);
+}
+
+.idea-vote-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-weight: var(--weight-bold);
+  opacity: 0.8;
+}
+
+.idea-vote-count i {
+  width: 10px;
+  height: 10px;
+  opacity: 0.7;
+}
+
+.idea-vote-count__num {
+  line-height: 1;
+}
+
+/* أؤيد — أخضر دائماً، ويشتد وضوحه عند الاختيار */
+.idea-vote-btn--up {
+  color: var(--status-success-text);
+  background-color: var(--status-success-bg);
+  border-color: var(--status-success-border);
+}
+
+.idea-vote-btn--up:hover {
+  border-color: var(--color-brand-500);
+}
+
+.idea-vote-btn--up.active {
+  color: var(--color-neutral-050);
+  background-color: var(--color-brand-500);
+  border-color: var(--color-brand-400);
+  box-shadow: var(--shadow-brand-sm);
+}
+
+/* لا أؤيد — أحمر هادئ دائماً، بدون حدّة حتى عند الاختيار */
+.idea-vote-btn--down {
+  color: var(--status-error-text);
+  background-color: rgba(var(--color-alert-900-rgb), 0.09);
+  border-color: rgba(var(--color-alert-800-rgb), 0.35);
+}
+
+.idea-vote-btn--down:hover {
+  border-color: var(--status-error-border);
+}
+
+.idea-vote-btn--down.active {
+  color: var(--color-neutral-050);
+  background-color: var(--color-danger-500);
+  border-color: var(--color-danger-400);
+}
+
+.idea-card__details {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  min-height: 40px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-overlay);
+  color: var(--text-brand);
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  transition: var(--transition-color), var(--transition-shadow);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.idea-card__details:hover {
+  color: var(--color-brand-100);
+  border-color: var(--border-brand);
+}
+
+.idea-card__details:active {
+  transform: scale(0.97);
+  background: var(--state-active-bg);
+}
+
+.idea-card__details i {
+  width: 15px;
+  height: 15px;
+  transition: transform 0.2s var(--ease-out);
+}
+
+.idea-card__details:hover i {
+  transform: translateX(-2px);
+}
+
+/* --------------------------------------------------------------------------
+   IDEA DETAIL PAGE (idea-box-detail.js) — Phase 5-6
+-------------------------------------------------------------------------- */
+
+.idea-detail-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: var(--space-4) var(--spacing-page-x) var(--space-8);
+}
+
+.idea-detail-card {
+  gap: var(--space-4);
+}
+
+.idea-detail-card__title {
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  line-height: var(--leading-snug);
+}
+
+.idea-detail-card__desc {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+  white-space: pre-wrap;
+}
+
+.idea-detail-card__benefit {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  background-color: var(--surface-overlay);
+  border: 1px solid var(--border-subtle);
+  border-inline-start: var(--card-accent-stripe);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+}
+
+.idea-detail-card__benefit-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--text-brand);
+}
+
+.idea-detail-card__benefit-label i {
+  width: 14px;
+  height: 14px;
+}
+
+.idea-detail-card__benefit p {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+}
+
+.idea-detail-card__votes {
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* --------------------------------------------------------------------------
+   COMMENTS SECTION
+-------------------------------------------------------------------------- */
+
+.idea-detail-comments {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.idea-detail-comments__heading {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+}
+
+.idea-detail-comments__heading i {
+  width: 18px;
+  height: 18px;
+  color: var(--text-brand);
+}
+
+.idea-detail-comments__list {
+  display: flex;
+  flex-direction: column;
+}
+
+.idea-detail-comments__loading,
+.idea-detail-comments__empty {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  text-align: center;
+  padding: var(--space-4) 0;
+}
+
+.idea-detail-comments__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* --------------------------------------------------------------------------
+   BUBBLES — نفس شكل فقاعات المناسبات (occasion-bubble-row) بالحرف: أفتار
+   + فقاعة بذيل حاد جهة البداية، ولون فرق بين "أنا" وغيري. الفرق هنا
+   عن المناسبات: لون التفعيل "brand" (هوية صندوق الأفكار نفسها، نفس لون
+   أزرار التصويت) بدل "reed"، وبدون ردود (إعجاب محلي فقط).
+-------------------------------------------------------------------------- */
+
+/* align-items: flex-start — مختلفة عمدًا عن occasion-bubble-row
+   الأصلية (flex-end هناك) رغم إن باقي الفقاعة بالحرف منها. السبب:
+   ردود مصنع الأفكار بتترندر جوّه نفس .idea-bubble الأصلي
+   (.idea-bubble__replies)، فالصندوق بيطول مع كل رد يتضاف — و
+   flex-end كانت بتدفع دايرة الأفتار لتحت الصندوق الطويل ده بالكامل
+   بدل ما تفضل ملاصقة اسم صاحب التعليق فوق (المشكلة اللي ظهرت:
+   دواير الأفتار بتتزحلق لتحت وتتداخل مع حدود الردود). المناسبات
+   مالهاش نفس المشكلة لأن كل تعليق هناك صف مستقل من غير تعشيش.
+   flex-start بتثبّت الأفتار فوق دايمًا زي أي واجهة محادثة عادية،
+   بغض النظر عن طول الردود جواه. */
+.idea-bubble-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  animation: fade-up var(--duration-slow) var(--ease-out) both;
+}
+
+.idea-detail-comments__list > .idea-bubble-row:nth-child(1) { animation-delay: 60ms; }
+.idea-detail-comments__list > .idea-bubble-row:nth-child(2) { animation-delay: 120ms; }
+.idea-detail-comments__list > .idea-bubble-row:nth-child(3) { animation-delay: 180ms; }
+.idea-detail-comments__list > .idea-bubble-row:nth-child(4) { animation-delay: 240ms; }
+.idea-detail-comments__list > .idea-bubble-row:nth-child(5) { animation-delay: 300ms; }
+
+.idea-bubble-row__avatar {
+  flex-shrink: 0;
+}
+
+/* العمود: جسم الفقاعة (اسم + نص) ثم شريط الإجراءات خارجها، ثم الردود.
+   الفقاعة نفسها بلا إطار — خلفية ناعمة فقط، والوزن البصري للنص. */
+.idea-bubble {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.idea-bubble__body {
+  max-width: 100%;
+  background: rgba(var(--overlay-white-rgb), 0.06);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2) var(--space-3);
+}
+
+.idea-bubble-row--own > .idea-bubble > .idea-bubble__body {
+  background: rgba(var(--color-brand-500-rgb), 0.14);
+}
+
+.idea-bubble-row--own .idea-bubble__author {
+  color: var(--text-brand);
+}
+
+.idea-bubble__author {
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  margin: 0 0 2px;
+}
+
+.idea-bubble__text {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+}
+
+/* شريط الإجراءات تحت الفقاعة: الوقت · إعجاب — نص خفيف بلا أزرار
+   مؤطّرة. منطقة اللمس كبيرة (padding رأسي) بدون ما يبان الزر. */
+.idea-bubble__footer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding-inline: var(--space-2);
+  margin-top: 2px;
+}
+
+.idea-bubble__meta {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-inline-end: var(--space-2);
+}
+
+.idea-bubble__action {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 36px;
+  padding: 0 var(--space-2);
+  border: none;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  cursor: pointer;
+  transition: var(--transition-color), var(--transition-transform);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.idea-bubble__action i {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+.idea-bubble__action:active {
+  transform: scale(0.94);
+}
+
+@media (hover: hover) {
+  .idea-bubble__action:hover {
+    color: var(--text-primary);
+  }
+}
+
+.idea-bubble__like.active {
+  color: var(--text-brand);
+}
+
+.idea-bubble__like.active i {
+  fill: currentColor;
+}
+
+.idea-bubble__like[data-busy] {
+  opacity: 0.7;
+}
+
+.idea-bubble__like-count:empty {
+  display: none;
+}
+
+/* --------------------------------------------------------------------------
+   COMPOSER — نفس شكل حبّة كتابة تعليق المناسبات بالحرف (كبسولة + عدّاد
+   تحتها). هنا ثابتة تحت القائمة دايمًا (بخلاف المناسبات) لأن المستخدم
+   يقدر يعلّق أكتر من مرة على الفكرة،
+-------------------------------------------------------------------------- */
+
+.idea-detail-comment-form {
+  position: sticky;
+  bottom: var(--space-2);
+  background-color: var(--surface-base);
+  padding-top: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.idea-detail-comment-form__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background-color: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  padding: 6px 6px 6px var(--space-1);
+  transition: var(--transition-shadow);
+}
+
+.idea-detail-comment-form__row:focus-within {
+  border-color: var(--border-brand);
+  box-shadow: var(--shadow-focus);
+}
+
+.idea-detail-comment-form__input {
+  flex: 1;
+  resize: none;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  background: none;
+  border: none;
+  padding: var(--space-2) var(--space-2);
+  line-height: var(--leading-normal);
+  max-height: 120px;
+}
+
+.idea-detail-comment-form__input:focus {
+  outline: none;
+}
+
+.idea-detail-comment-form__submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  border: none;
+  background-color: var(--color-brand-500);
+  color: var(--color-neutral-050);
+  cursor: pointer;
+  transition: var(--transition-color), var(--transition-transform);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.idea-detail-comment-form__submit:hover {
+  background-color: var(--color-brand-400);
+}
+
+.idea-detail-comment-form__submit:active {
+  transform: scale(0.95);
+}
+
+.idea-detail-comment-form__submit:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.idea-detail-comment-form__submit i {
+  width: 18px;
+  height: 18px;
+}
+
+.idea-detail-comment-form__counter {
+  align-self: flex-end;
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--text-muted);
+  padding-inline-end: var(--space-3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .idea-bubble-row { animation: none !important; }
+}
+
+/* تصويت لسع ما وصل الخادم (شبكة ضعيفة / حد الاستهلاك): يبقى بالطابور ويُرسَل تلقائيًا —
+   مقصود أن يبدو للمستخدم ناجحًا تمامًا (بلا خفوت ولا نبض)؛ السمة data-pending للمنطق فقط. */
+.idea-vote-btn[data-pending] { opacity: 1; }
