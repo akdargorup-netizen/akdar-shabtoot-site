@@ -1,0 +1,41 @@
+/* --------------------------------------------------------------------------
+   STAFF BADGE — وسم صفة (مطوّر / مشرف / مشرف آنداندي) بجانب الاسم.
+   حبة صغيرة هادئة بلون خفيف لكل دور، بدون أيقونات.
+-------------------------------------------------------------------------- */
+
+.staff-badge {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  margin-inline-start: 6px;
+  padding: 1px 8px;
+  border-radius: var(--radius-full);
+  border: 1px solid transparent;
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: var(--weight-bold);
+  line-height: 1.6;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+/* مطوّر — أخضر العلامة */
+.staff-badge--developer {
+  color: var(--text-brand);
+  background: rgba(var(--color-brand-500-rgb), 0.16);
+  border-color: var(--border-brand);
+}
+
+/* مشرف — محايد دافئ */
+.staff-badge--admin {
+  color: var(--text-primary);
+  background: rgba(var(--overlay-white-rgb), 0.10);
+  border-color: rgba(var(--overlay-white-rgb), 0.18);
+}
+
+/* مشرف آنداندي — ذهبي (نفس هوية قسم الرُطانة) */
+.staff-badge--nubian {
+  color: var(--color-accent-300, #e3c26b);
+  background: rgba(214, 170, 70, 0.14);
+  border-color: rgba(214, 170, 70, 0.32);
+}

@@ -1,0 +1,302 @@
+/* ==========================================================================
+   THEME LIGHT PLUS — شبتوت بحري
+   طبقة الثيم الفاتح الشاملة. تُحمَّل آخر ملف في الحزمة (بعد themes.css)،
+   فتكسب على قواعد الصفحات والمكوّنات من غير !important.
+
+   كل قواعدها بـ [data-scheme="light"] — القيمة المحلولة من js/shared/theme.js
+   (فاتح صريح، أو "تلقائي" على جهاز فاتح) — فتغطّي الاثنين بنفس القواعد.
+
+   الهوية: "ورق موثّق" — قاعدة كريمية دافئة، حبر أخضر للنصوص والأيقونات،
+   لمسات ذهب/برونز للتمييز. المبدأ الحاكم: أي لون صُمِّم فوق خلفية غامقة
+   (الدرجات 050→300 من أي عائلة) لا يُستخدم كنص أو أيقونة هنا — يُستبدل بدرجة
+   الحبر الأغمق من نفس العائلة (700→900) بتباين ≥ 4.5:1 للنص و≥ 3:1 للأيقونات.
+
+   الأقسام:
+   1) توكنز الثيم الفاتح الإضافية (تدرّجات الأزرار، ألوان الأيقونات)
+   2) الإطار العام: color-scheme، لون الاختيار، شريط التمرير، الانتقال بين الثيمات
+   3) السطوح العامة: الغطاء الشفاف للنوافذ، التوست، الهيكل العظمي، الحقول
+   4) إصلاحات المكوّنات (مُستخرجة من فحص تباين آلي لكل الصفحات)
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1) TOKENS
+   ========================================================================== */
+
+[data-scheme="light"] {
+  color-scheme: light;
+
+  /* ── تدرّجات الأزرار: كانت brand-300→400 (أخضر فاتح) بنص فاتح فوقها = 2.3:1.
+     دلوقتي درجات أعمق من نفس العائلة بحيث النص الفاتح (#fafaf4) يوصل 6:1+ ── */
+  --gradient-brand:        linear-gradient(155deg, var(--color-brand-500) 0%, var(--color-brand-600) 100%);
+  --gradient-brand-hover:  linear-gradient(155deg, var(--color-brand-400) 0%, var(--color-brand-500) 100%);
+  --gradient-accent:       linear-gradient(155deg, var(--color-accent-500) 0%, var(--color-accent-600) 100%);
+  --gradient-accent-hover: linear-gradient(155deg, var(--color-accent-400) 0%, var(--color-accent-500) 100%);
+  --gradient-clay:         linear-gradient(155deg, var(--color-clay-600) 0%, var(--color-clay-700) 100%);
+  --gradient-clay-hover:   linear-gradient(155deg, var(--color-clay-500) 0%, var(--color-clay-600) 100%);
+  --gradient-reed:         linear-gradient(155deg, var(--color-reed-600) 0%, var(--color-reed-700) 100%);
+  --gradient-reed-hover:   linear-gradient(155deg, var(--color-reed-500) 0%, var(--color-reed-600) 100%);
+
+  /* ── "حبر" الأيقونات والنصوص الملوّنة (٧٠٠/٨٠٠ — تباين ≥ 7:1 على الكريمي) ── */
+  --ink-brand:   var(--color-brand-700);
+  --ink-accent:  var(--color-accent-700);
+  --ink-nile:    var(--color-nile-700);
+  --ink-reed:    var(--color-reed-700);
+  --ink-clay:    var(--color-clay-700);
+  --ink-danger:  #7a1010;
+  --ink-stone:   var(--color-stone-700);
+
+  /* نصوص خافتة مضمونة التباين (≥ 4.6:1 على #f2f2e6 و#fafaf4) */
+  --text-faint:  #5c5f49;
+}
+
+
+/* ==========================================================================
+   2) FRAME
+   ========================================================================== */
+
+/* لون تحديد النص + المؤشر — بدل اللون الفاتح الافتراضي اللي بيضيع على الكريمي */
+[data-scheme="light"] ::selection {
+  background: rgba(var(--color-brand-600-rgb), 0.24);
+  color: var(--text-brand-strong);
+}
+[data-scheme="light"] { caret-color: var(--color-brand-600); accent-color: var(--color-brand-600); }
+
+/* شريط التمرير */
+[data-scheme="light"] ::-webkit-scrollbar-thumb       { background: #b4b69a; }
+[data-scheme="light"] ::-webkit-scrollbar-thumb:hover { background: #93967c; }
+[data-scheme="light"] { scrollbar-color: #b4b69a transparent; }
+
+/* انتقال لوني ناعم عند تبديل الثيم يدوياً (theme.js بيضيف data-theme-changing
+   لـ ٤٥٠ms بس — فمفيش أي تأثير على أداء التفاعل العادي) */
+[data-theme-changing] *,
+[data-theme-changing] *::before,
+[data-theme-changing] *::after {
+  transition:
+    background-color 0.35s ease,
+    border-color     0.35s ease,
+    color            0.35s ease,
+    fill             0.35s ease,
+    stroke           0.35s ease,
+    box-shadow       0.35s ease !important;
+}
+
+/* خلفية "الورق": تدرّج دافئ جداً (أخضر نخيل من فوق، ذهب رملي من تحت) بدل
+   لون مسطّح. على body نفسه مش fixed — عشان ما يسبّبش إعادة رسم أثناء السكرول. */
+[data-scheme="light"] body {
+  background-color: var(--surface-base);
+  background-image:
+    radial-gradient(120% 55% at 100% 0%, rgba(var(--color-brand-500-rgb), 0.07) 0%, transparent 60%),
+    radial-gradient(100% 50% at 0% 100%, rgba(var(--color-accent-400-rgb), 0.07) 0%, transparent 60%);
+  background-repeat: no-repeat;
+}
+
+/* حلقة التركيز: خضراء داكنة واضحة فوق الكريمي مع إزاحة تفصلها عن العنصر */
+[data-scheme="light"] :focus-visible {
+  outline-color: var(--color-brand-600);
+}
+
+
+/* ==========================================================================
+   3) SURFACES
+   ========================================================================== */
+
+/* غطاء النوافذ: كان rgba(brand-950, .78) — كتلة سوداء-خضراء ثقيلة فوق ورق فاتح.
+   دلوقتي حبر أخضر شفاف أخف مع ضبابية تحافظ على التركيز. */
+[data-scheme="light"] .overlay-backdrop {
+  background: rgba(var(--color-brand-900-rgb), 0.56);
+  /* ⚡ أداء: بدون backdrop-filter (رفعنا الشفافية بدل الضبابية) */
+}
+
+/* التوست */
+[data-scheme="light"] .toast {
+  background: var(--surface-elevated);
+  box-shadow: var(--shadow-md);
+}
+
+/* الهيكل العظمي (skeleton) */
+[data-scheme="light"] .skeleton {
+  background: linear-gradient(90deg, #e4e4cc 25%, #f2f2e6 50%, #e4e4cc 75%);
+  background-size: 200% 100%;
+}
+
+/* حقول الإدخال: خلفية بيضاء مائلة للدفء + حدود واضحة + نص بديل مقروء */
+[data-scheme="light"] input,
+[data-scheme="light"] textarea,
+[data-scheme="light"] select { color-scheme: light; }
+
+[data-scheme="light"] input::placeholder,
+[data-scheme="light"] textarea::placeholder {
+  color: var(--text-faint);
+  opacity: 1;
+}
+
+
+/* ==========================================================================
+   4) COMPONENT FIXES  (مُستخرجة من فحص تباين آلي لكل الصفحات في الثيم الفاتح)
+   ========================================================================== */
+
+/* ── ٤-أ) أسطح داكنة ثابتة (طوارئ/عاجل): هويتها حمراء غامقة في الثيمين، فنصوصها
+   وأيقونتها لازم تفضل فاتحة دايماً. كانت قاعدة .service-card العامة في themes.css
+   بتقلب خلفية بطاقة الطوارئ لكريمي (نفس درجة التخصيص وأحدث ترتيباً) والنص أبيض
+   فوقها = نص غير مرئي (تباين 1:1). نرجّع الخلفية الحمراء صراحةً. ── */
+[data-scheme="light"] .service-card.service-card--emergency {
+  background: linear-gradient(150deg, var(--color-danger-800) 0%, var(--color-danger-900) 100%);
+  border-color: var(--color-danger-600);
+  box-shadow: 0 0 0 1px rgba(var(--color-alert-300-rgb), 0.35), var(--shadow-md);
+}
+[data-scheme="light"] .service-card.service-card--emergency:hover {
+  border-color: var(--color-danger-400);
+}
+[data-scheme="light"] .service-card--emergency .service-card__icon,
+[data-scheme="light"] .service-card--emergency .service-card__icon svg,
+[data-scheme="light"] .service-card--emergency .service-card__title,
+[data-scheme="light"] .service-card--emergency .service-card__arrow,
+[data-scheme="light"] .service-card--emergency .service-card__arrow svg,
+[data-scheme="light"] .emergency-feature-card__icon,
+[data-scheme="light"] .emergency-feature-card__icon svg,
+[data-scheme="light"] .emergency-feature-card__head svg {
+  color: #fafaf4;
+}
+[data-scheme="light"] .service-card--emergency .service-card__desc { color: rgba(255, 228, 228, 0.9); }
+[data-scheme="light"] .emergency-feature-card__title { color: #fafaf4; }
+[data-scheme="light"] .emergency-feature-card__text  { color: rgba(255, 228, 228, 0.92); }
+
+/* ── ٤-ب) عناصر مملوءة بأخضر البراند الغامق ونصها كان text-primary (غامق في الفاتح) ── */
+[data-scheme="light"] .contact-suggest__btn,
+[data-scheme="light"] .contact-suggest__btn svg {
+  color: #fafaf4;
+}
+[data-scheme="light"] .contact-suggest {
+  background-color: rgba(var(--color-brand-700-rgb), 0.05);
+  border-color: var(--border-brand);
+}
+[data-scheme="light"] .contact-suggest p { color: var(--text-secondary); }
+
+[data-scheme="light"] .about-story-item__icon,
+[data-scheme="light"] .about-story-item__icon svg {
+  color: #fafaf4;
+}
+
+/* ── ٤-ج) لافتة "عندك فكرة مشروع؟" — أيقونتها وسهمها كانوا brand-300 فاتح ── */
+[data-scheme="light"] .project-idea-banner__icon  { color: var(--ink-brand); background-color: rgba(var(--color-brand-700-rgb), 0.12); }
+[data-scheme="light"] .project-idea-banner__arrow { color: var(--ink-brand); }
+[data-scheme="light"] .project-idea-banner        { background-color: rgba(var(--color-brand-700-rgb), 0.05); }
+[data-scheme="light"] .projects-disclaimer,
+[data-scheme="light"] .projects-disclaimer i      { color: var(--text-faint); opacity: 1; }
+
+/* ── ٤-د) ذهبي الأرقام والعناوين (accent-300 = #c8a040 → 2.1:1 على الكريمي).
+   نفس عائلة الذهب بدرجة 600/700 (تباين 5.6–8:1) ── */
+[data-scheme="light"] .dyk-item__source,
+[data-scheme="light"] .dyk-group__source,
+[data-scheme="light"] .dyk-item__num,
+[data-scheme="light"] .dyk-group__title,
+[data-scheme="light"] .nlang-search-card__count,
+[data-scheme="light"] .article-badge--important {
+  color: var(--color-accent-600);
+}
+[data-scheme="light"] .nlang-search-card__count {
+  background: rgba(var(--color-accent-600-rgb), 0.10);
+  border-color: rgba(var(--color-accent-600-rgb), 0.30);
+}
+[data-scheme="light"] .dyk-group__header svg,
+[data-scheme="light"] .dyk-group__header i { color: var(--color-accent-600); }
+
+/* ── ٤-هـ) حقوق الملكية في تذييل الإعدادات (text-disabled = 2.7:1) ── */
+[data-scheme="light"] .about-footer__copy { color: var(--text-faint); }
+
+/* ── ٤-و) أيقونة البحث داخل حقل البحث (brand-400 = 2.8:1) ── */
+[data-scheme="light"] .search-bar__icon,
+[data-scheme="light"] .search-bar__icon svg { color: var(--ink-brand); }
+
+/* ── ٤-ز) أيقونات بطاقات الخدمات المميزة: قواعد themes.css القديمة كانت تستهدف
+   كلاس غير موجود (.service-icon بدل .service-card__icon) فبقيت الأيقونة
+   brand-300 فاتح (1.4:1) على خلفية البطاقة. ── */
+[data-scheme="light"] .service-card__icon                             { color: var(--ink-brand); }
+[data-scheme="light"] .service-card--featured .service-card__icon     { color: var(--ink-brand); }
+[data-scheme="light"] .service-card--solidarity .service-card__icon   { color: var(--ink-accent); }
+[data-scheme="light"] .service-card--emergency .service-card__icon    { color: #fafaf4; }
+
+/* ── ٤-ح) توكنز الإشعارات/الشارات اللي ما اتعكسش لها لون فاتح في themes.css:
+   event / congrats / idea (ذهبي) و project (طيني) كانت درجات 200 الفاتحة على
+   خلفية كريمي (1.1:1 — الشارة بتختفي). نفس العائلة بحبر 800 وحدّ 600. ── */
+[data-scheme="light"] {
+  --notif-event-bg:       rgba(var(--color-accent-600-rgb), 0.12);
+  --notif-event-text:     var(--color-accent-800);
+  --notif-event-border:   var(--color-accent-600);
+
+  --notif-project-bg:     rgba(var(--color-clay-600-rgb), 0.10);
+  --notif-project-text:   var(--color-clay-800);
+  --notif-project-border: var(--color-clay-600);
+
+  /* disabled/ثانوي: كان neutral-400 (2.7:1) وهو اللي بيلوّن أسهم وتذييلات كتير.
+     دلوقتي ٤.٢:١ تقريباً — لسه أخف من muted بس مرئي. */
+  --text-disabled: #716f5a;
+}
+
+/* ── ٤-ط) وسم "مقيَّد" وعناصر code داخل تنبيهات لوحة الإدارة ── */
+[data-scheme="light"] .admin-group__restricted-tag,
+[data-scheme="light"] .admin-group__restricted-tag svg {
+  color: var(--ink-danger);
+}
+[data-scheme="light"] .admin-group__restricted-tag {
+  background: rgba(var(--color-danger-600-rgb), 0.10);
+  border-color: rgba(var(--color-danger-600-rgb), 0.45);
+}
+[data-scheme="light"] code,
+[data-scheme="light"] .admin-urgent-status--warning code {
+  color: var(--text-brand-strong);
+  background: rgba(var(--color-brand-700-rgb), 0.10);
+}
+[data-scheme="light"] .admin-card__arrow { opacity: 1; }
+
+/* شارة "نظام" في بيت المناسبات: قاعدتها الأصلية بتثبّت لون النص neutral-100 (فاتح جداً) */
+[data-scheme="light"] .occasion-chip[data-chip="system"] {
+  color: var(--color-neutral-800);
+  background-color: rgba(80, 86, 61, 0.10);
+  border-color: var(--color-neutral-500);
+}
+[data-scheme="light"] .occasion-chip[data-chip="condolence"] { color: #2b2e20; }
+
+/* ── ٤-ي) صفحة الذكاء الاصطناعي (.ai-*): شارة الهيرو والأفاتار كانت accent-200
+   (فاتح) على كريمي، ونقاط الكتابة brand-400 (2.8:1). نفس العائلة بحبر 800/700.
+   فقاعة المستخدم وزر الإرسال بالأخضر الأعمق + نص أبيض (تباين كافٍ في الثيمين)،
+   وباقي السطوح/النصوص بيورّثوها من themes.css ومش محتاجة تخصيص. ── */
+[data-scheme="light"] .ai-hero__badge,
+[data-scheme="light"] .ai-msg__avatar {
+  color: var(--color-accent-800);
+  background: rgba(var(--color-accent-600-rgb), 0.12);
+  border-color: var(--color-accent-600);
+}
+[data-scheme="light"] .ai-typing span { background: var(--ink-brand); }
+[data-scheme="light"] .ai-hero__ring--inner { border-color: var(--color-accent-600); opacity: 0.35; }
+[data-scheme="light"] .ai-hero__ring--outer { border-color: var(--ink-brand); opacity: 0.30; }
+[data-scheme="light"] .ai-msg__action.is-done { color: var(--ink-brand); }
+[data-scheme="light"] .ai-msg--error .ai-msg__bubble { border-color: var(--ink-danger); }
+
+/* ── بطاقة "ترفيه" (تحدي التنجلاب): نفس شكل الثيم التلقائي بالضبط (تيل/أزرق ليلي + شريط نوبي + ذهب)
+   في الفاتح أيضًا. قبل ذلك كانت تتحول لأخضر في الفاتح؛ نعيد هنا قيم services.css صراحةً
+   لأن قاعدة .service-card العامة في الفاتح تقلب الخلفية وتغلب الأصل ── */
+[data-scheme="light"] .service-card.service-card--fun {
+  border-color: #e8b53f;
+  background:
+    linear-gradient(135deg, #e8b53f 25%, transparent 25%) 8px 0 / 16px 8px repeat-x,
+    linear-gradient(225deg, #e8b53f 25%, transparent 25%) 8px 0 / 16px 8px repeat-x,
+    linear-gradient(135deg, #17909c 25%, transparent 25%) 0 0 / 16px 8px repeat-x,
+    linear-gradient(225deg, #17909c 25%, transparent 25%) 0 0 / 16px 8px repeat-x,
+    radial-gradient(120% 140% at 100% 0%, rgba(232, 181, 63, 0.22), transparent 55%),
+    linear-gradient(165deg, #0c353b 0%, #04181b 100%);
+}
+[data-scheme="light"] .service-card.service-card--fun:hover {
+  border-color: #f2c964;
+}
+[data-scheme="light"] .service-card--fun .service-card__icon,
+[data-scheme="light"] .service-card--fun .service-card__icon svg { color: #2b1b02; }
+[data-scheme="light"] .service-card--fun .service-card__title { color: #fbe9b4; }
+[data-scheme="light"] .service-card--fun .service-card__desc  { color: #c8ede7; }
+[data-scheme="light"] .service-card--fun .service-card__arrow,
+[data-scheme="light"] .service-card--fun .service-card__arrow svg { color: #f7da8b; }
+[data-scheme="light"] .service-card--fun .service-card__icon {
+  background: linear-gradient(165deg, #f7da8b 0%, #e8b53f 100%);
+  border-color: #fbe9b4;
+}

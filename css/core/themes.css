@@ -1,0 +1,1084 @@
+/* ==========================================================================
+   THEMES — شبتوت بحري
+   Theme overrides layer. Default is dark (the app's native personality).
+   ========================================================================== */
+
+/* :root defaults are already dark — defined in tokens.css */
+
+/* --------------------------------------------------------------------------
+   ENHANCED VISION — وضع الرؤية المحسّنة (لكبار السن)
+   يُفعَّل بإضافة data-vision="enhanced" على <html>
+-------------------------------------------------------------------------- */
+
+/* هذه الكتلة تغطي الوضع الافتراضي (الداكن). نسخة الثيم الفاتح موجودة تحت
+   قسم LIGHT THEME أسفل هذا الملف. وضع "تلقائي" لم يعد له نسخة مكرَّرة من القواعد:
+   js/shared/theme.js يحسب data-scheme (light|dark) ويحدّثه فور تغيّر إعداد الجهاز،
+   فكل قاعدة [data-scheme="light"] تنطبق على "فاتح" و"تلقائي" معاً. */
+[data-vision="enhanced"] {
+  /* خلفية أعمق → تباين أقوى */
+  --surface-base:    #000000;
+  --surface-raised:  #0e0e08;
+  --surface-elevated: #131309;
+  --surface-modal:   #161610;
+  --surface-overlay: #161610;  /* alias متزامن */
+
+  /* نصوص — text-secondary تتبع text-primary تلقائياً عبر color-mix */
+  --text-primary:      #f2f0d8;
+  --text-secondary:    rgba(242, 240, 216, 0.90);
+  --text-muted:        rgba(255, 252, 220, 0.92);
+  --text-disabled:     var(--color-neutral-200);
+  --text-brand:        var(--color-brand-200);
+  --text-brand-strong: #c8e8b0;
+  --text-accent:       var(--color-accent-100);
+
+  /* حدود أوضح */
+  --border-subtle:  var(--color-neutral-600);
+  --border-default: var(--color-neutral-500);
+  --border-strong:  var(--color-neutral-400);
+
+  /* ارتفاع سطر أكثر راحة */
+  --leading-normal:  1.7;
+  --leading-relaxed: 1.85;
+
+  /* حلقة تركيز أعرض — بدل 3px الافتراضية في tokens.css */
+  --shadow-focus: 0 0 0 4px var(--state-focus-ring);
+}
+
+/* --------------------------------------------------------------------------
+   ENHANCED VISION — تحسينات شاملة عابرة للثيمات (لا تعتمد على الألوان)
+-------------------------------------------------------------------------- */
+
+/* أيقونات Lucide كلها بتاخد class="lucide" وقت الرسم — سمك خط أعلى لوضوح أكبر */
+[data-vision="enhanced"] svg.lucide {
+  stroke-width: 2.6;
+}
+
+/* ثغرة كانت موجودة: مش كل أيقونات التطبيق بتعدّي من نظام Lucide. عدد
+   من الصفحات (worship.js، home.js، history-articles.js، news.js،
+   association.js، association-journey.js، nubian-dictionary.js،
+   shared/img.js) بترسم أسهم/رموز SVG يدوية بـ stroke-width مكتوب
+   كـ attribute مباشرة على <path>/<circle> (غالبًا 1–2px) — زي أسهم
+   التنقل بين الأحاديث في قسم العبادة، وسهم كارت الرئيسية. الرؤية
+   المحسّنة كانت بتقفز فوقها بالكامل فتفضل رفيعة وصعبة الملاحظة حتى
+   مع تفعيل الميزة. الحل هنا عام (attribute selector) بدل تعديل كل
+   ملف على حدة — بيغطي أي أيقونة يدوية جديدة تتضاف مستقبلاً تلقائيًا
+   من غير ما حد يفتكر يضيفها هنا. */
+[data-vision="enhanced"] svg :is(path, circle, line, polyline, polygon, rect)[stroke-width] {
+  stroke-width: 2.6;
+}
+
+/* صورة الغلاف الزخرفية في الرئيسية — تخفيتها أكتر يوضّح أي نص فوقها */
+[data-vision="enhanced"] .home-hero__img {
+  opacity: 0.30;
+}
+
+/* بطاقة الطوارئ — ألوانها ثابتة ومش تابعة لأي ثيم، فبتحتاج تعزيز مستقل */
+[data-vision="enhanced"] .contact-card.emergency-card {
+  background: #3a0f0f;
+  border-color: #ff9090;
+  border-width: 2px;
+  box-shadow: 0 0 0 2px rgba(255, 130, 130, 0.45), var(--shadow-lg);
+}
+
+[data-vision="enhanced"] .emergency-card .contact-row {
+  background-color: rgba(var(--overlay-white-rgb), 0.16);
+  border-color: rgba(var(--overlay-white-rgb), 0.32);
+}
+
+[data-vision="enhanced"] .emergency-card .contact-row__role {
+  color: #ffd6d6;
+}
+
+[data-vision="enhanced"] .contact-card.emergency-card .contact-title {
+  color: #ffffff;
+}
+
+/* شارة حالة المشروع (نشط/مخطط/متوقف) — بتترسم فوق صورة المشروع مباشرة
+   بخلفية شفافة جزئياً (rgba ثابتة مش تابعة لأي توكن)، فتباينها فوق
+   الصورة بيفضل زي ما هو حتى مع تفعيل الرؤية المحسّنة. بنرفع كثافة
+   الخلفية وسمك الحدود هنا عشان تفضل مقروءة فوق أي صورة، غامقة أو فاتحة. */
+[data-vision="enhanced"] .project-status {
+  border-width: 2px;
+  font-weight: var(--weight-bold);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+}
+
+[data-vision="enhanced"] .project-status.active {
+  background-color: rgba(var(--color-live-rgb), 0.94);
+  color: #06210a;
+  border-color: #eafbe4;
+}
+
+[data-vision="enhanced"] .project-status.planned {
+  background-color: rgba(130, 95, 15, 0.94);
+  color: #fff6de;
+  border-color: #f0d896;
+}
+
+[data-vision="enhanced"] .project-status.paused {
+  background-color: rgba(50, 50, 50, 0.94);
+  color: #ffffff;
+  border-color: #d8d8d8;
+}
+
+/* --------------------------------------------------------------------------
+   LIGHT THEME — هوية "ورق موثّق" (حبر أخضر + لمسات ذهبية على قاعدة كريمية دافئة)
+   نفس منظومة توكنز البراند (tokens.css) لكن معكوسة للسطوع، وليست ألواناً
+   منفصلة مُختارة يدوياً — أي تعديل مستقبلي على مقياس البراند ينعكس هنا تلقائياً
+   بإعادة اشتقاق القيم بنفس المنطق.
+   يُفعَّل عبر data-scheme="light" على <html> (القيمة المحلولة: تحسبها js/shared/theme.js
+   من data-theme = light أو system + تفضيل الجهاز — فتغطّي "فاتح" و"تلقائي" بنفس القواعد بالضبط)
+-------------------------------------------------------------------------- */
+
+/* ── إجبار الثيم الفاتح على كل العناصر ── */
+[data-scheme="light"],
+[data-scheme="light"] body {
+  color-scheme: light;
+  background-color: #f2f2e6;
+  color: #0c1a07;
+}
+
+[data-scheme="light"] {
+  --surface-base:    #f2f2e6;
+  --surface-raised:  #fafaf4;
+  --surface-elevated: #ffffff;
+  --surface-modal:   #e4e4cc;
+  --surface-overlay: #e4e4cc;
+  --surface-sunken:  #e8f6e0;
+
+  /* ── نصوص ── */
+  --text-primary:      #0c1a07;
+  --text-secondary:    #3e422f;
+  --text-muted:        #565944;
+  --text-disabled:     var(--color-neutral-400);
+  --text-inverse:      #f2f2e6;
+  --text-brand:        #234819;
+  --text-brand-strong: #172f0f;
+  --text-accent:       #4a3500;
+  --text-nile:         #112d42;
+
+  /* نصوص/أيقونات قسم "العبادة" — انظر شرح القيم الافتراضية في
+     tokens.css. هنا بالعكس: درجات غامقة (stone-700/900/600) بدل
+     الفاتحة (300/100/500) اللي كانت مصمَّمة للخلفية الغامقة بس. */
+  --text-stone:        #3e424c; /* stone-700 */
+  --text-stone-strong: #202228; /* stone-900 */
+  --border-stone:      #515662; /* stone-600 */
+  --stone-tint-rgb:    81, 86, 98; /* = stone-600 */
+
+  /* ── حدود ── */
+  --border-subtle:     #d0d0b4;
+  --border-default:    #b4b69a;
+  --border-strong:     #6b6e57; /* كانت neutral-400 (#93967c) — تباين ~2.7:1 على الخلفية الكريمية، ضعيف
+                                    خصوصاً إنها بتُستخدم كلون نص/أيقونة في community-occasions.css مش بس كحد.
+                                    القيمة الجديدة نفسها المستخدمة أصلاً كـ notif-system-text في هذا الملف. */
+  --border-brand:      #306328;
+  --border-brand-glow: #47883a;
+
+
+  /* ── تفاعل ── */
+  --state-hover-bg:    rgba(var(--color-brand-700-rgb), 0.08);
+  --state-active-bg:   rgba(var(--color-brand-700-rgb), 0.14);
+  --state-focus-ring:  rgba(var(--color-brand-700-rgb), 0.32);
+  --state-selected-bg: rgba(var(--color-brand-700-rgb), 0.10);
+
+  /* ── ظلال ── */
+  --shadow-xs: 0 1px 2px rgba(var(--color-brand-900-rgb), 0.10);
+  --shadow-sm: 0 2px 6px  rgba(var(--color-brand-900-rgb), 0.10),
+               0 1px 2px  rgba(var(--color-brand-900-rgb), 0.08);
+  --shadow-md: 0 4px 14px rgba(var(--color-brand-900-rgb), 0.12),
+               0 2px 4px  rgba(var(--color-brand-900-rgb), 0.08);
+  --shadow-lg: 0 8px 28px rgba(var(--color-brand-900-rgb), 0.14),
+               0 4px 8px  rgba(var(--color-brand-900-rgb), 0.10);
+  --shadow-brand-sm:    0 0 0 1px #47883a, 0 2px 8px rgba(var(--color-brand-700-rgb), 0.16);
+  --shadow-inset-brand: inset 0 1px 0 rgba(var(--color-brand-700-rgb), 0.10);
+
+  /* --shadow-*-glow/-sm الأربعة دول (brand-glow, reed-sm, nile-sm, accent-sm) ما كانوش
+     متجاوَزين هنا قبل كده — فكانوا بيرجعوا لقيم tokens.css الداكنة: هالة ضبابية بشفافية
+     منخفضة (0.06–0.26) مصمَّمة أصلاً تتوهّج فوق خلفية غامقة. فوق الخلفية الكريمية الفاتحة
+     الهالة دي عملياً بتختفي — وده أثّر بشكل مباشر على أهم عنصر تفاعلي في التطبيق كله:
+     hover الزر الأساسي (.btn--primary، وبطاقات memory/services المميزة) كان بيفقد أي
+     إحساس بصري بالتفاعل في الثيم الفاتح. الحل هنا نفس منطق --shadow-brand-sm فوق: حلقة
+     صلبة بلون غامق من نفس العائلة + ظل واضح، بدل هالة ضبابية بتحتاج خلفية غامقة تشتغل. */
+  --shadow-brand-glow:  0 0 0 1.5px #306328,
+                        0 3px 10px rgba(var(--color-brand-700-rgb), 0.22),
+                        0 1px 3px  rgba(var(--color-brand-900-rgb), 0.14);
+  --shadow-reed-sm:     0 0 0 1px var(--color-reed-700), 0 2px 8px rgba(28, 88, 67, 0.20);
+  --shadow-nile-sm:     0 0 0 1px var(--color-nile-700), 0 2px 8px rgba(30, 70, 120, 0.20);
+  --shadow-accent-sm:   0 0 0 1px var(--color-accent-600), 0 2px 8px rgba(var(--color-accent-600-rgb), 0.22);
+
+  --card-accent-stripe: 3px solid #306328;
+
+  /* ── حالات ── */
+  --status-success-bg:     rgba(var(--color-brand-700-rgb), 0.10);
+  --status-success-text:   #172f0f;
+  --status-success-border: #47883a;
+  --status-warning-bg:     rgba(var(--color-accent-700-rgb), 0.08);
+  --status-warning-text:   #4a3500;
+  --status-warning-border: #6b4e00;
+  --status-error-bg:     rgba(140, 20, 20, 0.08);
+  --status-error-text:   #7a1010;
+  --status-error-border: #a03030;
+  --status-info-bg:     rgba(17, 45, 66, 0.08);
+  --status-info-text:   #112d42;
+  --status-info-border: #1a4260;
+
+  /* ── شارات صفحة القراءة — حبر غامق بدل الباستيل الغامق الأصلي، عشان
+     تبقى مقروءة فوق الخلفية الكريمية (تباين 9:1–13:1 بدل ~1.4:1–2.2:1) ── */
+  --reader-news-bg:          rgba(var(--color-brand-700-rgb), 0.10);
+  --reader-news-text:        #234819;
+  --reader-news-border:      #306328;
+
+  --reader-history-bg:       rgba(var(--color-accent-700-rgb), 0.10);
+  --reader-history-text:     #4a3500;
+  --reader-history-border:   #6b4e00;
+
+  --reader-memory-bg:        rgba(17, 45, 66, 0.08);
+  --reader-memory-text:      #112d42;
+  --reader-memory-border:    #1a4260;
+
+  --reader-complaint-bg:     rgba(140, 20, 20, 0.08);
+  --reader-complaint-text:   #7a1010;
+  --reader-complaint-border: #a03030;
+
+  --reader-service-bg:       rgba(var(--color-brand-700-rgb), 0.08);
+  --reader-service-text:     #172f0f;
+  --reader-service-border:   #234819;
+
+  --reader-association-bg:      rgba(35, 72, 25, 0.07);
+  --reader-association-text:    #234819;
+  --reader-association-border:  #306328;
+
+  /* ── تكافل — نيلي حبر غامق (نفس منطق شارات القراءة النيلية فوق)،
+     بدل نسخة الأخضر/النجاح الافتراضية اللي معرّفة في tokens.css ── */
+  --notif-solidarity-bg:     rgba(17, 45, 66, 0.08);
+  --notif-solidarity-text:   #112d42;
+  --notif-solidarity-border: #1a4260;
+
+  --notif-community-bg:     var(--notif-solidarity-bg);
+  --notif-community-text:   var(--notif-solidarity-text);
+  --notif-community-border: var(--notif-solidarity-border);
+
+  /* ── تصنيفا "تعزية" و"نظام" في الإشعارات كانوا بياخدوا نص فاتح
+     (neutral-200/300) مباشرة بلا أي تجاوز للثيم الفاتح — شبه غير مقروء
+     (تباين 1.4:1–1.8:1). حبر غامق دلوقتي بدل الباستيل. تعزية بحضور
+     أوضح (خلفية أعمق) من نظام (أهدى)، بنفس فرق الحضور المطبّق في
+     الثيم الغامق. ── */
+  --notif-condolence-bg:     rgba(80, 86, 61, 0.16);
+  --notif-condolence-text:   #2b2e20;
+  --notif-condolence-border: #565944;
+
+  --notif-system-bg:     rgba(80, 86, 61, 0.07);
+  --notif-system-text:   #6b6e57;
+  --notif-system-border: #93967c;
+}
+
+/* ── هيدر في الثيم الفاتح ── */
+[data-scheme="light"] .app-header {
+  background-color: rgba(242, 242, 230, 0.96);
+  border-bottom-color: #d0d0b4;
+  box-shadow: 0 2px 12px rgba(var(--color-brand-900-rgb), 0.10), 0 1px 0 #caeabc;
+}
+
+/* ── شريط سفلي في الثيم الفاتح ── */
+[data-scheme="light"] .app-bottom-nav {
+  background-color: rgba(242, 242, 230, 0.97);
+  border-top-color: #d0d0b4;
+  box-shadow: 0 -2px 12px rgba(var(--color-brand-900-rgb), 0.10), 0 -1px 0 #caeabc;
+}
+
+/* ── أيقونة التبويب النشط ── */
+[data-scheme="light"] .nav-tab--active {
+  color: #234819;
+}
+
+[data-scheme="light"] .nav-tab:not(.nav-tab--active) {
+  color: #565944;
+}
+
+/* ── نقطة البراند في الهيدر ── */
+[data-scheme="light"] .header-brand__dot {
+  background: #306328;
+  box-shadow: 0 0 6px rgba(var(--color-brand-600-rgb), 0.4), 0 0 12px rgba(var(--color-brand-600-rgb), 0.2);
+}
+
+/* ── اسم البراند في الهيدر — كانت override الثيم الفاتح هنا فعليًا
+   بلا أثر: بتغيّر --color بس، لكن القاعدة الأساسية بتستخدم
+   background-clip:text + -webkit-text-fill-color:transparent، يعني
+   اللون الظاهر فعلًا هو التدرّج نفسه (درجات فاتحة مصمَّمة تتوهّج فوق
+   خلفية غامقة) مش قيمة color — فالاسم كان يفضل شاحب فوق خلفية فاتحة
+   بالظبط زي ما اتبلّغ. الحل: نعيد تعريف التدرّج نفسه بدرجات غامقة
+   (نفس توكنز --text-brand/--text-brand-strong المستخدمة في باقي
+   نصوص البراند بالثيم الفاتح)، ونشيل الهالة الضوئية (drop-shadow)
+   لنفس سبب هالات --shadow-brand-glow قبل كده — هالة فاتحة بتختفي
+   فوق خلفية فاتحة أصلًا. */
+[data-scheme="light"] .header-brand__name {
+  background: linear-gradient(
+    to left,
+    var(--text-brand-strong) 0%,
+    var(--border-brand) 50%,
+    var(--border-brand-glow) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--text-brand-strong);
+  filter: none;
+}
+
+/* ── زر البحث في الهيدر (وأي زر أيقونة تاني بنفس الكلاس) — كانت
+   بلا أي override للثيم الفاتح خالص، فلون الأيقونة (brand-300 فاتح)
+   كان يفضل باهت فوق خلفية بيضاء. نفس منطق header-back-btn تحت
+   بالظبط، بس بشكل مربّع بدل دائرة. ── */
+[data-scheme="light"] .header-icon-btn {
+  border-color: var(--border-default);
+  background: var(--surface-raised);
+  color: var(--text-brand);
+}
+
+[data-scheme="light"] .header-icon-btn:hover {
+  color: var(--text-brand-strong);
+  background: var(--surface-elevated);
+  border-color: var(--border-brand-glow);
+  box-shadow: var(--shadow-brand-sm);
+}
+
+[data-scheme="light"] .header-icon-btn:active {
+  color: var(--text-brand-strong);
+  background: rgba(48, 99, 40, 0.14);
+  border-color: var(--border-brand);
+  box-shadow: none;
+}
+
+[data-scheme="light"] .header-icon-btn--ai {
+  background: rgba(48, 99, 40, 0.09);
+  border-color: rgba(48, 99, 40, 0.30);
+  color: var(--text-brand);
+}
+
+[data-scheme="light"] .header-icon-btn--ai:hover {
+  background: rgba(48, 99, 40, 0.16);
+  border-color: var(--border-brand);
+  color: var(--text-brand-strong);
+}
+
+[data-scheme="light"] .header-icon-btn--ai:active {
+  background: rgba(48, 99, 40, 0.22);
+  border-color: var(--border-brand);
+  color: var(--text-brand-strong);
+}
+
+/* زر "تصفير" السبحة (tasbih-action-btn--reset، قسم العبادة) — كان
+   لونه --color-danger-200 (وردي باهت جدًا، مصمَّم لخلفية غامقة) ثابت
+   بلا أي تجاوز للثيم الفاتح، فيفضل شبه غير مقروء فوق الخلفية الكريمية. */
+[data-scheme="light"] .tasbih-action-btn--reset {
+  color: #8c3636; /* = --color-danger-700 */
+}
+
+/* ── زر الرجوع — نفس فكرة التظليل الشفاف بس بتباين مناسب لخلفية
+   فاتحة: تظليل أخضر أفتح شوية ونص أغمق عشان يبان واضح فوق الأبيض ── */
+[data-scheme="light"] .header-back-btn {
+  background: rgba(48, 99, 40, 0.09);
+  border-color: rgba(48, 99, 40, 0.30);
+  color: #306328;
+}
+
+[data-scheme="light"] .header-back-btn:hover {
+  background: rgba(48, 99, 40, 0.16);
+  border-color: #306328;
+  color: #234819;
+}
+
+/* ── خط العنوان في الهيدر ── */
+[data-scheme="light"] .header-title-line {
+  background: linear-gradient(90deg, #306328, transparent);
+}
+
+/* ── Hero الرئيسية ── */
+[data-scheme="light"] .home-hero {
+  background: #caeabc;
+}
+
+[data-scheme="light"] .home-hero__img {
+  opacity: 0.60;
+}
+
+[data-scheme="light"] .home-hero__overlay {
+  background: linear-gradient(
+    to bottom,
+    var(--surface-base) 0%,
+    transparent 22%,
+    transparent 55%,
+    var(--surface-base) 100%
+  );
+}
+
+/* ── بطاقات الرئيسية ── */
+[data-scheme="light"] .home-card--primary .home-card__icon {
+  color: #234819;
+}
+
+[data-scheme="light"] .home-card:hover {
+  border-color: #47883a;
+  box-shadow: 0 0 0 1px #47883a, 0 2px 8px rgba(var(--color-brand-700-rgb), 0.14);
+}
+
+/* ── بطاقة هل تعلم ── */
+[data-scheme="light"] .home-fact-card {
+  border-right-color: #6b4e00;
+}
+
+[data-scheme="light"] .home-fact-card {
+  background: linear-gradient(145deg, #fafaf4 0%, #f6efe0 100%);
+  border-color: rgba(107, 78, 0, 0.28);
+  border-inline-end-color: #6b4e00;
+  box-shadow: 0 2px 8px rgba(var(--color-brand-900-rgb), 0.08), inset 0 1px 0 rgba(var(--overlay-white-rgb), 0.8);
+}
+
+[data-scheme="light"] .home-fact-card__badge,
+[data-scheme="light"] .home-fact-card__label {
+  color: #4a3500;
+}
+
+[data-scheme="light"] .home-fact-card__text {
+  color: #3e422f;
+}
+
+[data-scheme="light"] .home-fact-card__counter {
+  background: rgba(var(--color-accent-700-rgb), 0.08);
+  border-color: rgba(var(--color-accent-700-rgb), 0.18);
+  color: #4a3500;
+}
+
+[data-scheme="light"] .home-fact-dot {
+  background: #6b4e00;
+}
+
+[data-scheme="light"] .home-fact-dot--active {
+  background: #4a3500;
+}
+
+[data-scheme="light"] .home-fact-card__nav,
+[data-scheme="light"] .home-fact-card__more {
+  color: #4a3500;
+  background: rgba(var(--color-accent-700-rgb), 0.07);
+  border-color: rgba(var(--color-accent-700-rgb), 0.18);
+}
+
+/* ── بطاقات الصفحة الرئيسية (home-card) ── */
+[data-scheme="light"] .home-card {
+  background: linear-gradient(145deg, #fafaf4 0%, #e8f6e0 100%);
+  border-color: #caeabc;
+  box-shadow: 0 2px 8px rgba(var(--color-brand-900-rgb), 0.08), inset 0 1px 0 rgba(var(--overlay-white-rgb), 0.8);
+}
+[data-scheme="light"] .home-card--primary {
+  background: linear-gradient(145deg, rgba(var(--color-brand-700-rgb), 0.05) 0%, #fafaf4 60%);
+  border-color: #7ec86a;
+}
+[data-scheme="light"] .home-card--secondary {
+  background: #fafaf4;
+  border-color: #d0d0b4;
+}
+[data-scheme="light"] .home-card__icon {
+  color: #234819;
+  background: rgba(var(--color-brand-700-rgb), 0.10);
+  border-color: rgba(var(--color-brand-700-rgb), 0.20);
+}
+[data-scheme="light"] .home-card__title {
+  color: #0c1a07;
+}
+
+/* ── هوية الأخبار والمجتمع — ثيم فاتح ── */
+[data-scheme="light"] .home-card--news {
+  background: linear-gradient(155deg, rgba(var(--color-danger-600-rgb), 0.10) 0%, #fafaf4 62%);
+  border-color: #c99a9a;
+  border-inline-start-color: var(--color-danger-600);
+}
+[data-scheme="light"] .home-card--news .home-card__icon {
+  color: #8a2e2e;
+  background: rgba(var(--color-danger-600-rgb), 0.14);
+  border-color: rgba(var(--color-danger-600-rgb), 0.30);
+}
+[data-scheme="light"] .home-card--news:hover {
+  border-color: var(--color-danger-600);
+  box-shadow: 0 0 0 1px var(--color-danger-600), 0 2px 8px rgba(var(--color-danger-600-rgb), 0.14);
+}
+[data-scheme="light"] .home-card--community {
+  border-color: var(--color-reed-300);
+  border-inline-start-color: var(--color-reed-500);
+}
+[data-scheme="light"] .home-card--community .home-card__icon {
+  background: rgba(var(--color-reed-700-rgb), 0.16);
+  border-color: rgba(var(--color-reed-700-rgb), 0.30);
+}
+[data-scheme="light"] .home-card--community:hover {
+  border-color: var(--color-reed-600);
+  box-shadow: 0 0 0 1px var(--color-reed-600), 0 2px 8px rgba(var(--color-reed-700-rgb), 0.14);
+}
+[data-scheme="light"] .home-card--accent {
+  background: linear-gradient(155deg, rgba(var(--color-accent-600-rgb), 0.10) 0%, #fafaf4 62%);
+  border-color: #d8c48a;
+  border-inline-start-color: var(--color-accent-600);
+}
+[data-scheme="light"] .home-card--accent .home-card__icon {
+  color: #4a3500;
+  background: rgba(var(--color-accent-600-rgb), 0.14);
+  border-color: rgba(var(--color-accent-600-rgb), 0.30);
+}
+[data-scheme="light"] .home-card--accent:hover {
+  border-color: var(--color-accent-600);
+  box-shadow: 0 0 0 1px var(--color-accent-600), 0 2px 8px rgba(var(--color-accent-600-rgb), 0.14);
+}
+[data-scheme="light"] .home-card--green {
+  border-color: var(--color-brand-300);
+  border-inline-start-color: var(--color-brand-500);
+}
+[data-scheme="light"] .home-card--green .home-card__icon {
+  background: rgba(var(--color-brand-700-rgb), 0.16);
+  border-color: rgba(var(--color-brand-700-rgb), 0.30);
+}
+[data-scheme="light"] .home-card--green:hover {
+  border-color: var(--color-brand-600);
+  box-shadow: 0 0 0 1px var(--color-brand-600), 0 2px 8px rgba(var(--color-brand-700-rgb), 0.14);
+}
+[data-scheme="light"] .home-card__identity--news {
+  color: #8a2e2e;
+  background: rgba(var(--color-danger-600-rgb), 0.10);
+  border-color: rgba(var(--color-danger-600-rgb), 0.26);
+}
+[data-scheme="light"] .home-card__identity--community {
+  color: var(--color-reed-800);
+  background: rgba(var(--color-reed-700-rgb), 0.10);
+  border-color: rgba(var(--color-reed-700-rgb), 0.24);
+}
+[data-scheme="light"] .home-card__identity--accent {
+  color: #4a3500;
+  background: rgba(var(--color-accent-600-rgb), 0.10);
+  border-color: rgba(var(--color-accent-600-rgb), 0.26);
+}
+[data-scheme="light"] .home-section {
+  background: transparent;
+}
+
+/* ── أيقونات Lucide — تتبع اللون تلقائياً عبر currentColor ── */
+[data-scheme="light"] svg {
+  color: inherit;
+}
+
+/* ── يوتيليتي الأيقونات العامة (.icon--brand/.icon--accent من states.css)
+   كانت بتستخدم brand-300/accent-300 مباشرة (مصممين للخلفية الغامقة) بلا
+   أي تجاوز للثيم الفاتح — أضعف نقطتين تباين في المشروع (~1.8:1) لأنها
+   يوتيليتي عامة مستخدمة بشكل مباشر فوق خلفيات الصفحة في أماكن كتير. ── */
+[data-scheme="light"] .icon--brand  { color: #234819; }
+[data-scheme="light"] .icon--accent { color: #4a3500; }
+
+/* --------------------------------------------------------------------------
+   LIGHT THEME + ENHANCED VISION
+   بما إن هذه القواعد بتيجي بعد كتلة [data-vision="enhanced"] الأساسية في
+   ترتيب الملف، وبنفس درجة التخصيص (attribute selector)، كانت قيم الثيم
+   الفاتح بتكسب دايماً وتلغي تأثير الرؤية المحسّنة بالكامل. الحل: تركيبة
+   selector مخصصة بأقصى تباين ممكن على خلفية بيضاء تماماً.
+-------------------------------------------------------------------------- */
+
+[data-scheme="light"][data-vision="enhanced"] {
+  --surface-base:    #ffffff;
+  --surface-raised:  #ffffff;
+  --surface-modal:   #f4f4ea;
+  --surface-overlay: #f4f4ea;
+
+  --text-primary:      #000000;
+  --text-secondary:    rgba(0, 0, 0, 0.88);
+  --text-muted:        rgba(0, 0, 0, 0.74);
+  --text-disabled:     var(--color-neutral-700);
+  --text-brand:        var(--color-brand-800);
+  --text-brand-strong: var(--color-brand-900);
+  --text-accent:       var(--color-accent-800);
+
+  --border-subtle:  var(--color-neutral-500);
+  --border-default: var(--color-neutral-600);
+  --border-strong:  var(--color-neutral-700);
+
+  --leading-normal:  1.7;
+  --leading-relaxed: 1.85;
+
+  --shadow-focus: 0 0 0 4px var(--state-focus-ring);
+}
+
+/* بطاقات هوية الأقسام في الرئيسية (أخبار/مجتمع/آنداندي/جيل أخضر) كل
+   واحدة منها بحد لوني خاص بهويتها مكتوب بقيمة ثابتة مش تابعة لتوكنز
+   --border-*، فمكنش بياخد أي تعزيز من الرؤية المحسّنة — وضل باهتًا
+   (خصوصًا community بلون reed-300 الفاتح ونيوز بـ #c99a9a، الاتنين
+   تباينهم ضعيف فوق خلفية بيضاء تمامًا). دول أول حاجة بتشوفها في
+   الرئيسية فمهم يبانوا واضح، فبنستخدم هنا أغمق درجة من نفس عيلة كل
+   قسم + سمك حد أعلى، بدل ما نمسّ الهوية اللونية نفسها. */
+[data-scheme="light"][data-vision="enhanced"] .home-card--news {
+  border-width: 2px;
+  border-color: var(--color-danger-700);
+  border-inline-start-width: 4px;
+}
+[data-scheme="light"][data-vision="enhanced"] .home-card--community {
+  border-width: 2px;
+  border-color: var(--color-reed-700);
+  border-inline-start-width: 4px;
+}
+[data-scheme="light"][data-vision="enhanced"] .home-card--accent {
+  border-width: 2px;
+  border-color: var(--color-accent-700);
+  border-inline-start-width: 4px;
+}
+[data-scheme="light"][data-vision="enhanced"] .home-card--green {
+  border-width: 2px;
+  border-color: var(--color-brand-700);
+  border-inline-start-width: 4px;
+}
+
+
+/* ==========================================================================
+   LIGHT THEME — overrides الأخبار والمناسبات والإعدادات
+   يُعالج الألوان المشفّرة مباشرة (color-neutral-050/200, color-brand-*)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   الأخبار — news.css
+-------------------------------------------------------------------------- */
+
+/* عنوان وملخص الخبر */
+[data-scheme="light"] .news-title      { color: #0c1a07; }
+[data-scheme="light"] .news-excerpt    { color: #3e422f; }
+
+/* فئة الخبر */
+[data-scheme="light"] .news-category {
+  color: #234819;
+  background-color: rgba(var(--color-brand-700-rgb), 0.10);
+  border-color: #47883a;
+}
+
+/* زر اقرأ المزيد */
+[data-scheme="light"] .read-more       { color: #234819; }
+[data-scheme="light"] .read-more:active { color: #172f0f; }
+
+/* أزرار التصفح */
+
+
+/* شارة العدد */
+
+
+/* مؤشرات الفئة الجانبية */
+[data-scheme="light"] .news-card--society   { border-right-color: #306328; }
+[data-scheme="light"] .news-card--history   { border-right-color: #112d42; }
+[data-scheme="light"] .news-card--community { border-right-color: #4a3500; }
+
+/* الخبر العاجل — يبقى أحمر لكن أغمق ومتباين */
+[data-scheme="light"] .breaking-card {
+  background-color: #7a1010;
+  border-color: #921818;
+}
+[data-scheme="light"] .breaking-title { color: #fafaf4; }
+
+/* --------------------------------------------------------------------------
+   المناسبات — events.css
+-------------------------------------------------------------------------- */
+
+/* عنوان وملخص المناسبة */
+[data-scheme="light"] .event-title     { color: #0c1a07; }
+[data-scheme="light"] .event-excerpt   { color: #3e422f; }
+
+/* فلاتر */
+[data-scheme="light"] .filter-chip.active {
+  color: #234819;
+  background-color: rgba(var(--color-brand-700-rgb), 0.10);
+  border-color: #306328;
+}
+
+/* تصنيفات المناسبة */
+[data-scheme="light"] .event-category.social {
+  color: #112d42;
+  background-color: rgba(17, 45, 66, 0.10);
+  border-color: #1a4260;
+}
+[data-scheme="light"] .event-category.documentary {
+  color: #4a3500;
+  background-color: rgba(var(--color-accent-700-rgb), 0.10);
+  border-color: #6b4e00;
+}
+[data-scheme="light"] .event-category.other {
+  color: #234819;
+  background-color: rgba(var(--color-brand-700-rgb), 0.10);
+  border-color: #47883a;
+}
+
+/* أزرار الأيقونات */
+[data-scheme="light"] .icon-btn {
+  border-color: #d0d0b4;
+  color: #565944;
+}
+[data-scheme="light"] .icon-btn:active {
+  background-color: rgba(var(--color-brand-700-rgb), 0.10);
+  color: #0c1a07;
+}
+
+/* زر المشاهدة */
+[data-scheme="light"] .watch-btn {
+  background-color: #306328;
+  color: #fafaf4;
+}
+[data-scheme="light"] .watch-btn:active { background-color: #234819; }
+
+/* --------------------------------------------------------------------------
+   الإعدادات — settings.css
+-------------------------------------------------------------------------- */
+
+
+/* رابط إعداد */
+
+
+/* --------------------------------------------------------------------------
+   صفحات الإعدادات الفرعية — settings-sub.css
+-------------------------------------------------------------------------- */
+
+/* خيارات الثيم */
+[data-scheme="light"] .appearance-option {
+  background-color: #fafaf4;
+  border-color: #d0d0b4;
+}
+[data-scheme="light"] .appearance-option--active {
+  background-color: rgba(var(--color-brand-700-rgb), 0.08);
+  border-color: #306328;
+}
+[data-scheme="light"] .appearance-option__label { color: #3e422f; }
+[data-scheme="light"] .appearance-option--active .appearance-option__label { color: #234819; }
+[data-scheme="light"] .appearance-check { color: #234819; }
+
+/* علامة الاختيار */
+[data-scheme="light"] .appearance-tick--on { color: #234819; }
+
+/* settings-item */
+[data-scheme="light"] .settings-item {
+  background-color: #fafaf4;
+  border-color: #e4e4cc;
+}
+[data-scheme="light"] .settings-item:hover  { background-color: rgba(var(--color-brand-700-rgb), 0.05); }
+[data-scheme="light"] .settings-item:active { background-color: rgba(var(--color-brand-700-rgb), 0.10); }
+
+[data-scheme="light"] .settings-icon {
+  background-color: #e4e4cc;
+  color: #234819;
+}
+[data-scheme="light"] .settings-icon svg,
+[data-scheme="light"] .settings-icon [data-lucide] { color: #234819; }
+
+[data-scheme="light"] .settings-content h4 { color: #0c1a07; }
+[data-scheme="light"] .settings-content p  { color: #565944; }
+
+/* Toggle */
+[data-scheme="light"] .toggle__track {
+  background-color: #b4b69a;
+}
+[data-scheme="light"] .toggle--on .toggle__track {
+  background-color: #306328;
+}
+[data-scheme="light"] .toggle__thumb {
+  background-color: #fafaf4;
+}
+
+/* --------------------------------------------------------------------------
+   AUDIT: أيقونات/نصوص فرعية كانت بتستخدم درجات فاتحة (100/200/300/050) من
+   BRAND/ACCENT/NILE/VIOLET/DANGER مباشرة — مصممة للتباين فوق خلفية غامقة،
+   بلا أي تجاوز للثيم الفاتح. حبر غامق بديل هنا لكل عائلة، بنفس منطق باقي
+   هذا الملف (تباين 6:1–13:1 بدل 1.4:1–2.2:1). مُستثنى عمداً: أي عنصر خلفيته
+   داكنة ثابتة بغض النظر عن الثيم (سكريم فوق صورة، lightbox، أوفرلاي معرض).
+-------------------------------------------------------------------------- */
+
+/* — css/components/forms.css — */
+
+
+/* — css/components/states.css — */
+[data-scheme="light"] .empty-state--brand .empty-state__icon { color: #306328; }
+
+/* — css/pages/admin-content.css — */
+[data-scheme="light"] .admin-gallery-tile__meta { color: #234819; }
+
+/* — css/pages/admin-panel.css — */
+[data-scheme="light"] .admin-hero__icon { color: #234819; }
+[data-scheme="light"] .admin-hero--nubian .admin-hero__icon { color: #4a3500; }
+[data-scheme="light"] .admin-role-chip--admin { color: #234819; }
+[data-scheme="light"] .admin-role-chip--developer { color: #112d42; }
+[data-scheme="light"] .admin-role-chip--nubian { color: #4a3500; }
+[data-scheme="light"] .admin-card__icon { color: #234819; }
+[data-scheme="light"] .admin-card--restricted .admin-card__icon { color: #7a1010; }
+
+/* — css/pages/association-journey.css — */
+[data-scheme="light"] .association-journey-page .article-badge { color: #234819; }
+
+/* — css/pages/association-regulations.css — */
+[data-scheme="light"] .regs-doc__eyebrow { color: #306328; }
+[data-scheme="light"] .regs-chapter__num { color: #172f0f; }
+[data-scheme="light"] .regs-list li::marker { color: #306328; }
+[data-scheme="light"] .regs-card__title { color: #234819; }
+
+/* — css/pages/community-occasions.css —
+   .occasion-card__owner بقى ياخد لونه من data-chip (توريث الألوان)
+   مش لون ثابت، فمالوش داعي override هنا. .occasion-detail-comments__heading
+   بقى محايد (نص أساسي) بدل بنفسجي قديم من عهد هوية القسم السابقة. */
+[data-scheme="light"] .occasion-detail-comments__heading i { color: var(--color-reed-700); }
+[data-scheme="light"] .occasion-bubble__like.active { color: var(--color-reed-700); }
+
+/* — css/pages/contact-directory.css — */
+
+/* — css/pages/did-you-know.css — */
+
+
+
+
+/* — css/pages/history-sub.css — */
+
+
+/* — css/pages/history.css — */
+[data-scheme="light"] .article-badge { color: #306328; }
+
+/* — css/pages/home.css — */
+[data-scheme="light"] .home-card__identity--green { color: #234819; }
+[data-scheme="light"] .home-feature-card__icon { color: #3e424c; }
+[data-scheme="light"] .home-feature-card:hover .home-feature-card__icon { color: #2e3138; }
+[data-scheme="light"] .home-feature-card__eyebrow { color: #515662; }
+[data-scheme="light"] .home-feature-card:hover .home-feature-card__arrow { color: #3e424c; }
+
+/* — css/pages/idea-box.css — */
+[data-scheme="light"] .idea-card__top { color: #4a3500; }
+[data-scheme="light"] .idea-card__entity-icon i { color: #234819; }
+[data-scheme="light"] .idea-card__details:hover { color: #172f0f; }
+[data-scheme="light"] .idea-detail-card__top-badge { color: #4a3500; }
+
+/* — css/pages/memory-sub.css — */
+
+/* — css/pages/news.css — */
+[data-scheme="light"] .news-pagination__nav { color: #306328; }
+
+/* — css/pages/nubian-language-sub.css — */
+[data-scheme="light"] .nlang-sub-header__icon { color: #4a3500; }
+[data-scheme="light"] .nword-group-header { color: #6b4e00; }
+[data-scheme="light"] .nword-tile__script { color: #4a3500; }
+[data-scheme="light"] .nphrase-item__nub  { color: #4a3500; }
+[data-scheme="light"] .nlang-empty__icon { color: #6b4e00; }
+
+/* — css/pages/nubian-language.css — */
+
+[data-scheme="light"] .nlang-search-card__icon { color: #6b4e00; }
+[data-scheme="light"] .nlang-index-card__icon { color: #6b4e00; }
+[data-scheme="light"] .nlang-index-card:hover .nlang-index-card__arrow { color: #4a3500; }
+
+/* — css/pages/reader.css — */
+[data-scheme="light"] .reader-audio-icon svg { color: #306328; }
+[data-scheme="light"] .reader-contact-row svg { color: #306328; }
+[data-scheme="light"] .reader-contact-number { color: #234819; }
+
+/* — css/pages/services.css — */
+
+
+
+
+/* — css/pages/settings-sub.css — */
+[data-scheme="light"] .about-app-page .privacy-note-card__icon { color: #306328; }
+[data-scheme="light"] .privacy-hero__icon { color: #234819; }
+[data-scheme="light"] .privacy-note-card__icon { color: #306328; }
+
+[data-scheme="light"] .contact-success__icon { color: #234819; }
+
+/* — css/pages/settings.css — */
+[data-scheme="light"] .profile-header__avatar { color: #234819; }
+
+
+/* ==========================================================================
+   LIGHT THEME — تباين شامل وذكي
+   يغطي الهيدر والشريط السفلي والتاريخ والرابطة والذاكرة والأقسام العامة
+   المبدأ: أي عنصر صمّم على أساس الداكن يحصل على override واضح هنا
+   ========================================================================== */
+
+/* ─── هيدر التطبيق ─── */
+[data-scheme="light"] .app-header {
+  background: linear-gradient(
+    180deg,
+    rgba(242, 242, 230, 0.97) 0%,
+    rgba(228, 228, 204, 0.97) 100%
+  ) !important;
+  border-bottom: 1px solid #b4b69a !important;
+  box-shadow: 0 1px 0 #d0d0b4, 0 4px 16px rgba(var(--color-brand-900-rgb), 0.10) !important;
+}
+
+[data-scheme="light"] .header-brand__name { color: #0c1a07; }
+[data-scheme="light"] .header-page-title  { color: #0c1a07; }
+
+/* ─── شريط التنقل السفلي ─── */
+[data-scheme="light"] .app-bottom-nav {
+  background: linear-gradient(
+    0deg,
+    rgba(242, 242, 230, 0.99) 0%,
+    rgba(242, 242, 230, 0.98) 100%
+  ) !important;
+  border-top: 1px solid #b4b69a !important;
+  box-shadow: 0 -1px 0 #d0d0b4, 0 -4px 16px rgba(var(--color-brand-900-rgb), 0.10) !important;
+}
+
+[data-scheme="light"] .nav-tab          { color: #565944; }
+[data-scheme="light"] .nav-tab:hover    { color: #3e422f; }
+[data-scheme="light"] .nav-tab--active  { color: #234819; }
+[data-scheme="light"] .nav-tab--active .nav-tab__label { color: #234819; }
+[data-scheme="light"] .nav-tab--active .nav-tab__icon  { color: #f2f2e6; }
+
+/* ─── أيقونة التبويب النشط — highlight ─── */
+[data-scheme="light"] .nav-tab--active::after {
+  background: linear-gradient(
+    180deg,
+    rgba(var(--color-brand-700-rgb), 0.18) 0%,
+    transparent 100%
+  );
+}
+
+/* ─── بطاقات التاريخ والرابطة (history-index-card) ─── */
+[data-scheme="light"] .history-index-card {
+  background: #fafaf4;
+  border-color: #d0d0b4;
+}
+[data-scheme="light"] .history-index-card:hover {
+  border-color: #306328;
+  box-shadow: 0 0 0 1px #47883a, 0 2px 10px rgba(var(--color-brand-700-rgb), 0.14);
+}
+[data-scheme="light"] .history-index-card__title { color: #234819; }
+[data-scheme="light"] .history-index-card__desc  { color: #3e422f; }
+
+[data-scheme="light"] .history-index-card__icon {
+  background: rgba(var(--color-brand-700-rgb), 0.10);
+  border-color: rgba(var(--color-brand-700-rgb), 0.30);
+  color: #234819;
+}
+[data-scheme="light"] .history-index-card__arrow { color: #306328; }
+[data-scheme="light"] .history-index-card:hover .history-index-card__arrow { color: #234819; }
+
+/* ─── بطاقات السطح العام ─── */
+[data-scheme="light"] [class*="-card"] {
+  border-color: #d0d0b4;
+}
+
+/* ─── قسم التاريخ — الفهرس وعنوان الصفحة ─── */
+/* ─── قائمة المقالات (article-list) ─── */
+[data-scheme="light"] .article-list {
+  background: #fafaf4;
+  border-color: #d0d0b4;
+}
+[data-scheme="light"] .article-item:hover {
+  background-color: rgba(var(--color-brand-700-rgb), 0.06);
+}
+[data-scheme="light"] .article-item:active {
+  background-color: rgba(var(--color-brand-700-rgb), 0.12);
+}
+[data-scheme="light"] .article-number {
+  color: #234819;
+  background: rgba(var(--color-brand-700-rgb), 0.10);
+  border-color: rgba(var(--color-brand-700-rgb), 0.22);
+}
+[data-scheme="light"] .article-item:hover .article-number {
+  background: rgba(var(--color-brand-700-rgb), 0.18);
+  color: #172f0f;
+}
+[data-scheme="light"] .article-title  { color: #3e422f; }
+[data-scheme="light"] .article-item:hover .article-title { color: #0c1a07; }
+[data-scheme="light"] .article-arrow  { color: #565944; }
+[data-scheme="light"] .article-item:hover .article-arrow { color: #234819; }
+[data-scheme="light"] .article-divider {
+  background: linear-gradient(to right, transparent, #d0d0b4 15%, #d0d0b4 85%, transparent);
+}
+
+/* ─── صفحة الرابطة ─── */
+[data-scheme="light"] .association-index .history-index-card {
+  background: #fafaf4;
+  border-color: #d0d0b4;
+}
+
+/* ─── بطاقات فهرس المجتمع والرابطة (community-index-card / association-index-card) ─── */
+[data-scheme="light"] .association-index-card {
+  background: #fafaf4;
+  border-color: #d0d0b4;
+}
+[data-scheme="light"] .association-index-card:hover {
+  border-color: #306328;
+  box-shadow: 0 0 0 1px #47883a, 0 2px 10px rgba(var(--color-brand-700-rgb), 0.14);
+}
+[data-scheme="light"] .association-index-card__icon {
+  background: rgba(var(--color-brand-700-rgb), 0.10);
+  border-color: rgba(var(--color-brand-700-rgb), 0.30);
+  color: #234819;
+}
+[data-scheme="light"] .association-index-card:hover .association-index-card__icon {
+  background: rgba(var(--color-brand-700-rgb), 0.18);
+  border-color: rgba(var(--color-brand-700-rgb), 0.38);
+  color: #172f0f;
+}
+[data-scheme="light"] .association-index-card__title {
+  color: #234819;
+}
+[data-scheme="light"] .association-index-card__desc {
+  color: #3e422f;
+}
+[data-scheme="light"] .association-index-card__arrow {
+  color: #565944;
+}
+[data-scheme="light"] .association-index-card:hover .association-index-card__arrow {
+  color: #234819;
+}
+
+
+
+[data-scheme="light"] .page-intro p,
+[data-scheme="light"] .contact-admin-intro__sub,
+[data-scheme="light"] .nlang-intro p { color: #565944; }
+[data-scheme="light"] .appearance-section-label { color: #565944; }
+
+/* ─── CTA boxes ─── */
+
+
+
+/* ─── ذاكرة القرية — بطاقات التنقل ─── */
+
+
+
+
+
+
+
+/* ─── هل تعلم ─── */
+
+
+
+/* ─── البحث ─── */
+
+[data-scheme="light"] .search-input { color: #0c1a07; background: transparent; }
+[data-scheme="light"] .search-input::placeholder { color: var(--color-neutral-400); }
+
+/* ─── أيقونات الخدمات ─── */
+[data-scheme="light"] .service-card {
+  background: #fafaf4;
+  border-color: #d0d0b4;
+}
+[data-scheme="light"] .service-card:hover { border-color: #306328; }
+
+/* ─── reader / مقالة ─── */
+[data-scheme="light"] .reader-header { background: transparent; }
+[data-scheme="light"] .reader-title  { color: #0c1a07; }
+[data-scheme="light"] .reader-paragraph { color: #3e422f; }
+[data-scheme="light"] .reader-meta span { color: #565944; }
+
+/* ─── نبذة عن الرابطة وباقي الصفحات الفرعية ─── */
+
+
+
+/* ─── حالات الفراغ والتحميل ─── */
+[data-scheme="light"] .empty-state__title { color: #3e422f; }
+
+/* ─── تذييل الإعدادات ─── */
+[data-scheme="light"] .app-name     { color: #3e422f; }
+[data-scheme="light"] .app-version  { color: #565944; }
+[data-scheme="light"] .about-footer__copy { color: var(--color-neutral-400); }
+[data-scheme="light"] .notif-note   { color: #565944; }
+
+/* ─── نافذة القرية والخريطة ─── */
+
+
