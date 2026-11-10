@@ -1,0 +1,132 @@
+import { shouldQueue, recordSendError } from './transient-error.js';
+const MAX_QUEUE_AGE_MS = 3 * 24 * 3600 * 1000;
+const KEYS = { occasion: 'akdar_occasion_comment_outbox', idea: 'akdar_idea_comment_outbox' };
+function _readAll(kind) {
+try {
+return JSON.parse(localStorage.getItem(KEYS[kind]) || '{}');
+} catch {
+return {};
+}
+}
+function _writeAll(kind, data) {
+try {
+localStorage.setItem(KEYS[kind], JSON.stringify(data));
+} catch {
+}
+}
+function _queue(kind, parentId, comment) {
+const all = _readAll(kind);
+const list = all[parentId] || [];
+const tempId = `pending-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+const queued = { ...comment, id: tempId, createdAt: new Date().toISOString(), _pending: true };
+list.push(queued);
+all[parentId] = list;
+_writeAll(kind, all);
+return queued;
+}
+export function queueComment(occasionId, comment) {
+return _queue('occasion', occasionId, comment);
+}
+export function queueIdeaComment(ideaId, comment) {
+return _queue('idea', ideaId, comment);
+}
+export function getQueuedUserComment(occasionId, uid) {
+const list = _readAll('occasion')[occasionId] || [];
+return list.find(c => c.uid === uid) || null;
+}
+export function getQueuedComments(occasionId) {
+return _readAll('occasion')[occasionId] || [];
+}
+export function getQueuedIdeaComments(ideaId) {
+return _readAll('idea')[ideaId] || [];
+}
+export function reconcileQueuedIdeaComments(ideaId, serverComments) {
+const seen = new Set((serverComments || []).map((c) => c.clientId).filter(Boolean));
+if (!seen.size) return;
+const all = _readAll('idea');
+const list = all[ideaId];
+if (!list || !list.length) return;
+const keep = list.filter((c) => !(c.clientId && seen.has(c.clientId)));
+if (keep.length === list.length) return;
+if (keep.length) all[ideaId] = keep; else delete all[ideaId];
+_writeAll('idea', all);
+}
+function _removeFromQueue(kind, parentId, tempId) {
+const all = _readAll(kind);
+const list = (all[parentId] || []).filter(c => c.id !== tempId);
+if (list.length) all[parentId] = list;
+else delete all[parentId];
+_writeAll(kind, all);
+}
+const _expired = (c) => Date.now() - Date.parse(c.createdAt || '') > MAX_QUEUE_AGE_MS;
+function _hasQueuedItems() {
+return ['occasion', 'idea'].some((kind) => {
+const all = _readAll(kind);
+return Object.keys(all).some(k => (all[k] || []).length > 0);
+});
+}
+let _flushing = false;
+let _failStreak = 0;
+let _nextAt = 0;
+export async function flushOutbox() {
+if (_flushing || !navigator.onLine || !_hasQueuedItems() || Date.now() < _nextAt) return;
+_flushing = true;
+let failed = false;
+try {
+const { addOccasionComment, addIdeaComment } = await import('../data/db.js');
+const occ = _readAll('occasion');
+for (const occasionId of Object.keys(occ)) {
+for (const queued of occ[occasionId] || []) {
+if (_expired(queued)) { _removeFromQueue('occasion', occasionId, queued.id); continue; }
+try {
+const { id, _pending, _tries, ...payload } = queued;
+const saved = await addOccasionComment(occasionId, payload);
+_removeFromQueue('occasion', occasionId, id);
+window.dispatchEvent(new CustomEvent('akdar:comment-synced', {
+detail: { kind: 'occasion', occasionId, tempId: id, comment: saved },
+}));
+} catch (err) {
+if (err?.message === 'لقد علّقت على هذه المناسبة من قبل') {
+_removeFromQueue('occasion', occasionId, queued.id);
+} else {
+recordSendError(err, 'occasion-comment');
+failed = true;
+}
+}
+}
+}
+const ideas = _readAll('idea');
+for (const ideaId of Object.keys(ideas)) {
+for (const queued of ideas[ideaId] || []) {
+if (_expired(queued)) { _removeFromQueue('idea', ideaId, queued.id); continue; }
+try {
+const { id, _pending, _tries, createdAt, ...payload } = queued;
+const saved = await addIdeaComment(ideaId, payload);
+_removeFromQueue('idea', ideaId, id);
+window.dispatchEvent(new CustomEvent('akdar:comment-synced', {
+detail: { kind: 'idea', ideaId, tempId: id, comment: saved },
+}));
+} catch (err) {
+if (shouldQueue(err)) {
+recordSendError(err, 'idea-comment');
+failed = true;
+} else {
+_removeFromQueue('idea', ideaId, queued.id);
+window.dispatchEvent(new CustomEvent('akdar:comment-failed', {
+detail: { kind: 'idea', ideaId, tempId: queued.id, text: queued.text, message: err?.message || '' },
+}));
+}
+}
+}
+}
+} finally {
+_flushing = false;
+if (failed) {
+_failStreak = Math.min(_failStreak + 1, 6);
+_nextAt = Date.now() + [5000, 15000, 45000, 120000, 300000, 300000][_failStreak - 1] + Math.random() * 3000;
+} else { _failStreak = 0; _nextAt = 0; }
+}
+}
+window.addEventListener('online', () => { _nextAt = 0; setTimeout(flushOutbox, Math.random() * 8000); });
+flushOutbox();
+setInterval(() => { if (_hasQueuedItems()) flushOutbox(); }, 5000);

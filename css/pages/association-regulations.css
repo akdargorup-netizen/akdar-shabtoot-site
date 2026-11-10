@@ -1,0 +1,272 @@
+/* ==========================================================================
+   ASSOCIATION REGULATIONS PAGE — الدستور واللوائح الداخلية
+   دمج صفحتي "النظام الأساسي" و"اللوائح التنظيمية" (سابقاً كروت/صفحات
+   منفصلة) في وثيقة طويلة متصلة. المحتوى بقى كبير، فالتصميم هنا مبني
+   خصيصاً لقراءة طويلة مريحة وأنيقة: بابان بعنوان مذهّب وترويسة رسمية،
+   شريط فلاتر تصنيف ثابت (sticky) — الكل / الدستور / اللوائح الداخلية،
+   بنفس نمط .filter-chip المستخدم في باقي التطبيق (history.css،
+   events.css) — أرقام فصول دائرية بدل نقاط قوائم عادية، وبطاقات
+   "سجل رسمي" بلمسة خضراء هادئة (هوية قسم الرابطة) بدل الذهبي القديم.
+   Consumes: tokens.css, components (.filter-chip من events.css)
+   ========================================================================== */
+
+.association-regulations-page {
+  display: flex;
+  flex-direction: column;
+}
+
+/* --------------------------------------------------------------------------
+   FILTERS — شريط فلتر ثابت (الكل / الدستور / اللوائح الداخلية)، بيتحكم
+   في إظهار الباب المطلوب بدل مجرد قفز تمرير — نفس منطق article-filters
+   في history.css
+-------------------------------------------------------------------------- */
+
+/* --------------------------------------------------------------------------
+   FILTERS — شريط فلتر (الكل / الدستور / اللوائح الداخلية)، بيتحكم في
+   إظهار الباب المطلوب بدل مجرد قفز تمرير. غير ثابت (non-sticky) — بيمشي
+   مع تمرير الصفحة زي article-filters في history.css، مش عائم فوق
+   المحتوى. حجم الشارات مصغّر شوية (--filter-chip-sm) عشان الشريط يفضل
+   خفيف قدّام وثيقة طويلة.
+-------------------------------------------------------------------------- */
+
+.regs-filters {
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-1) 0 var(--space-3);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.regs-filters::-webkit-scrollbar {
+  display: none;
+}
+
+.regs-filters .filter-chip {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-xs);
+}
+
+/* --------------------------------------------------------------------------
+   DOCUMENT — باب كامل (الدستور / اللوائح الداخلية)
+-------------------------------------------------------------------------- */
+
+.regs-doc {
+  padding: 0 var(--spacing-page-x);
+  scroll-margin-top: var(--space-4);
+}
+
+.regs-doc[hidden] {
+  display: none;
+}
+
+.regs-doc__header {
+  text-align: center;
+  padding: var(--space-6) var(--space-4) var(--space-7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.regs-doc__eyebrow {
+  font-family: var(--font-heading);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wide);
+  color: var(--text-brand);
+  text-transform: uppercase;
+}
+
+.regs-doc__title {
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  margin: 0;
+  position: relative;
+  padding-bottom: var(--space-4);
+}
+
+/* خط فاصل زخرفي تحت عنوان الباب — لمسة "وثيقة رسمية" فخمة */
+.regs-doc__title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 64px;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-brand-400) 50%,
+    transparent
+  );
+}
+
+.regs-doc__subtitle {
+  font-family: var(--font-long-text);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: var(--leading-relaxed);
+  max-width: 46ch;
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   CHAPTER — فصل داخل الباب، برقم دائري بدل عنوان مسطّح
+-------------------------------------------------------------------------- */
+
+.regs-chapter {
+  margin-bottom: var(--space-7);
+}
+
+.regs-chapter--last {
+  margin-bottom: var(--space-2);
+}
+
+.regs-chapter__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  margin: 0 0 var(--space-4) 0;
+}
+
+.regs-chapter__num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  color: var(--text-brand);
+  background: rgba(var(--color-brand-400-rgb), 0.18);
+  border: 1px solid rgba(var(--color-brand-400-rgb), 0.45);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------------------
+   TEXT & LISTS — نص طويل مريح للقراءة (Almarai + تباعد أسخى)
+-------------------------------------------------------------------------- */
+
+.regs-text {
+  font-family: var(--font-long-text);
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+  max-width: 65ch;
+  margin: 0 0 var(--space-3) 0;
+}
+
+.regs-text--tight {
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-2);
+}
+
+.regs-list {
+  font-family: var(--font-long-text);
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+  margin: 0;
+  padding-inline-start: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: 65ch;
+}
+
+.regs-list li::marker {
+  color: var(--color-brand-400);
+  font-weight: var(--weight-semibold);
+}
+
+.regs-list--tight {
+  font-size: var(--text-sm);
+  gap: var(--space-2);
+}
+
+/* --------------------------------------------------------------------------
+   CARD — بطاقة "سجل رسمي" (الضباط، الأمانات...) — تدرّج هادئ بلمسة
+   نيلية بدل الكرت المسطّح العام، عشان يحس القارئ إنه بند رسمي موثّق
+-------------------------------------------------------------------------- */
+
+.regs-card {
+  background: linear-gradient(
+    155deg,
+    var(--surface-raised) 0%,
+    color-mix(in srgb, var(--surface-raised) 92%, var(--color-brand-800)) 100%
+  );
+  border: 1px solid var(--border-subtle);
+  border-inline-start: 3px solid var(--color-brand-400);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  margin-bottom: var(--space-3);
+  box-shadow: var(--shadow-xs);
+}
+
+/* بطاقات اللوائح الداخلية أعرض: نلغي هامش الباب والصفحة تقريبًا
+   ونترك 8px فقط من حافة الشاشة كي لا تلتصق البطاقة بها */
+.regs-card {
+  margin-inline: calc(var(--space-2) - 2 * var(--spacing-page-x));
+}
+
+.regs-card:last-child {
+  margin-bottom: 0;
+}
+
+.regs-card__title {
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  color: var(--text-brand);
+  letter-spacing: var(--tracking-wide);
+  margin: 0 0 var(--space-2) 0;
+}
+
+/* --------------------------------------------------------------------------
+   DIVIDER — فاصل زخرفي بين البابين، يظهر بس وقت فلتر "الكل"
+-------------------------------------------------------------------------- */
+
+.regs-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2) var(--spacing-page-x) var(--space-5);
+}
+
+.regs-divider[hidden] {
+  display: none;
+}
+
+.regs-divider::before,
+.regs-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--border-subtle) 50%,
+    transparent
+  );
+}
+
+.regs-divider__ornament {
+  width: 7px;
+  height: 7px;
+  margin: 0 var(--space-3);
+  border-radius: 50%;
+  background: var(--color-brand-400);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
