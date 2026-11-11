@@ -1,0 +1,1678 @@
+/* ==========================================================================
+   WORSHIP SUB-PAGES — صفحات فرعية داخل قسم "العبادة"
+   (السبحة الإلكترونية، ولاحقًا القرآن الكريم وحصن المسلم)
+   Consumes: tokens.css
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   TASBIH — السبحة الإلكترونية
+-------------------------------------------------------------------------- */
+
+.worship-tasbih-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-5);
+  padding: var(--space-3) var(--space-1) var(--space-8);
+  position: relative;
+}
+
+/* ─── الصف العلوي: الإجمالي + زر الإنجازات ─────────────────────── */
+.tasbih-top {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.tasbih-total {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  padding: var(--space-3) var(--space-4);
+  background: linear-gradient(
+    160deg,
+    rgba(var(--stone-tint-rgb), 0.20),
+    rgba(var(--stone-tint-rgb), 0.07)
+  );
+  border: 1px solid rgba(var(--stone-tint-rgb), 0.38);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+}
+
+.tasbih-total__label {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--text-stone);
+}
+
+.tasbih-total__num {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl, 1.75rem);
+  font-weight: var(--weight-bold);
+  line-height: 1.2;
+  color: var(--text-stone-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+.tasbih-achv-btn {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  min-width: 96px;
+  min-height: 64px;
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  line-height: 1.3;
+  text-align: center;
+  color: var(--text-stone-strong);
+  background: rgba(var(--stone-tint-rgb), 0.16);
+  border: 1px solid rgba(var(--stone-tint-rgb), 0.45);
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background var(--duration-fast) var(--ease-out),
+              transform var(--duration-fast) var(--ease-out);
+}
+
+.tasbih-achv-btn:active { transform: scale(0.96); background: rgba(var(--stone-tint-rgb), 0.28); }
+.tasbih-achv-btn [data-lucide] { width: 22px; height: 22px; }
+
+/* ─── زر اختيار الذكر + القائمة المنسدلة ───────────────────────── */
+.tasbih-select-wrap {
+  position: relative;
+  width: 100%;
+  z-index: 1;
+}
+
+.tasbih-select-wrap.is-open { z-index: calc(var(--z-overlay) + 2); }
+
+.tasbih-select {
+  width: 100%;
+  min-height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-4);
+  font: inherit;
+  text-align: right;
+  color: var(--text-primary);
+  background: var(--surface-raised);
+  border: 1.5px solid rgba(var(--stone-tint-rgb), 0.5);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color var(--duration-fast) var(--ease-out),
+              box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.tasbih-select-wrap.is-open .tasbih-select {
+  border-color: rgba(var(--stone-tint-rgb), 0.9);
+  box-shadow: 0 0 0 3px rgba(var(--stone-tint-rgb), 0.22), var(--shadow-sm);
+}
+
+.tasbih-select__text { display: flex; flex-direction: column; min-width: 0; }
+
+.tasbih-select__label {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.tasbih-select__value {
+  font-family: var(--font-heading);
+  font-size: var(--text-md, var(--text-base));
+  font-weight: var(--weight-bold);
+  color: var(--text-stone-strong);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tasbih-select__chev {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  color: var(--text-stone-strong);
+  background: rgba(var(--stone-tint-rgb), 0.2);
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+.tasbih-select__chev svg { width: 18px; height: 18px; }
+.tasbih-select-wrap.is-open .tasbih-select__chev { transform: rotate(180deg); }
+
+.tasbih-menu {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  inset-inline: 0;
+  margin: 0;
+  padding: var(--space-2);
+  list-style: none;
+  max-height: min(46vh, 340px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--surface-raised);
+  border: 1.5px solid rgba(var(--stone-tint-rgb), 0.5);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  animation: tasbih-pop var(--duration-base) var(--ease-out);
+}
+
+.tasbih-menu[hidden] { display: none; }
+
+@keyframes tasbih-pop {
+  from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+  to   { opacity: 1; transform: none; }
+}
+
+.tasbih-menu__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-height: 52px;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-lg);
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background var(--duration-fast) var(--ease-out);
+}
+
+.tasbih-menu__item + .tasbih-menu__item { margin-top: 2px; }
+.tasbih-menu__item:active { background: rgba(var(--stone-tint-rgb), 0.2); }
+.tasbih-menu__item:focus-visible { outline: 2px solid rgba(var(--stone-tint-rgb), 0.7); outline-offset: -2px; }
+
+.tasbih-menu__item.is-active {
+  background: rgba(var(--stone-tint-rgb), 0.24);
+  color: var(--text-stone-strong);
+}
+
+.tasbih-menu__check {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  color: var(--text-stone-strong);
+  background: rgba(var(--stone-tint-rgb), 0.3);
+}
+
+.tasbih-menu__check svg { width: 15px; height: 15px; stroke-width: 3; }
+.tasbih-menu__item.is-active .tasbih-menu__check { display: flex; }
+
+/* غطاء ضبابي: يغطي المحتوى خلف القائمة فلا يتداخل معها بصريًا */
+.tasbih-blur {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-overlay) + 1);
+  background: rgba(var(--color-brand-950-rgb), 0.55);
+  backdrop-filter: blur(9px) saturate(110%);
+  -webkit-backdrop-filter: blur(9px) saturate(110%);
+  touch-action: none;
+  animation: fade-in var(--duration-base) var(--ease-out);
+}
+
+.tasbih-blur[hidden] { display: none; }
+
+/* ─── العدّاد الحالي: حلقة تقدّم (٣٣) حول الدائرة الكبيرة ──────── */
+.tasbih-counter-wrap {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: var(--space-2) 0;
+}
+
+.tasbih-ring {
+  --ring-size: min(74vw, 280px);
+  width: var(--ring-size);
+  height: var(--ring-size);
+  padding: 9px;
+  border-radius: 50%;
+  background:
+    conic-gradient(
+      rgba(var(--stone-tint-rgb), 0.95) calc(var(--p, 0) * 1%),
+      rgba(var(--stone-tint-rgb), 0.16) 0
+    );
+  box-shadow: 0 0 0 1px rgba(var(--stone-tint-rgb), 0.25), var(--shadow-md);
+  transition: background var(--duration-fast) linear;
+}
+
+.tasbih-counter-circle {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  background: radial-gradient(
+    circle at 35% 30%,
+    color-mix(in srgb, var(--surface-raised) 70%, var(--color-stone-800)) 0%,
+    color-mix(in srgb, var(--surface-raised) 88%, var(--color-stone-950)) 100%
+  );
+  border: 2px solid var(--surface-base);
+  box-shadow: inset 0 2px 0 rgba(var(--color-stone-200-rgb), 0.10);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform var(--duration-fast) var(--ease-spring);
+}
+
+.tasbih-counter-circle:active { transform: scale(0.96); }
+
+.tasbih-counter-circle.is-tick .tasbih-counter-circle__count {
+  animation: tasbih-bump 160ms var(--ease-out);
+}
+
+@keyframes tasbih-bump {
+  0%   { transform: scale(1); }
+  45%  { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+
+.tasbih-counter-circle__count {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 16vw, 4.2rem);
+  font-weight: var(--weight-bold);
+  color: var(--text-stone-strong);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.tasbih-counter-circle__label {
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--text-stone);
+  text-align: center;
+  padding: 0 var(--space-5);
+}
+
+.tasbih-updated-at {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.tasbih-actions {
+  display: flex;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.tasbih-action-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 52px;
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--text-stone-strong);
+  background: rgba(var(--stone-tint-rgb), 0.14);
+  border: 1px solid rgba(var(--stone-tint-rgb), 0.30);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+}
+
+.tasbih-action-btn [data-lucide] { width: 18px; height: 18px; }
+
+.tasbih-action-btn:hover {
+  background: rgba(var(--stone-tint-rgb), 0.22);
+  border-color: rgba(var(--stone-tint-rgb), 0.5);
+}
+
+.tasbih-action-btn--off {
+  color: var(--text-muted);
+  background: var(--surface-raised);
+  border-color: var(--border-default);
+}
+
+.tasbih-action-btn--reset {
+  color: var(--color-danger-200);
+  background: rgba(var(--color-alert-600-rgb), 0.12);
+  border-color: rgba(var(--color-alert-600-rgb), 0.28);
+}
+
+.tasbih-action-btn--reset:hover {
+  background: rgba(var(--color-alert-600-rgb), 0.20);
+  border-color: rgba(var(--color-alert-600-rgb), 0.42);
+}
+
+/* ─── نافذة الإنجازات (ورقة سفلية فوق غطاء ضبابي) ──────────────── */
+.tasbih-sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 var(--space-3) var(--space-3);
+  background: rgba(var(--color-brand-950-rgb), 0.6);
+  backdrop-filter: blur(9px) saturate(110%);
+  -webkit-backdrop-filter: blur(9px) saturate(110%);
+  animation: fade-in var(--duration-base) var(--ease-out);
+}
+
+.tasbih-sheet-backdrop[hidden] { display: none; }
+
+.tasbih-sheet {
+  width: 100%;
+  max-width: 460px;
+  max-height: 82vh;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-4) var(--space-4);
+  background: var(--surface-raised);
+  border: 1px solid rgba(var(--stone-tint-rgb), 0.4);
+  border-radius: var(--radius-2xl, 24px);
+  box-shadow: var(--shadow-lg);
+  overflow-y: auto;
+  animation: tasbih-rise var(--duration-slow, 320ms) var(--ease-out);
+}
+
+@keyframes tasbih-rise {
+  from { transform: translateY(32px); opacity: 0; }
+  to   { transform: none; opacity: 1; }
+}
+
+.tasbih-sheet__grab {
+  align-self: center;
+  width: 40px;
+  height: 4px;
+  border-radius: var(--radius-full);
+  background: rgba(var(--stone-tint-rgb), 0.45);
+}
+
+.tasbih-sheet__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tasbih-sheet__title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  color: var(--text-stone-strong);
+}
+
+.tasbih-sheet__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  color: var(--text-stone-strong);
+  background: rgba(var(--stone-tint-rgb), 0.18);
+  cursor: pointer;
+}
+
+.tasbih-sheet__close svg { width: 18px; height: 18px; }
+
+.tasbih-sheet__hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: var(--space-4);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(160deg, rgba(var(--stone-tint-rgb), 0.24), rgba(var(--stone-tint-rgb), 0.08));
+  border: 1px solid rgba(var(--stone-tint-rgb), 0.35);
+}
+
+.tasbih-sheet__hero-label {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: var(--text-stone);
+}
+
+.tasbih-sheet__hero-num {
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  font-weight: var(--weight-bold);
+  line-height: 1.15;
+  color: var(--text-stone-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+.tasbih-achv-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.tasbih-achv-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background: rgba(var(--stone-tint-rgb), 0.06);
+}
+
+.tasbih-achv-item.is-empty { opacity: 0.6; }
+
+.tasbih-achv-item__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.tasbih-achv-item__name {
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
+}
+
+.tasbih-achv-item__num {
+  font-family: var(--font-display);
+  font-size: var(--text-md, var(--text-base));
+  font-weight: var(--weight-bold);
+  color: var(--text-stone-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+.tasbih-achv-item__bar {
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: rgba(var(--stone-tint-rgb), 0.18);
+  overflow: hidden;
+}
+
+.tasbih-achv-item__bar i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: rgba(var(--stone-tint-rgb), 0.9);
+  transition: width var(--duration-slow, 320ms) var(--ease-out);
+}
+
+.tasbih-sheet__clear {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--text-muted);
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+}
+
+.tasbih-sheet__clear svg { width: 16px; height: 16px; }
+
+.tasbih-sheet__clear.is-armed {
+  color: var(--color-danger-200);
+  background: rgba(var(--color-alert-600-rgb), 0.14);
+  border-color: rgba(var(--color-alert-600-rgb), 0.4);
+}
+
+/* --------------------------------------------------------------------------
+   QURAN — القرآن الكريم (فهرس السور + صفحة القراءة)
+-------------------------------------------------------------------------- */
+
+.worship-quran-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-4) 0 var(--space-8);
+}
+
+/* ─── شريط الأدوات الثابت (بحث + تصفية) ─────────────────────────────
+   .app-content هو حاوية التمرير والهيدر خارجها، فالتثبيت عند top: 0. */
+
+.quran-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-2) 0 var(--space-3);
+  background: var(--surface-base);
+}
+
+.quran-toolbar::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  bottom: -12px;
+  height: 12px;
+  background: linear-gradient(180deg, var(--surface-base), transparent);
+  pointer-events: none;
+}
+
+.quran-chips {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.quran-chip {
+  min-height: 36px;
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-subtle);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background var(--duration-fast) var(--ease-out),
+              color var(--duration-fast) var(--ease-out),
+              border-color var(--duration-fast) var(--ease-out);
+}
+
+.quran-chip.is-active {
+  background: rgba(var(--stone-tint-rgb), 0.24);
+  border-color: rgba(var(--stone-tint-rgb), 0.55);
+  color: var(--text-stone-strong);
+}
+
+/* ─── قائمة السور ─────────────────────────────────────────────────── */
+
+.quran-surah-list {
+  display: flex;
+  flex-direction: column;
+  background: none;
+}
+
+.quran-surah-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  min-height: 68px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background var(--duration-fast) var(--ease-out);
+}
+
+/* فاصل رفيع يبدأ بعد إطار الرقم (مش بعرض الصف كله) */
+.quran-surah-row::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  inset-inline-start: calc(var(--space-4) + 40px + var(--space-4));
+  inset-inline-end: 0;
+  height: 1px;
+  background: var(--border-subtle);
+  opacity: 0.6;
+}
+
+.quran-surah-row:hover {
+  background: rgba(var(--stone-tint-rgb), 0.08);
+}
+
+.quran-surah-row:active {
+  background: rgba(var(--stone-tint-rgb), 0.16);
+}
+
+.quran-surah-row:focus-visible {
+  outline: 2px solid rgba(var(--stone-tint-rgb), 0.7);
+  outline-offset: -2px;
+}
+
+/* رقم السورة — نفس الإطار النجمي الثماني لرقم الآية في صفحة القراءة،
+   بحجم أكبر ليظهر كزخرفة مصحفية. */
+
+.quran-surah-row__index {
+  position: relative;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quran-surah-row__index-frame {
+  position: absolute;
+  inset: 5px;
+  border-radius: 4px;
+  border: 1.25px solid rgba(var(--stone-tint-rgb), 0.5);
+  background: rgba(var(--stone-tint-rgb), 0.14);
+}
+
+.quran-surah-row__index-frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  border: 1.25px solid rgba(var(--stone-tint-rgb), 0.5);
+  transform: rotate(45deg);
+}
+
+.quran-surah-row__index-digit {
+  position: relative;
+  z-index: 1;
+  color: var(--text-stone-strong);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  font-variant-numeric: normal;
+}
+
+.quran-surah-row__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.quran-surah-row__name {
+  font-family: 'Amiri Quran', var(--font-display);
+  font-size: 1.375rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+
+.quran-surah-row__badge {
+  padding: 1px 10px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: var(--weight-semibold);
+  line-height: 1.6;
+}
+
+.quran-surah-row__badge--meccan {
+  background: rgba(var(--stone-tint-rgb), 0.16);
+  color: var(--text-stone-strong);
+}
+
+.quran-surah-row__badge--medinan {
+  border: 1px solid rgba(var(--stone-tint-rgb), 0.45);
+  color: var(--text-muted);
+}
+
+.quran-surah-row__count {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.2;
+}
+
+.quran-surah-row__count-num {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  color: var(--text-secondary);
+}
+
+.quran-surah-row__count-label {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+}
+
+.quran-empty-search {
+  text-align: center;
+  padding: var(--space-8) var(--space-4);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+/* ─── صفحة قراءة سورة ────────────────────────────────────────────── */
+
+.worship-quran-surah-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: var(--space-4) 0 var(--space-10);
+}
+
+/* ─── لوحة القراءة — إطار مصحفي واحد للبسملة + الآيات ──────────────
+   حافة زوايا خفيفة (::before/::after) بتوحي بصفحة مخطوطة مؤطّرة،
+   من غير أي صورة أو أصل خارجي — أربع زوايا بس، كل واحدة خطين
+   متعامدين قصيرين بلون الطين الهادئ. */
+
+.quran-surah-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: none;
+  padding: var(--space-4) var(--space-2) var(--space-5);
+}
+
+/* ─── البسملة — بين خطّين رفيعين متلاشيين، بدل سطر عائم لوحده ─────── */
+
+.quran-basmalah {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  text-align: center;
+  margin: 0 0 var(--space-5);
+}
+
+.quran-basmalah__rule {
+  flex: 1;
+  max-width: 56px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(var(--stone-tint-rgb), 0.55)
+  );
+}
+
+.quran-basmalah__rule:first-child { background: linear-gradient(270deg, transparent, rgba(var(--stone-tint-rgb), 0.55)); }
+
+.quran-basmalah__text {
+  flex-shrink: 0;
+  font-family: 'Amiri Quran', var(--font-display);
+  font-size: calc(var(--text-xl) * var(--quran-scale, 1));
+  font-weight: var(--weight-semibold);
+  color: var(--text-stone-strong);
+}
+
+.quran-ayahs-block {
+  font-family: 'Amiri Quran', var(--font-display);
+  font-size: calc(var(--text-lg) * var(--quran-scale, 1));
+  line-height: 2.6;
+  text-align: justify;
+  text-align-last: right;
+  color: var(--text-primary);
+}
+
+.quran-ayah-text {
+  display: inline;
+}
+
+/* ─── رقم الآية — إطار نجمي ثماني حول الرقم، زي علامة نهاية الآية
+   في المصحف (نجمة/زهرة صغيرة) بدل دائرة مجردة. مبني بـ CSS بحت
+   (مربعين متراكبين بزاوية 45°) من غير أي صورة. ─────────────────── */
+
+.quran-ayah-number {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(30px * (1 + (var(--quran-scale, 1) - 1) * 0.6));
+  height: calc(30px * (1 + (var(--quran-scale, 1) - 1) * 0.6));
+  margin: 0 var(--space-1);
+  vertical-align: middle;
+}
+
+.quran-ayah-number__frame {
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  border: 1.25px solid rgba(var(--stone-tint-rgb), 0.55);
+  background: rgba(var(--stone-tint-rgb), 0.14);
+}
+
+.quran-ayah-number__frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  border: 1.25px solid rgba(var(--stone-tint-rgb), 0.55);
+  transform: rotate(45deg);
+}
+
+.quran-ayah-number__digit {
+  position: relative;
+  z-index: 1;
+  color: var(--text-stone-strong);
+  font-family: var(--font-body);
+  font-size: calc(var(--text-xs) * (1 + (var(--quran-scale, 1) - 1) * 0.6));
+  font-weight: var(--weight-bold);
+  font-variant-numeric: normal;
+}
+
+/* ─── خاتمة السورة — نفس زخرفة الهيدر، مقلوبة رأسيًا لتأطير النهاية ── */
+
+.quran-surah-end-ornament {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-6);
+  color: rgba(var(--stone-tint-rgb), 0.45);
+  width: 120px;
+  height: 14px;
+  align-self: center;
+  transform: scaleY(-1);
+}
+
+.quran-surah-end-ornament svg {
+  width: 100%;
+  height: 100%;
+}
+
+.quran-surah-error {
+  text-align: center;
+  padding: var(--space-8) var(--space-4);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+/* ─── شريط القراءة الثابت: رقم الآية + التقدّم ─────────── */
+
+.quran-reader-bar {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-1) 0 var(--space-2);
+  background: var(--surface-base);
+}
+
+.quran-reader-bar__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.quran-reader-bar__pos {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--text-muted);
+}
+
+.quran-reader-bar__track {
+  height: 4px;
+  border-radius: var(--radius-full);
+  background: rgba(var(--stone-tint-rgb), 0.18);
+  overflow: hidden;
+}
+
+.quran-reader-bar__fill {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: rgba(var(--stone-tint-rgb), 0.85);
+  transform: scaleX(0);
+  transform-origin: right;          /* الصفحة RTL: التقدّم يمتلئ من اليمين */
+  transition: transform 80ms linear;
+}
+
+/* ─── السورة السابقة / التالية ──────────────────────────────────────
+   "التالية" بطاقة رئيسية عريضة بتدرّج هادئ وزر سهم دائري، و"السابقة"
+   بطاقة ثانوية أخفّ تحتها. */
+
+.quran-nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: var(--space-5);
+  margin-top: var(--space-2);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.quran-nav[hidden] { display: none; }
+
+.quran-nav-card {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-xl);
+  color: inherit;
+  font: inherit;
+  text-align: right;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background var(--duration-fast) var(--ease-out),
+              transform var(--duration-fast) var(--ease-out),
+              border-color var(--duration-fast) var(--ease-out);
+}
+
+.quran-nav-card:active { transform: scale(0.98); }
+
+.quran-nav-card:focus-visible {
+  outline: 2px solid rgba(var(--stone-tint-rgb), 0.8);
+  outline-offset: 2px;
+}
+
+/* الرئيسية: التالية */
+.quran-nav-card--next {
+  justify-content: space-between;
+  min-height: 78px;
+  background: linear-gradient(
+    135deg,
+    rgba(var(--stone-tint-rgb), 0.34),
+    rgba(var(--stone-tint-rgb), 0.12)
+  );
+  border: 1.5px solid rgba(var(--stone-tint-rgb), 0.6);
+  box-shadow: var(--shadow-sm);
+}
+
+.quran-nav-card--next:active { background: rgba(var(--stone-tint-rgb), 0.38); }
+
+/* الثانوية: السابقة */
+.quran-nav-card--prev {
+  min-height: 56px;
+  background: transparent;
+  border: 1px solid rgba(var(--stone-tint-rgb), 0.35);
+}
+
+.quran-nav-card--prev:active { background: rgba(var(--stone-tint-rgb), 0.14); }
+
+.quran-nav-card__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.quran-nav-card__label {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  line-height: 1.4;
+  color: var(--text-stone);
+}
+
+.quran-nav-card__name {
+  font-family: 'Amiri Quran', var(--font-display);
+  line-height: 1.7;
+  color: var(--text-primary);
+}
+
+.quran-nav-card--next .quran-nav-card__name {
+  font-size: 1.5rem;
+  color: var(--text-stone-strong);
+}
+
+.quran-nav-card--prev .quran-nav-card__name { font-size: 1.125rem; }
+
+.quran-nav-card__arrow {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  color: var(--text-muted);
+}
+
+.quran-nav-card--next .quran-nav-card__arrow {
+  width: 40px;
+  height: 40px;
+  padding: 9px;
+  border-radius: 50%;
+  background: rgba(var(--stone-tint-rgb), 0.38);
+  color: var(--text-stone-strong);
+}
+
+/* --------------------------------------------------------------------------
+   HISN AL-MUSLIM — أذكار الصباح والمساء والنوم (worship-hisn.js)
+   شريط الفلتر: نفس .filter-chip المشترك من events.css، حاوية محلية
+   بس. كارت الذكر: رقم في إطار معيّن (نفس روح quran-ayah-number) +
+   نص + تخريج مختصر تحته.
+-------------------------------------------------------------------------- */
+
+/* الصفحة نفسها (.page) فيها padding جانبي، والعناصر الداخلية كانت
+   بتضيف padding تاني فوقه = مساحة تنفّس ضايعة على الجوانب. الحل: نقلّل
+   padding الصفحة هنا ونخلّي البطاقات تاخد العرض كامل. */
+.worship-hisn-page {
+  padding-inline: var(--space-2);
+  padding-top: var(--space-3);
+}
+
+.worship-hisn-page .page-intro {
+  padding: var(--space-1) var(--space-2) var(--space-3);
+}
+
+.hisn-chips {
+  margin: var(--space-1) 0 var(--space-4);
+}
+
+.hisn-filters {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  padding: 0 var(--space-1) var(--space-3);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.hisn-filters::-webkit-scrollbar {
+  display: none;
+}
+
+.hisn-filters .filter-chip {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: var(--space-1);
+  min-height: 44px;
+}
+
+.hisn-filters .filter-chip i {
+  width: 14px;
+  height: 14px;
+}
+
+.hisn-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: 0 0 var(--space-8);
+}
+
+/* بطاقة الذكر — عرض كامل، شريط لوني جانبي في البداية، رقم في إطار
+   معيّن (نفس روح رقم السورة)، النص تحته، والتخريج في تذييل منفصل */
+.hisn-item {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-4) var(--space-4) var(--space-3);
+  background: linear-gradient(
+    180deg,
+    var(--surface-raised),
+    color-mix(in srgb, var(--surface-raised) 94%, var(--color-stone-900))
+  );
+  border: 1px solid rgba(var(--stone-tint-rgb), 0.26);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.hisn-item::before {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 4px;
+  background: linear-gradient(180deg, rgba(var(--stone-tint-rgb), 0.9), rgba(var(--stone-tint-rgb), 0.35));
+}
+
+.hisn-item__index {
+  position: relative;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-stone-strong);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+}
+
+.hisn-item__index::before,
+.hisn-item__index::after {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border-radius: 4px;
+  border: 1.25px solid rgba(var(--stone-tint-rgb), 0.55);
+  background: rgba(var(--stone-tint-rgb), 0.12);
+}
+
+.hisn-item__index::after {
+  background: none;
+  transform: rotate(45deg);
+}
+
+.hisn-item__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.hisn-item__text {
+  font-family: var(--font-body);
+  font-size: var(--text-md, var(--text-base));
+  line-height: 2;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-3);
+  overflow-wrap: anywhere;
+}
+
+.hisn-item__source {
+  display: block;
+  margin: 0;
+  padding-top: var(--space-2);
+  border-top: 1px dashed rgba(var(--stone-tint-rgb), 0.3);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+
+
+/* ==========================================================================
+   2026-10-01 — فهرس القرآن: إعادة تصميم
+   • البسملة/شارة النوع (مكية/مدنية) بعيدة عن اسم السورة (سطر مستقل بمسافة)
+   • فواصل واضحة بين السور داخل بطاقة واحدة
+   • بحث أنيق + شرائح تصفية على شكل مفتاح مقسوم (segmented)
+   ========================================================================== */
+
+.worship-quran-page {
+  gap: var(--space-3);
+  padding-inline: var(--space-1);
+}
+
+/* ─── شريط الأدوات ─── */
+.quran-toolbar {
+  gap: var(--space-3);
+  padding: var(--space-2) 0 var(--space-3);
+}
+
+/* شكل شريط البحث (إطار بلون وسُمك أيقونة العدسة) موحّد في css/components/search-bar.css */
+
+/* ─── التصفية: مفتاح مقسوم ─── */
+.quran-chips {
+  gap: 4px;
+  padding: 4px;
+  background: rgba(var(--stone-tint-rgb), 0.10);
+  border: 1px solid rgba(var(--stone-tint-rgb), 0.18);
+  border-radius: var(--radius-full);
+}
+
+.quran-chip {
+  flex: 1;
+  min-height: 38px;
+  padding: 0 var(--space-3);
+  border: 1px solid transparent;
+  color: var(--text-muted);
+}
+
+.quran-chip.is-active {
+  background: rgba(var(--stone-tint-rgb), 0.34);
+  border-color: rgba(var(--stone-tint-rgb), 0.55);
+  color: var(--text-stone-strong);
+  box-shadow: var(--shadow-xs);
+}
+
+/* ─── القائمة: كل سورة بطاقة مستقلة بينها مسافة واضحة ─── */
+.quran-surah-list {
+  gap: var(--space-3);
+  background: none;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+  box-shadow: none;
+}
+
+.quran-surah-row {
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  min-height: 84px;
+  overflow: hidden;
+  background: var(--surface-raised);
+  border: 1px solid rgba(var(--stone-tint-rgb), 0.30);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+}
+
+/* شريط جانبي رفيع يميّز نوع السورة: مكية (ممتلئ) / مدنية (أخفّ) */
+.quran-surah-row::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  inset-inline-end: auto;
+  width: 4px;
+  height: auto;
+  background: rgba(var(--stone-tint-rgb), 0.9);
+  opacity: 1;
+}
+
+.quran-surah-row[data-type="medinan"]::after { background: rgba(var(--stone-tint-rgb), 0.4); }
+
+.quran-surah-row:active { transform: scale(0.99); }
+
+.quran-surah-row__body {
+  gap: var(--space-2);          /* مسافة صريحة بين الاسم والشارة */
+  padding-block: 2px;
+}
+
+.quran-surah-row__name {
+  display: block;
+  font-size: 1.5rem;
+  line-height: 1.9;             /* مساحة كافية للتشكيل فلا يلمس الشارة */
+  padding-block: 2px;
+}
+
+.quran-surah-row__badge {
+  align-self: flex-start;
+  margin-top: var(--space-1);
+  padding: 2px 12px;
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+/* عدد الآيات — عمود مفصول بخط رأسي رفيع */
+.quran-surah-row__count {
+  align-self: stretch;
+  justify-content: center;
+  min-width: 52px;
+  padding-inline-start: var(--space-4);
+  border-inline-start: 1px solid rgba(var(--stone-tint-rgb), 0.28);
+}
+
+.quran-surah-row__count-num { font-size: var(--text-md, var(--text-base)); }
+
+
+/* ==========================================================================
+   2026-10-01 — صفحة قراءة السورة
+   • مؤشر التقدّم وحده في الأعلى (شلنا عدّاد "الآية س من ص")
+   • رأس السورة ("سورة ...") قريب منه، بعده البسملة بحجم أصغر
+   ========================================================================== */
+
+.worship-quran-surah-page {
+  gap: var(--space-3);
+  padding-top: 0;
+}
+
+.quran-reader-bar {
+  gap: 0;
+  padding: var(--space-2) 0;
+}
+
+.quran-reader-bar__track {
+  height: 5px;
+  background: rgba(var(--stone-tint-rgb), 0.22);
+}
+
+.quran-surah-panel {
+  padding-top: var(--space-2);
+}
+
+.quran-basmalah {
+  margin: 0 0 var(--space-4);
+}
+
+.quran-basmalah__text {
+  font-size: calc(var(--text-base) * 1.1 * var(--quran-scale, 1));
+  font-weight: var(--weight-regular, 400);
+  color: var(--text-stone);
+}
+
+.quran-basmalah__rule { max-width: 44px; }
+
+
+/* ==========================================================================
+   أدوات صفحة القراءة (وضع التمرير وحده — شُلِّ وضع الصفحات 2026-10-05)
+   ========================================================================== */
+
+.worship-quran-surah-page [hidden] { display: none !important; }
+
+/* الفاصل بين شرائح التصفية وشريط البحث الثابت */
+.worship-quran-page .quran-chips { margin-top: var(--space-1); }
+
+/* ==========================================================================
+   تعديلات تحسينية بعد المعاينة
+   ========================================================================== */
+
+/* صفحة القراءة بلا padding جانبي (النص يحتاج العرض) — لكن البطاقات
+   والمتحكّم يحتاجون هامشًا فلا يلمسون حافة الشاشة */
+.quran-nav { padding-inline: var(--space-3); }
+
+/* السبحة في الثيم الفاتح: دائرة العدّاد بخلفية فاتحة بدل الرمادي الداكن */
+[data-scheme="light"] .tasbih-counter-circle {
+  background: radial-gradient(
+    circle at 35% 30%,
+    var(--surface-raised) 0%,
+    color-mix(in srgb, var(--surface-raised) 82%, var(--color-stone-300)) 100%
+  );
+}
+
+
+/* ==========================================================================
+   2026-10-05 — القرآن: مقدمة السورة + المواصلة من حيث توقفت
+   ========================================================================== */
+
+/* ─── مقدمة السورة: لافتة على طريقة المصحف ────────────────────────────
+   إطار مزدوج رفيع، رقم السورة في إطار نجمي على الطرف، واسم السورة
+   بخط المصحف في الوسط، وعدد الآيات على الطرف الآخر. */
+
+.quran-intro {
+  padding: 0 var(--space-3) var(--space-1);
+}
+
+.quran-intro__banner {
+  position: relative;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) 48px;
+  align-items: center;
+  column-gap: var(--space-3);
+  padding: var(--space-4) var(--space-4);
+  border: 1px solid rgba(var(--stone-tint-rgb), 0.5);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(
+    180deg,
+    rgba(var(--stone-tint-rgb), 0.16),
+    rgba(var(--stone-tint-rgb), 0.06)
+  );
+}
+
+/* الإطار الداخلي الرفيع */
+.quran-intro__banner::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px solid rgba(var(--stone-tint-rgb), 0.24);
+  border-radius: calc(var(--radius-lg) - 4px);
+  pointer-events: none;
+}
+
+.quran-intro__no {
+  position: relative;
+  justify-self: center;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quran-intro__no-frame {
+  position: absolute;
+  inset: 5px;
+  border-radius: 4px;
+  border: 1.25px solid rgba(var(--stone-tint-rgb), 0.55);
+  background: rgba(var(--stone-tint-rgb), 0.14);
+}
+
+.quran-intro__no-frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  border: 1.25px solid rgba(var(--stone-tint-rgb), 0.55);
+  transform: rotate(45deg);
+}
+
+.quran-intro__no-digit {
+  position: relative;
+  z-index: 1;
+  color: var(--text-stone-strong);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  font-variant-numeric: normal;
+}
+
+.quran-intro__title {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  column-gap: var(--space-2);
+  text-align: center;
+}
+
+.quran-intro__kicker {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-regular, 400);
+  color: var(--text-muted);
+}
+
+.quran-intro__name {
+  font-family: 'Amiri Quran', var(--font-display);
+  font-size: 1.875rem;
+  line-height: 1.5;
+  font-weight: var(--weight-bold);
+  color: var(--text-stone-strong);
+}
+
+.quran-intro__type {
+  flex-basis: 100%;
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--text-muted);
+}
+
+.quran-intro__count {
+  justify-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.2;
+}
+
+.quran-intro__count-num {
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  color: var(--text-stone-strong);
+}
+
+.quran-intro__count-label {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+}
+
+/* ─── شريط "تابع من الآية س" داخل صفحة السورة ───────────────────────── */
+
+.quran-resume-strip {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  margin-inline: var(--space-3);
+  padding: 0 var(--space-4);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--text-stone-strong);
+  background: rgba(var(--stone-tint-rgb), 0.12);
+  border: 1px solid rgba(var(--stone-tint-rgb), 0.4);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background var(--duration-fast) var(--ease-out),
+              transform var(--duration-fast) var(--ease-out);
+}
+
+.quran-resume-strip:active {
+  background: rgba(var(--stone-tint-rgb), 0.24);
+  transform: scale(0.985);
+}
+
+.quran-resume-strip:focus-visible {
+  outline: 2px solid rgba(var(--stone-tint-rgb), 0.7);
+  outline-offset: 2px;
+}
+
+.quran-resume-strip__icon { width: 18px; height: 18px; flex-shrink: 0; }
+.quran-resume-strip__go   { width: 16px; height: 16px; flex-shrink: 0; color: var(--text-muted); }
+.quran-resume-strip__text { flex: 1; text-align: start; }
+
+/* ─── تظليل الآية التي قفزنا إليها (يزول بعد لحظات) ─────────────────── */
+
+.quran-ayah-text {
+  border-radius: 6px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  transition: background-color 900ms var(--ease-out), box-shadow 900ms var(--ease-out);
+}
+
+.quran-ayah-text.is-resume-target {
+  background-color: rgba(var(--stone-tint-rgb), 0.30);
+  box-shadow: 0 0 0 3px rgba(var(--stone-tint-rgb), 0.30);
+}
+
+/* ─── بطاقة "تابع من حيث توقفت" في فهرس السور ──────────────────────────
+   أبرز من صفوف السور (تدرّج وحدّ أقوى) لكنها بنفس الخامة: طين هادئ، اسم
+   السورة بخط المصحف. شريط التقدّم الرفيع يلتصق بحافتها السفلى. */
+
+.quran-resume {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+  padding: var(--space-4) var(--space-4) calc(var(--space-4) + 3px);
+  overflow: hidden;
+  font: inherit;
+  text-align: start;
+  color: inherit;
+  background: linear-gradient(
+    150deg,
+    rgba(var(--stone-tint-rgb), 0.26),
+    rgba(var(--stone-tint-rgb), 0.09)
+  );
+  border: 1px solid rgba(var(--stone-tint-rgb), 0.55);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.quran-resume:active { transform: scale(0.985); }
+
+.quran-resume:focus-visible {
+  outline: 2px solid rgba(var(--stone-tint-rgb), 0.7);
+  outline-offset: 2px;
+}
+
+.quran-resume__mark {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  color: var(--text-stone-strong);
+}
+
+.quran-resume__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.quran-resume__label {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--text-muted);
+}
+
+.quran-resume__name {
+  font-family: 'Amiri Quran', var(--font-display);
+  font-size: 1.5rem;
+  line-height: 1.5;
+  font-weight: var(--weight-bold);
+  color: var(--text-stone-strong);
+}
+
+.quran-resume__snippet {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: 'Amiri Quran', var(--font-display);
+  font-size: 1.0625rem;
+  line-height: 1.9;
+  color: var(--text-secondary);
+}
+
+.quran-resume__where {
+  margin-top: 2px;
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.quran-resume__go {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+
+.quran-resume__track {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 3px;
+  background: rgba(var(--stone-tint-rgb), 0.18);
+}
+
+/* الصفحة RTL: الشريط يمتلئ من اليمين تلقائيًا (بداية السطر) */
+.quran-resume__fill {
+  display: block;
+  height: 100%;
+  background: rgba(var(--stone-tint-rgb), 0.85);
+}
+
+/* ─── القرآن: حالة "جارٍ تحميل السورة" + حجز مكان مقطع بطاقة المواصلة ───
+   نص السورة يُجلب عند الفتح (قد يتأخر بشبكة ضعيفة): العنصر المضغوط يومض بدل أن يبدو متجمّدًا،
+   ومقطع الآية في بطاقة "تابع" يُملأ بعد الرسم فنحجز مكانه كي لا تقفز القائمة تحته. */
+.quran-surah-row.is-loading,
+.quran-resume.is-loading,
+.quran-nav-card.is-loading {
+  pointer-events: none;
+  animation: quran-loading-pulse 1s ease-in-out infinite;
+}
+
+@keyframes quran-loading-pulse {
+  50% { opacity: 0.55; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quran-surah-row.is-loading,
+  .quran-resume.is-loading,
+  .quran-nav-card.is-loading {
+    animation: none;
+    opacity: 0.6;
+  }
+}
+
+.quran-resume__snippet:empty {
+  min-height: 1.9em;
+}
