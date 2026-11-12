@@ -1,0 +1,186 @@
+/* ==========================================================================
+   ITEM ACTIONS — زر ⋮ + قائمة (تعديل / حذف / إبلاغ) للمناسبات والأفكار
+   وتعليقاتهما. المكوّن: js/shared/item-actions.js
+   ========================================================================== */
+
+/* عنصر المحتوى: نمنع قائمة اللمس الافتراضية (iOS callout) عشان الضغط
+   المطوّل يفتح قائمتنا. التحديد بالنص نفسه يفضل شغّال (مش user-select:none). */
+[data-item-kind] {
+  -webkit-touch-callout: none;
+}
+
+/* ── زر ⋮ ─────────────────────────────────────────────────────
+   مربّع ناعم بلا إطار يوازي مربّع أيقونة القسم على الجهة المقابلة من
+   الرأس: خلفية خفيفة جدًا، وأيقونة هادئة، ولون القسم عند الضغط فقط.
+   في التعليق نسخة أصغر داخل الصف العلوي (الاسم والوقت ← ⋮). */
+.item-menu-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: var(--surface-overlay);
+  color: var(--text-muted);
+  box-shadow: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--duration-base) var(--ease-out), color var(--duration-base) var(--ease-out), transform var(--duration-base) var(--ease-out);
+}
+.item-menu-btn i,
+.item-menu-btn svg {
+  width: 18px;
+  height: 18px;
+}
+.item-menu-btn:active {
+  background: var(--oc-as, var(--surface-overlay));
+  color: var(--oc-at, var(--text-primary));
+  transform: scale(0.92);
+}
+@media (hover: hover) {
+  .item-menu-btn:hover { color: var(--text-primary); }
+}
+.item-menu-btn:focus-visible {
+  outline: 2px solid var(--oc-a, var(--border-strong));
+  outline-offset: 2px;
+}
+
+.item-menu-btn--sm {
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+}
+.item-menu-btn--sm i,
+.item-menu-btn--sm svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* رأس البطاقة: ⋮ في آخر السطر (طرف النهاية = يسار في RTL) */
+.idea-card__head > .item-menu-btn,
+.occasion-card__head > .item-menu-btn {
+  margin-inline-start: auto;
+}
+
+/* ── وسم "معدّل" ──────────────────────────────────────────── */
+.item-edited-mark {
+  margin-inline-start: var(--space-1);
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+
+/* ── تعليق محذوف / مخفي بالبلاغات ─────────────────────────── */
+.item-placeholder-text {
+  margin: 0;
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: var(--text-sm);
+}
+
+.item-reported-note {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0 0 var(--space-2);
+  color: var(--color-danger-300, #e0a3a3);
+  font-size: var(--text-xs);
+}
+.item-reported-note i,
+.item-reported-note svg {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+}
+
+/* بطاقة اتخفت بالبلاغات (تظهر لصاحبها والمشرف بس): نفس معاملة "قيد المراجعة" */
+.idea-card--reported .idea-vote-buttons,
+.idea-card--reported .idea-card__progress,
+.idea-card--reported .idea-card__details,
+.occasion-card--reported .occasion-card__actions {
+  display: none;
+}
+.idea-card--reported,
+.occasion-card--reported {
+  opacity: 0.92;
+  border-style: dashed;
+}
+
+/* ── القائمة (bottom sheet) ───────────────────────────────── */
+.item-sheet {
+  padding-bottom: var(--space-2);
+}
+
+.item-sheet__title {
+  padding: var(--space-3) var(--space-6) var(--space-2);
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  text-align: center;
+}
+
+.item-sheet__list {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-1) var(--space-3);
+}
+
+.item-sheet__action {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: 48px;
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: transparent;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  text-align: start;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.item-sheet__action i,
+.item-sheet__action svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.item-sheet__action:hover,
+.item-sheet__action:focus-visible,
+.item-sheet__action:active {
+  background: rgba(var(--color-brand-400-rgb), 0.12);
+}
+
+.item-sheet__action:disabled {
+  opacity: 0.5;
+}
+
+.item-sheet__action--danger {
+  color: var(--color-danger-300, #e0a3a3);
+}
+
+.item-sheet__hint {
+  margin: var(--space-1) var(--space-6) 0;
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  text-align: center;
+}
+
+.item-sheet__footer {
+  padding: var(--space-2) var(--space-4) var(--space-3);
+}
+
+.item-edit__body {
+  padding-top: var(--space-2);
+}
+
+

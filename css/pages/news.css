@@ -1,0 +1,452 @@
+/* ==========================================================================
+   NEWS PAGE — شبتوت بحري
+   Consumes: tokens.css, components/card.css
+   ========================================================================== */
+
+.news-page {
+  position: relative;
+  isolation: isolate;
+}
+
+/* توهج "الغبار" — بلون هوية بطاقة "الأخبار" في الصفحة الرئيسية
+   (أحمر/alert)، نفس بنية وحركة الغبار في بيت المناسبات وشوف البرامج،
+   عشان كل قسم يحمل توهج بلون بطاقته من أول ما تفتحه. */
+.news-page::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  right: -80px;
+  width: 260px;
+  height: 260px;
+  background: radial-gradient(
+    circle,
+    rgba(var(--color-alert-400-rgb), 0.16) 0%,
+    transparent 70%
+  );
+  filter: blur(18px);
+  z-index: -1;
+  pointer-events: none;
+  animation: pulse-subtle 14s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .news-page::before { animation: none; }
+}
+
+
+/* --------------------------------------------------------------------------
+   BREAKING NEWS — الخبر العاجل
+-------------------------------------------------------------------------- */
+
+.breaking-news {
+  margin-bottom: var(--space-8);
+}
+
+.breaking-card {
+  /* أحمر فاتح صلب — مُشتق من التوكينز بالـ color-mix، مش لون عشوائي،
+     وميّز بصرياً عن باقي الكروت الداكنة في الصفحة بدل التدرّج الشفاف القديم */
+  background: color-mix(in srgb, var(--status-error-border) 16%, var(--color-neutral-000) 84%);
+  border: 1px solid color-mix(in srgb, var(--status-error-border) 45%, var(--color-neutral-000) 55%);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-5) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+/* خط علوي للخبر العاجل */
+.breaking-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--status-error-border);
+  pointer-events: none;
+}
+
+.breaking-label {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-neutral-000);
+  background-color: var(--status-error-border);
+  border: none;
+  border-radius: var(--radius-full);
+  padding: var(--space-1) var(--space-3);
+  width: fit-content;
+}
+
+.breaking-title {
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-bold);
+  color: color-mix(in srgb, var(--status-error-border) 78%, var(--color-neutral-950) 22%);
+  line-height: var(--leading-snug);
+}
+
+.breaking-text {
+  font-size: var(--text-base);
+  color: color-mix(in srgb, var(--status-error-border) 55%, var(--color-neutral-950) 45%);
+  line-height: var(--leading-relaxed);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.breaking-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.breaking-card .meta-item {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  color: color-mix(in srgb, var(--status-error-border) 80%, var(--color-neutral-950) 20%);
+  background-color: color-mix(in srgb, var(--status-error-border) 12%, var(--color-neutral-000) 88%);
+  border: 1px solid color-mix(in srgb, var(--status-error-border) 35%, var(--color-neutral-000) 65%);
+  border-radius: var(--radius-full);
+  padding: 2px var(--space-3);
+}
+
+/* --------------------------------------------------------------------------
+   BUTTONS — قراءة المزيد (عاجل + بطاقة عادية)
+-------------------------------------------------------------------------- */
+
+.primary-btn {
+  align-self: flex-start;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  background-color: var(--status-error-border);
+  color: var(--color-neutral-000);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  border: none;
+  cursor: pointer;
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.primary-btn:active {
+  opacity: 0.85;
+  transform: scale(0.97);
+}
+
+.read-more {
+  align-self: flex-start;
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-brand-200);
+  background-color: var(--status-success-bg);
+  border: 1px solid var(--color-brand-700);
+  border-radius: var(--radius-full);
+  padding: var(--space-2) var(--space-4);
+  cursor: pointer;
+  transition: var(--transition-all);
+}
+
+.read-more:hover {
+  background-color: color-mix(in srgb, var(--status-success-bg) 160%, transparent);
+  border-color: var(--color-brand-500);
+}
+
+.read-more:active {
+  transform: scale(0.96);
+  background-color: var(--state-active-bg);
+}
+
+/* --------------------------------------------------------------------------
+   NEWS FEED
+-------------------------------------------------------------------------- */
+
+.news-feed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* --------------------------------------------------------------------------
+   NEWS CARD
+-------------------------------------------------------------------------- */
+
+.news-card {
+  background: linear-gradient(
+    148deg,
+    var(--surface-raised) 0%,
+    color-mix(in srgb, var(--surface-raised) 88%, var(--color-brand-950)) 100%
+  );
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow:
+    var(--shadow-md),
+    inset 0 1px 0 rgba(var(--shimmer-base-rgb), 0.06);
+  transition: var(--transition-all);
+  position: relative;
+}
+
+.news-card:hover {
+  border-color: var(--color-brand-500);
+  box-shadow:
+    var(--shadow-lg),
+    0 0 0 1px rgba(var(--color-brand-400-rgb), 0.12);
+  transform: translateY(-3px);
+}
+
+.news-card:active {
+  transform: translateY(0) scale(0.985);
+  box-shadow: var(--shadow-xs);
+}
+
+.news-image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background-color: var(--surface-overlay);
+}
+
+.news-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+.news-card:hover .news-image img {
+  transform: scale(1.03);
+}
+
+/* تدرّج خفيف أسفل الصورة عشان شارة التصنيف تبين بوضوح فوقها */
+.news-image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.35) 0%, transparent 45%);
+  pointer-events: none;
+}
+
+.news-content {
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* --------------------------------------------------------------------------
+   NEWS META — تصنيف · وقت · مصدر
+-------------------------------------------------------------------------- */
+
+.news-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.news-category {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-brand-200);
+  background-color: var(--status-success-bg);
+  border: 1px solid var(--color-brand-700);
+  border-radius: var(--radius-full);
+  padding: 2px var(--space-3);
+  width: fit-content;
+}
+
+/* شارة التصنيف فوق الصورة مباشرة */
+.news-category--overlay {
+  position: absolute;
+  top: var(--space-3);
+  inset-inline-start: var(--space-3);
+  z-index: 1;
+  backdrop-filter: blur(6px);
+  box-shadow: var(--shadow-sm);
+}
+
+.news-time,
+.news-source {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.news-time::before,
+.news-source::before {
+  content: '·';
+  margin-left: var(--space-1);
+  margin-right: var(--space-1);
+}
+
+/* أول عنصر في سطر البيانات الوصفية ما يحتاجش فاصلة قبله */
+.news-meta > :first-child::before {
+  content: none;
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   NEWS TITLE & EXCERPT
+-------------------------------------------------------------------------- */
+
+.news-title {
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  line-height: var(--leading-snug);
+}
+
+.news-excerpt {
+  font-size: var(--text-sm);
+  font-family: var(--font-body);
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   NEWS PAGINATION
+-------------------------------------------------------------------------- */
+
+.news-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-5) 0 var(--space-2);
+}
+
+.news-pagination__nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--space-8);
+  height: var(--space-8);
+  color: var(--color-brand-300);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.news-pagination__nav:hover {
+  background: rgba(var(--color-brand-600-rgb), 0.12);
+  border-color: var(--color-brand-600);
+}
+
+.news-pagination__nav:disabled {
+  opacity: 0.3;
+  cursor: default;
+  pointer-events: none;
+}
+
+.news-pagination__numbers {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.news-pagination__num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--space-8);
+  height: var(--space-8);
+  padding: 0 var(--space-1);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.news-pagination__num:hover {
+  background: rgba(var(--color-brand-600-rgb), 0.10);
+  color: var(--text-primary);
+}
+
+.news-pagination__num--active {
+  background: var(--color-brand-500);
+  border-color: var(--color-brand-500);
+  color: var(--text-inverse);
+  font-weight: var(--weight-semibold);
+  cursor: default;
+  pointer-events: none;
+}
+
+.news-pagination__ellipsis {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--space-6);
+  height: var(--space-8);
+  color: var(--text-disabled);
+  font-size: var(--text-sm);
+  user-select: none;
+}
+
+/* --------------------------------------------------------------------------
+   NEWS CARD — لون الفئة (مؤشر جانبي + شارة التصنيف)
+   المفاتيح مطابقة تماماً لـ NEWS_CATEGORIES في local-data.js
+-------------------------------------------------------------------------- */
+
+.news-card--community { border-right: 3px solid var(--color-brand-500); }
+.news-card--events    { border-right: 3px solid var(--color-nile-400); }
+.news-card--projects   { border-right: 3px solid var(--color-accent-400); }
+
+.news-card--community .news-category {
+  color: var(--color-brand-200);
+  background-color: var(--status-success-bg);
+  border-color: var(--color-brand-700);
+}
+
+.news-card--events .news-category {
+  color: var(--color-nile-400);
+  background-color: color-mix(in srgb, var(--color-nile-500) 16%, transparent);
+  border-color: var(--color-nile-500);
+}
+
+.news-card--projects .news-category {
+  color: var(--color-accent-400);
+  background-color: color-mix(in srgb, var(--color-accent-500) 16%, transparent);
+  border-color: var(--color-accent-500);
+}
+
+/* شارة overlay فوق الصورة — خلفية داكنة موحّدة، اللون في النص بس */
+.news-card .news-category--overlay {
+  background-color: rgba(20, 20, 16, 0.55);
+  border-color: rgba(var(--overlay-white-rgb), 0.18);
+}
+
+/* عدد الأخبار في الفئة */
