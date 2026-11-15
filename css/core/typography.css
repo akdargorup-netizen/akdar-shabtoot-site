@@ -1,0 +1,312 @@
+/* ==========================================================================
+   TYPOGRAPHY — شبتوت بحري  v11
+   Font loading, headings, body text, code, quotes.
+   Consumes: tokens.css
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   FONT LOADING
+-------------------------------------------------------------------------- */
+
+@font-face {
+  font-family: 'Tajawal';
+  src: url('../../assets/fonts/Tajawal-Regular.woff2') format('woff2'),
+       url('../../assets/fonts/Tajawal-Regular.woff') format('woff'),
+       url('../../assets/fonts/Tajawal-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Tajawal';
+  src: url('../../assets/fonts/Tajawal-Medium.woff2') format('woff2'),
+       url('../../assets/fonts/Tajawal-Medium.woff') format('woff'),
+       url('../../assets/fonts/Tajawal-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Tajawal';
+  src: url('../../assets/fonts/Tajawal-Bold.woff2') format('woff2'),
+       url('../../assets/fonts/Tajawal-Bold.woff') format('woff'),
+       url('../../assets/fonts/Tajawal-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Tajawal';
+  src: url('../../assets/fonts/Tajawal-ExtraBold.woff2') format('woff2'),
+       url('../../assets/fonts/Tajawal-ExtraBold.woff') format('woff'),
+       url('../../assets/fonts/Tajawal-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cairo';
+  src: url('../../assets/fonts/Cairo-Variable.woff2') format('woff2'),
+       url('../../assets/fonts/Cairo-Variable.woff') format('woff'),
+       url('../../assets/fonts/Cairo-Variable.ttf') format('truetype-variations');
+  font-weight: 200 1000;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* خط مخصص للنص القرآني فقط (worship-quran-surah.js) — لا يُستخدم في أي مكان
+   آخر بالتطبيق. مصدره مشروع Amiri الرسمي (github.com/alif-type/amiri)،
+   ترخيص SIL Open Font License. تم التحقق من تغطيته الكاملة لكل الرموز
+   المستخدمة في نص القرآن (js/data/worship-quran-data.js) قبل الدمج. */
+@font-face {
+  font-family: 'Amiri Quran';
+  src: url('../../assets/fonts/AmiriQuran.woff2') format('woff2'),
+       url('../../assets/fonts/AmiriQuran.woff') format('woff'),
+       url('../../assets/fonts/AmiriQuran.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+/* --------------------------------------------------------------------------
+   HEADINGS
+-------------------------------------------------------------------------- */
+
+/* أي عنصر يحمل صنفًا فيه كلمة title/subtitle (عناوين البطاقات والصفحات كافة) — Cairo دائمًا */
+[class*="title"] {
+  font-family: var(--font-heading);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--text-primary);
+}
+
+h1 { font-size: var(--text-4xl); }
+h2 { font-size: var(--text-3xl); }
+h3 { font-size: var(--text-2xl); }
+h4 { font-size: var(--text-xl); }
+h5 { font-size: var(--text-lg);  font-weight: var(--weight-medium); }
+h6 { font-size: var(--text-md);  font-weight: var(--weight-medium); }
+
+/* --------------------------------------------------------------------------
+   BODY TEXT
+-------------------------------------------------------------------------- */
+
+p {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+}
+
+small {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+strong {
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
+}
+
+em {
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
+/* --------------------------------------------------------------------------
+   BLOCKQUOTE
+-------------------------------------------------------------------------- */
+
+blockquote {
+  padding: var(--space-4) var(--space-5);
+  border-inline-start: 3px solid var(--border-brand);
+  background: var(--surface-raised);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* --------------------------------------------------------------------------
+   CODE & PRE
+-------------------------------------------------------------------------- */
+
+code, pre, kbd {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+code {
+  background: var(--surface-overlay);
+  padding: 1px var(--space-2);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  color: var(--color-brand-200);
+  font-size: var(--text-sm);
+}
+
+pre {
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+  overflow-x: auto;
+}
+
+pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: var(--text-sm);
+  color: var(--color-brand-200);
+}
+
+/* --------------------------------------------------------------------------
+   FONT INTELLIGENCE — Tajawal للواجهة والمحتوى معاً (وزن موحّد)
+   • وزن Bold (700)  → العناوين، الأزرار، التسميات، الـ badges، الـ nav
+   • وزن Regular (400) → النصوص السردية، الأوصاف، محتوى المقالات
+-------------------------------------------------------------------------- */
+
+/* أوصاف البطاقات */
+.history-index-card__desc,
+.association-index-card__desc,
+.service-text {
+  font-family: var(--font-body);
+  line-height: var(--leading-relaxed);
+}
+
+/* بطاقة المعلومة اليومية */
+.home-fact-card__text {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+}
+
+/* نصوص الإعدادات */
+.page-intro p, .contact-admin-intro__body {
+  font-family: var(--font-body);
+}
+
+/* صفحة القارئ */
+.reader-body p,
+.reader-body li {
+  font-family: var(--font-long-text);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+}
+
+/* إشعارات */
+.notification-text,
+.empty-state__description,
+.gallery-excerpt,
+.voice-excerpt {
+  font-family: var(--font-body);
+  line-height: var(--leading-relaxed);
+}
+
+/* مشاريع وخدمات */
+.project-title,
+.gallery-title {
+  font-family: var(--font-heading);
+}
+
+.gallery-excerpt {
+  font-family: var(--font-body);
+}
+
+/* --------------------------------------------------------------------------
+   UI ELEMENTS — Tajawal (وزن Bold)
+-------------------------------------------------------------------------- */
+
+button,
+[role="button"],
+.btn,
+label,
+.nav-tab__label,
+.filter-chip,
+.article-number,
+.badge,
+.chip,
+.filter-btn,
+.cta-button,
+.listen-btn,
+.appearance-section-label,
+.home-fact-card__more {
+  font-family: var(--font-display);
+}
+
+/* عناوين البطاقات وكل صفحة — Cairo دائمًا */
+.card__title,
+.home-card__title,
+.news-title,
+.event-title,
+.history-index-card__title,
+.home-fact-card__label {
+  font-family: var(--font-heading);
+}
+
+/* --------------------------------------------------------------------------
+   LONG-FORM READING — Tajawal (وزن Regular)
+-------------------------------------------------------------------------- */
+
+.reader-body, .info-text, .news-excerpt, .home-fact-card__text, blockquote p {
+  font-family: var(--font-long-text);
+}
+
+/* --------------------------------------------------------------------------
+   UTILITY
+-------------------------------------------------------------------------- */
+
+
+
+/* ==========================================================================
+   v12 — رفع وضوح الخطوط عالمياً
+   ========================================================================== */
+
+/* العناوين — أوزان أثقل */
+h1 { font-weight: var(--weight-bold); }
+h2 { font-weight: var(--weight-bold); }
+h3 { font-weight: var(--weight-semibold); }
+h4 { font-weight: var(--weight-semibold); }
+
+/* عناوين البطاقات والصفحات — ↑ أوضح */
+.card__title,
+.home-card__title,
+.news-title,
+.event-title,
+.history-index-card__title,
+.association-index-card__title,
+.gallery-title,
+.reader-title,
+.info-title {
+  font-family: var(--font-heading);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+}
+
+/* الأوصاف الثانوية — ↑ أوضح (secondary بدل muted) */
+.news-excerpt,
+.event-excerpt,
+.history-index-card__desc,
+.association-index-card__desc,
+.service-text,
+.gallery-excerpt {
+  color: var(--text-secondary);
+}
+
+/* النص المخفت — ↑ مقروء أكثر */
+.reader-meta,
+.news-meta,
+.event-meta,
+.reader-dateline {
+  color: var(--text-muted);
+}
