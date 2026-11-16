@@ -1,0 +1,394 @@
+/* ==========================================================================
+   NUBIAN LANGUAGE SUB-PAGES — صفحات تصنيفات القاموس (17 تصنيف)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   PAGE HEADER — أيقونة + عنوان + مقدمة
+-------------------------------------------------------------------------- */
+
+.nlang-sub-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding-bottom: var(--space-10);
+}
+
+.nlang-sub-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-5) 0 var(--space-5);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.nlang-sub-header__icon {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px;
+  color: var(--color-accent-200);
+  background: rgba(var(--color-accent-500-rgb), 0.12);
+  border: 1px solid rgba(var(--color-accent-400-rgb), 0.22);
+  border-radius: var(--radius-lg);
+}
+
+.nlang-sub-header__icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+  stroke-width: 1.75;
+}
+
+.nlang-sub-header__intro {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   WORD LIST — قائمة صفوف الكلمات (بدل بلاطات الشبكة المربعة القديمة)
+   كل كلمة صف واحد بعرض القائمة كاملة: النوبي هو النجم (خط كبير
+   بالذهبي) وتحته النطق اللاتيني على جهة البداية، والمعنى العربي على
+   الجهة التانية كسياق سريع مفصول بخط. Consumes: nubian-word-render.js (JS)
+-------------------------------------------------------------------------- */
+
+.nword-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.nword-tile {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: color-mix(in srgb, var(--surface-sunken) 55%, var(--surface-raised) 45%);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+}
+
+.nword-tile__ar {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
+  line-height: var(--leading-snug);
+  flex: 1;
+  min-width: 0;
+}
+
+.nword-tile__nub-wrap {
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 45%;
+  min-width: 0;
+  text-align: left;
+}
+
+.nword-tile__script {
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  color: var(--color-accent-200);
+  line-height: var(--leading-snug);
+  text-align: left;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.nword-tile__translit {
+  font-family: var(--font-display);
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  direction: ltr;
+  text-align: left;
+  line-height: var(--leading-snug);
+  margin-top: 2px;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+/* صف كلمة لسع من غير نطق نوبي مسجّل — حدود متقطعة "قيد الإضافة"
+   بدل صف فاضي، نفس منطق .nlang-empty في باقي التطبيق */
+.nword-tile--empty {
+  border-style: dashed;
+  border-color: var(--border-default);
+  background: transparent;
+}
+
+.nword-tile--empty .nword-tile__ar {
+  font-size: var(--text-sm);
+}
+
+.nword-tile__note {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-style: italic;
+  color: var(--text-muted);
+  opacity: 0.75;
+}
+
+/* صف "الكلمات لسع ما اتضافت" لتصنيف فاضي تمامًا */
+.nword-tile--wide {
+  justify-content: center;
+  padding: var(--space-4);
+}
+
+/* عنوان مجموعة (زي "الضمائر"/"ضمائر الملكية" جوه تصنيف واحد) — شريط
+   قبل صفوفه مباشرة، بخط سفلي ذهبي بدل خلفية ثقيلة أو letter-spacing/
+   uppercase (بلا تأثير أصلاً على نص عربي، وبيكسر التوصيل البصري بين
+   الحروف) */
+.nword-group-header {
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  color: var(--color-accent-200);
+  padding-bottom: var(--space-1);
+  margin-top: var(--space-2);
+  border-bottom: 1px solid rgba(var(--color-accent-400-rgb), 0.28);
+}
+
+.nword-grid > .nword-group-header:first-child {
+  margin-top: 0;
+}
+
+/* --------------------------------------------------------------------------
+   EMPTY STATE — التصنيف لسه بدون كلمات
+-------------------------------------------------------------------------- */
+
+.nlang-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-3);
+  padding: var(--space-8) var(--space-5);
+  background: var(--surface-raised);
+  border: 1px dashed var(--border-default);
+  border-radius: var(--radius-xl);
+}
+
+.nlang-empty__icon {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent-300);
+  background: rgba(var(--color-accent-500-rgb), 0.10);
+  border: 1px solid rgba(var(--color-accent-400-rgb), 0.20);
+  border-radius: var(--radius-full);
+}
+
+.nlang-empty__icon svg {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  stroke-width: 1.75;
+}
+
+.nlang-empty__title {
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.nlang-empty__desc {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: var(--leading-relaxed);
+  max-width: 32ch;
+  margin: 0;
+}
+
+
+/* ── زر النطق الصوتي (قاموس الكلمات + تعلم الكلام) — يظهر فقط للعناصر التي لها حقل audio ── */
+.clip-btn {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;               /* هدف لمس مريح على الجوال */
+  padding: 0;
+  margin-inline-start: auto;
+  color: var(--color-accent-500);
+  background: color-mix(in srgb, var(--color-accent-500) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-accent-500) 35%, transparent);
+  border-radius: 50%;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color .15s ease, transform .15s ease;
+}
+.clip-btn:active { transform: scale(.94); }
+.clip-btn.is-loading { opacity: .55; }
+.clip-btn.is-playing {
+  color: var(--surface-raised);
+  background: var(--color-accent-500);
+}
+@media (prefers-reduced-motion: reduce) {
+  .clip-btn { transition: none; }
+  .clip-btn:active { transform: none; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   بطاقة الكلمة v2 — عمود صوت ثابت + ثلاثة مستويات نص + توسيع جانبي
+   (nubian-word-render.js). يأتي آخر الملف فيغلب القواعد القديمة أعلاه.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* توسيع جانبي: نستفيد من هامش الصفحة (16px) ونقرّب حاوية التصنيف من الحافة (≈12px)
+   مع حشوة داخلية 12px، فيكسب نص الكلمة نحو 14px على كل جانب دون التصاق بالحواف */
+.nlang-search-card--words {
+  margin-inline: calc(var(--space-1) * -1);
+  padding: var(--space-4) var(--space-3);
+}
+.nlang-search-card--words .nword-grid { gap: 10px; }
+
+.nword-tile {
+  gap: var(--space-3);                 /* ≥12px فاصل بين النص وعمود الصوت */
+  padding: 14px;
+}
+
+/* بطاقة الكلمة المكدّسة: النص بعرض البطاقة كله، والذيل (نطق لاتيني + زر استمع) في صف مستقل */
+.nword-tile--stack {
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 6px;
+}
+.nword-tile__foot,
+.nphrase-item__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-width: 0;
+}
+.nword-tile__foot .nword-tile__translit,
+.nphrase-item__foot .nphrase-item__translit {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+/* الصف الأول: المعنى العربي + الكلمة النوبية (بالحروف العربية) جنبًا إلى جنب — يلتفّان لسطرين لو طالا */
+.nword-tile__main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--space-3);
+  row-gap: 0;
+}
+.nword-tile--stack .nword-tile__ar {
+  flex: none;
+  max-width: 100%;
+  flex-grow: 0;
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold, 600);
+  color: var(--text-primary);
+}
+.nword-tile--stack .nword-tile__script {
+  flex: 0 1 auto;
+  font-size: var(--text-base);   /* النوبي أصغر من المعنى العربي (هو الجزء الأطول) فلا يزدحم الصف */
+  line-height: 1.5;
+  text-align: start;
+}
+.nword-tile--stack .nword-tile__script:empty { display: none; }
+/* الصف الثاني: النطق اللاتيني — أصغر وأخفت، لا يزاحم الصف الأول */
+.nword-tile--stack .nword-tile__translit {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  text-align: right;                   /* لاتيني (ltr) لكنه يصطف مع بداية الصف العربي فوقه */
+  margin-top: 0;
+}
+
+/* ── زر الصوت — «استمع» ──
+   حبّة أفقية بأيقونة سماعة + كلمة «استمع» («إيقاف» أثناء التشغيل) في طرف ذيل البطاقة، فيُعرف أنه زر وأنه نطق صوتي
+   دون أن يأخذ عرضًا من نص الكلمة. مساحة اللمس أوسع من الشكل المرئي (::after). */
+.nword-tile__audio,
+.nphrase-item__audio {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+}
+.nword-tile__audio .clip-btn,
+.nphrase-item__audio .clip-btn {
+  position: relative;
+  width: auto;
+  height: 36px;
+  margin: 0;
+  padding: 0 14px 0 12px;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: var(--color-accent-200);
+  background: color-mix(in srgb, var(--color-accent-400) 20%, transparent);
+  border: 1.5px solid color-mix(in srgb, var(--color-accent-400) 65%, transparent);
+  border-radius: var(--radius-full);
+}
+.nword-tile__audio .clip-btn::after,
+.nphrase-item__audio .clip-btn::after {
+  content: '';
+  position: absolute;
+  inset: -6px -4px;           /* هدف لمس ≈ 48px ارتفاعًا */
+}
+.nword-tile__audio .clip-btn__icon,
+.nphrase-item__audio .clip-btn__icon { display: inline-flex; }
+.nword-tile__audio .clip-btn svg,
+.nphrase-item__audio .clip-btn svg { width: 18px; height: 18px; }
+.nword-tile__audio .clip-btn__label,
+.nphrase-item__audio .clip-btn__label {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  line-height: 1;
+  white-space: nowrap;
+}
+.clip-btn__t--on { display: none; }
+.clip-btn.is-playing .clip-btn__t--idle { display: none; }
+.clip-btn.is-playing .clip-btn__t--on { display: inline; }
+/* أثناء التشغيل: الحبّة تمتلئ، وأثناء التحميل تنبض */
+.nword-tile__audio .clip-btn.is-playing,
+.nphrase-item__audio .clip-btn.is-playing {
+  color: var(--surface-raised);
+  background: var(--color-accent-400);
+  border-color: var(--color-accent-400);
+}
+.nword-tile__audio .clip-btn.is-loading,
+.nphrase-item__audio .clip-btn.is-loading { opacity: 1; animation: clip-pulse 1s ease-in-out infinite; }
+@keyframes clip-pulse { 50% { opacity: .5; } }
+@media (prefers-reduced-motion: reduce) {
+  .nword-tile__audio .clip-btn.is-loading,
+  .nphrase-item__audio .clip-btn.is-loading { animation: none; }
+}
+
+/* بلا تسجيل: نفس الحبّة لكن خامدة (حدود متقطعة + «لا صوت») — لا تُضغط */
+.nword-tile__audio .clip-btn--off,
+.nphrase-item__audio .clip-btn--off {
+  cursor: default;
+  pointer-events: none;
+  color: var(--text-muted);
+  background: transparent;
+  border: 1px dashed var(--border-default);
+  opacity: 0.55;
+}
+
+/* الكلمة داخل الزر خاصة ببطاقات آنداندي؛ في أي موضع آخر يبقى الزر دائرة أيقونة فقط */
+.clip-btn__label { display: none; }
+.nword-tile__audio .clip-btn__label,
+.nphrase-item__audio .clip-btn__label { display: inline-block; }
+.clip-btn__icon { display: inline-flex; }

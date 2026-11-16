@@ -1,0 +1,184 @@
+/* ==========================================================================
+   SEARCH BAR — مكوّن موحّد لكل صناديق البحث بالتطبيق
+   ══════════════════════════════════════════════════════════════════
+   قبل كده كان عندنا 3 تنسيقات مختلفة لنفس الفكرة (search-bar في صفحة
+   البحث الشامل، contact-search في دليل الاتصال، nword-search في
+   القاموس النوبي) — شكل مختلف شوية في كل مكان (بعضها pill بالكامل،
+   بعضها من غير توهج تركيز، بعضها بخلفية مختلفة). دُمجوا في مكوّن واحد
+   هنا (.search-bar) يُستخدم بنفس الـ markup في الصفحات الثلاث، عشان
+   يبقى شكل البحث "لغة بصرية" واحدة مهما كان مكانه — بهوية البراند
+   (الأخضر) كلون تركيز موحّد، مش لون القسم المحلي، لأن صندوق البحث
+   عنصر عابر للأقسام مش جزء من هوية قسم واحد.
+   Consumes: tokens.css
+   ========================================================================== */
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  height: var(--space-12);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  padding: 0 var(--space-4);
+  box-shadow:
+    var(--shadow-sm),
+    inset 0 1px 0 rgba(var(--color-accent-200-rgb), 0.07);
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow   var(--duration-base) var(--ease-out),
+    background   var(--duration-fast) var(--ease-out);
+}
+
+.search-bar:focus-within {
+  border-color: var(--color-brand-500);
+  background: var(--surface-raised);
+  box-shadow:
+    var(--shadow-focus),
+    inset 0 1px 0 rgba(var(--color-accent-200-rgb), 0.07);
+}
+
+/* ── أيقونة البحث (يمين/يسار حسب RTL) ── */
+
+.search-bar__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--space-6);
+  height: var(--space-6);
+  flex-shrink: 0;
+  color: var(--text-disabled);
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.search-bar:focus-within .search-bar__icon {
+  color: var(--color-brand-400);
+}
+
+.search-bar__icon svg {
+  width: 19px;
+  height: 19px;
+  stroke-width: 2;
+}
+
+/* ── الحقل نفسه ── */
+
+.search-bar__input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  direction: rtl;
+}
+
+.search-bar__input::placeholder {
+  color: var(--text-disabled);
+}
+
+.search-bar__input:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+/* ── زر المسح (اختياري — يظهر فقط وقت وجود نص) ── */
+
+.search-bar__clear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--space-7);
+  height: var(--space-7);
+  border-radius: var(--radius-full);
+  background: var(--surface-overlay);
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition:
+    color      var(--duration-fast) var(--ease-out),
+    background var(--duration-fast) var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.search-bar__clear:hover  { color: var(--text-primary); }
+.search-bar__clear:active { background: var(--state-active-bg); }
+
+.search-bar__clear svg {
+  width: 14px;
+  height: 14px;
+  stroke-width: 2.4;
+}
+
+
+/* ==========================================================================
+   توحيد شريط البحث في: الفهرس القرآني + آنداندي + دليل البلد
+   ──────────────────────────────────────────────────────────────────
+   نفس الشكل في الأقسام الثلاثة، والفرق الوحيد هو لون القسم عبر المتغيّر
+   --sb-accent. إطار الشريط بنفس لون أيقونة العدسة ونفس وزن خطّها
+   (إطار ٢px = سُمك خط الأيقونة المرسومة بحجم ٢٠px و stroke-width ٢.٤).
+   أي قسم جديد يحتاج نفس الشكل: يضيف كلاسه في القائمة :is(...) ويعرّف
+   --sb-accent له.
+   ========================================================================== */
+
+.nlang-page             { --sb-accent: var(--color-accent-400); }   /* الرُطانة — ذهبي */
+.contact-directory-page { --sb-accent: var(--color-brand-400); }    /* دليل البلد — أخضر */
+.worship-quran-page     { --sb-accent: var(--text-stone); }         /* العبادة — طيني/حجري */
+
+[data-scheme="light"] .nlang-page             { --sb-accent: var(--ink-accent); }
+[data-scheme="light"] .contact-directory-page { --sb-accent: var(--ink-brand); }
+
+:is(.nlang-page, .contact-directory-page, .worship-quran-page) .search-bar {
+  height: 54px;
+  padding: 0 var(--space-3) 0 var(--space-4);
+  border: 2px solid var(--sb-accent);
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-sm);
+}
+
+:is(.nlang-page, .contact-directory-page, .worship-quran-page) .search-bar:focus-within {
+  border-color: var(--sb-accent);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--sb-accent) 24%, transparent),
+    var(--shadow-sm);
+}
+
+:is(.nlang-page, .contact-directory-page, .worship-quran-page) .search-bar__icon {
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--sb-accent);
+}
+
+:is(.nlang-page, .contact-directory-page, .worship-quran-page) .search-bar__icon svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2.4;
+  color: var(--sb-accent);
+}
+
+/* حالة التركيز: نفس لون الأيقونة، فلا يتغير عن لون الإطار */
+:is(.nlang-page, .contact-directory-page, .worship-quran-page) .search-bar:focus-within .search-bar__icon {
+  color: var(--sb-accent);
+  background: none;
+  border: 0;
+}
+
+[data-scheme="light"] :is(.nlang-page, .contact-directory-page, .worship-quran-page) .search-bar__icon,
+[data-scheme="light"] :is(.nlang-page, .contact-directory-page, .worship-quran-page) .search-bar__icon svg {
+  color: var(--sb-accent);
+}
+
+:is(.nlang-page, .contact-directory-page, .worship-quran-page) .search-bar__clear {
+  width: 34px;
+  height: 34px;
+  background: color-mix(in srgb, var(--sb-accent) 16%, transparent);
+  color: var(--sb-accent);
+}

@@ -1,0 +1,46 @@
+/* ==========================================================================
+   SPACING UTILITIES — شبتوت بحري
+   Single-purpose margin and padding classes.
+   Use sparingly. Prefer component-level spacing over utility overrides.
+   Consumes: tokens.css
+   ========================================================================== */
+
+/* Padding — all sides */
+
+.p-2 { padding: var(--space-2); }
+
+
+
+
+/* Padding — horizontal */
+
+
+
+/* Padding — vertical */
+
+
+
+
+/* Margin — top */
+
+
+
+
+
+/* Margin — bottom */
+
+
+
+
+
+/* Margin — centered */
+
+
+/* Gap */
+
+.gap-2 { gap: var(--space-2); }
+
+
+
+
+
