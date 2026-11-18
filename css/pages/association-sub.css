@@ -1,0 +1,107 @@
+/* ==========================================================================
+   ASSOCIATION SUB-PAGES — شبتوت بحري
+   Covers: association-about, association-journey, and shared roles-list
+   component. association-regulations (الدستور واللوائح الداخلية) has
+   its own dedicated stylesheet الآن — association-regulations.css —
+   بعد ما بقت وثيقة طويلة مدموجة محتاجة تصميم مخصص.
+   Consumes: tokens.css, css/pages/association.css
+   ========================================================================== */
+
+
+/* ==========================================================================
+   ASSOCIATION ABOUT PAGE — نبذة عن الرابطة
+   ========================================================================== */
+
+.info-sections {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  /* بدون هامش أفقي — .page الأب بيدّيه أصلاً، وتكراره هنا كان
+     بيضيّق بطاقات النبذة (التعريف/الرؤية/الرسالة...) بهامش مضاعف
+     ويخلّيها تتطول رأسيًا بلا داعي */
+  padding: 0 0 var(--space-8);
+}
+
+.info-box {
+  background-color: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-sm);
+  border-inline-start: var(--card-accent-stripe);
+}
+
+.info-title {
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  color: var(--text-brand);
+  margin: 0 0 var(--space-3) 0;
+}
+
+.info-text {
+  font-family: var(--font-long-text);
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+  max-width: 65ch;         /* الحد الأمثل للقراءة العربية */
+  margin: 0;
+}
+
+
+/* ==========================================================================
+   ARCHIVE CARD — مكوّن كرت فهرس عام (icon + عنوان + وصف)، غير مستخدم
+   حالياً في أي صفحة association (مسيرة الرابطة بقت قائمة مقالات
+   مباشرة، والدستور واللوائح بقوا وثيقة واحدة) — تُرك للاستخدام
+   المستقبلي المحتمل في فهارس مشابهة.
+   ========================================================================== */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ── قوائم أدوار الرابطة (role-card — reusable module في
+   association/constitution/roles-list.js) ── */
+
+
+
+
+
+
+
+
+/* ── قوائم نبذة الرابطة ── */
+.info-list {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+  margin: var(--space-2) 0 0 0;
+  padding-right: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.info-list li {
+  position: relative;
+}
+
+.info-list li::marker {
+  color: var(--text-brand);
+}

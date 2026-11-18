@@ -1,0 +1,88 @@
+/* ==========================================================================
+   BREAKPOINTS — شبتوت بحري  v11
+   Mobile-first responsive overrides.
+
+   --bp-sm:  480px   (large phones)
+   --bp-md:  768px   (tablets)
+   --bp-lg:  1024px  (small desktops)
+   --bp-xl:  1280px  (large desktops)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   480px+ — Large phones
+-------------------------------------------------------------------------- */
+
+@media (min-width: 480px) {
+  :root {
+    --spacing-page-x: var(--space-6);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   768px+ — Tablets
+-------------------------------------------------------------------------- */
+
+@media (min-width: 768px) {
+  :root {
+    --spacing-page-x: var(--space-8);
+    --header-height:  60px;
+  }
+
+  h1 { font-size: var(--text-5xl); }
+  h2 { font-size: var(--text-4xl); }
+  h3 { font-size: var(--text-3xl); }
+
+  .app-bottom-nav {
+    display: none;
+  }
+
+  .app-content {
+    bottom: 0;
+  }
+
+  .modal {
+    border-radius: var(--radius-2xl);
+  }
+
+  .overlay-backdrop {
+    align-items: center;
+  }
+
+  /* Wider home grid on tablets */
+  .home-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* صفوف جهات الاتصال — أفقية بدل عمودية، المساحة الأعرض بتسمح
+     بعرض الاسم/الدور بجانب أزرار الاتصال مباشرة بدل تحتها */
+  .contact-row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+
+  .contact-row__actions {
+    width: auto;
+    flex-shrink: 0;
+  }
+
+  .contact-row__call {
+    flex: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   1024px+ — Desktops
+-------------------------------------------------------------------------- */
+
+@media (min-width: 1024px) {
+  :root {
+    --spacing-page-x: var(--space-10);
+  }
+
+  .page {
+    padding-top: var(--space-8);
+    padding-bottom: var(--space-10);
+  }
+}
