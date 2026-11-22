@@ -1,0 +1,11 @@
+{
+  "v": 1,
+  "ask": {
+    "endpoints": [
+      "https://rtgrkugcokqxseedzunr.supabase.co/functions/v1/ask"
+    ]
+  },
+  "media": {
+    "supabase": "auto"
+  }
+}
